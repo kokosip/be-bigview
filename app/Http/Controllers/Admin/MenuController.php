@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Admin\MenuRepositories;
 use App\Services\Admin\MenuServices;
 use App\Traits\ApiResponse;
 use Exception;
