@@ -24,4 +24,23 @@ class MenuRepositories {
 
         return $latesSort;
     }
+
+    public function getMenuUtama(){
+        $result = DB::table('menu')->selectRaw('DISTINCT name_menu')
+            ->where('id_parent', 0)->get();
+
+        return $result;
+    }
+
+    public function getListMenu($search, $perPage){
+        $db = DB::table('menu as a')
+            ->selectRaw("a.id_menu, a.name_menu, a.id_parent, IFNULL(b.name_menu, '') as parent, a.sort")
+            ->leftJoin('menu as b','a.id_parent','=','b.id_menu');
+
+        if($search){
+            $db = $db->whereRaw("a.name_menu like ? OR b.name_menu like ?", ["%{$search}%", "%{$search}%"]);
+        }
+        $result = $db->paginate($perPage, $perPage);
+        return $result;
+    }
 }
