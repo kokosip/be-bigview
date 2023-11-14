@@ -27,5 +27,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::prefix('admin')->group(function () {
     Route::post('/menus', [MenuController::class, 'addMenu']);
     Route::get('/menus', [MenuController::class, 'listMenu']);
+    Route::put('/menus/{id}', [MenuController::class, 'updateMenu']);
+    Route::get('/menus/{id}', [MenuController::class, 'getMenuById']);
     Route::get('/menus/parent', [MenuController::class, 'filterMenuUtama']);
 });

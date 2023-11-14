@@ -43,4 +43,29 @@ class MenuRepositories {
         $result = $db->paginate($perPage, $perPage);
         return $result;
     }
+
+    public function getMenuById($id_menu){
+        $db = DB::table('menu')
+            ->select('id_menu', 'name_menu', 'icon', 'link', 'id_parent', 'sort')
+            ->where('id_menu', $id_menu)
+            ->first();
+
+        return $db;
+    }
+
+    public function deleteMenu($id_menu){
+        $db = DB::table('menu')
+            ->where('id_menu', $id_menu)
+            ->delete();
+
+        return $db;
+    }
+
+    public function updateMenu($data, $id_menu){
+        $db = DB::table('menu')
+            ->where('id_menu', $id_menu)
+            ->update($data);
+
+        return $db;
+    }
 }

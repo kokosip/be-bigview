@@ -2,6 +2,7 @@
 namespace App\Services\Admin;
 
 use App\Repositories\Admin\MenuRepositories;
+use Exception;
 
 class MenuServices {
     protected $menuRepositories;
@@ -42,5 +43,39 @@ class MenuServices {
             $rows->items(),
             $pagination
         ];
+    }
+
+    public function getMenuById($id_menu){
+        $result = $this->menuRepositories->getMenuById($id_menu);
+
+        if($result){
+            return $result;
+        } else {
+            throw new Exception('ID Tidak Ditemukan');
+        }
+    }
+
+    public function deleteMenu($id_menu){
+        $this->getMenuById($id_menu);
+
+        $result = $this->menuRepositories->deleteMenu($id_menu);
+
+        if($result){
+            return $result;
+        } else {
+            throw new Exception('Gagal Update');
+        }
+    }
+
+    public function updateMenu($data, $id_menu){
+        $this->getMenuById($id_menu);
+
+        $result = $this->menuRepositories->updateMenu($data, $id_menu);
+
+        if($result){
+            return $result;
+        } else {
+            throw new Exception('Gagal Update');
+        }
     }
 }
