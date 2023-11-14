@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\Admin\MenuRepositories;
 use App\Services\Admin\MenuServices;
 use App\Traits\ApiResponse;
 use Exception;
@@ -35,6 +36,29 @@ class MenuController extends Controller
             $data = $this->menuService->insertMenu($validator->validate());
 
             return $this->successResponse($data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function filterMenuUtama(){
+        try{
+            $data = $this->menuService->getMenuUtama();
+
+            return $this->successResponse($data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function listMenu(Request $request){
+        $search = $request->input("search");
+        $perPage = is_null($request->input('per_page')) ? 5 : $request->input('per_page');
+
+        try{
+            [$data, $metadata] = $this->menuService->getListMenu($search, $perPage);
+
+            return $this->successResponse(data: $data, metadata: $metadata);
         } catch(Exception $e){
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }

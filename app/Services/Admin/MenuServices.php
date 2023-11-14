@@ -19,4 +19,28 @@ class MenuServices {
 
         return $data;
     }
+
+    public function getMenuUtama(){
+        $rows = $this->menuRepositories->getMenuUtama();
+
+        $result = $rows->pluck("name_menu")->values();
+
+        return ["name_menu" => $result];
+    }
+
+    public function getListMenu($search, $perPage){
+        $rows = $this->menuRepositories->getListMenu($search, $perPage);
+
+        $pagination = [
+            "current_page" => $rows->currentPage(),
+            "per_page" => $rows->perPage(),
+            "total_page" => ceil($rows->total() / $rows->perPage()),
+            "total_row" => $rows->total(),
+        ];
+
+        return [
+            $rows->items(),
+            $pagination
+        ];
+    }
 }

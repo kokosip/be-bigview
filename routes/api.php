@@ -26,5 +26,6 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::prefix('admin')->group(function () {
     Route::post('/menus', [MenuController::class, 'addMenu']);
-    // Route::get('/users', 'cardPemodalan');
+    Route::get('/menus', [MenuController::class, 'listMenu']);
+    Route::get('/menus/parent', [MenuController::class, 'filterMenuUtama']);
 });
