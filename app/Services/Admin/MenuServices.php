@@ -24,9 +24,7 @@ class MenuServices {
     public function getMenuUtama(){
         $rows = $this->menuRepositories->getMenuUtama();
 
-        $result = $rows->pluck("name_menu")->values();
-
-        return ["name_menu" => $result];
+        return $rows;
     }
 
     public function getListMenu($search, $perPage){

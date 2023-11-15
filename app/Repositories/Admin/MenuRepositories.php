@@ -26,7 +26,7 @@ class MenuRepositories {
     }
 
     public function getMenuUtama(){
-        $result = DB::table('menu')->selectRaw('DISTINCT name_menu')
+        $result = DB::table('menu')->selectRaw('DISTINCT id_menu, name_menu')
             ->where('id_parent', 0)->get();
 
         return $result;
