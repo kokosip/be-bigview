@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services\Admin;
 
 use App\Repositories\Admin\MenuRepositories;
@@ -61,7 +62,7 @@ class MenuServices {
         if($result){
             return $result;
         } else {
-            throw new Exception('Gagal Update');
+            throw new Exception('Gagal Delete Menu');
         }
     }
 
@@ -73,7 +74,7 @@ class MenuServices {
         if($result){
             return $result;
         } else {
-            throw new Exception('Gagal Update');
+            throw new Exception('Gagal Update Menu');
         }
     }
 }

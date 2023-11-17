@@ -73,11 +73,11 @@ class MenuController extends Controller
         }
     }
 
-    public function deleteMenu(Request $request, $id_menu){
+    public function deleteMenu($id_menu){
         try{
             $this->menuService->deleteMenu($id_menu);
 
-            return $this->successResponse(message: "Data Berhasil di Update");
+            return $this->successResponse(message: "Data Berhasil dihapus");
         } catch(Exception $e){
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
