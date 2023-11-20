@@ -79,4 +79,46 @@ class MenuServices {
             throw new Exception('Gagal Update Menu');
         }
     }
+
+    public function listRoleMenu($data){
+        $list_usermenu = $this->menuRepositories->getMenuByRole($data);
+
+        $list_menu = $this->menuRepositories->listRoleMenu($data);
+
+        foreach($list_menu as $list){
+            if(in_array($list->id_menu, $list_usermenu)){
+                $list->is_check = True;
+            } else {
+                $list->is_check = False;
+            }
+        }
+
+        return $list_menu;
+    }
+
+    public function listSubMenu($data){
+        $list_menu = $this->menuRepositories->listSubMenu($data);
+
+        return $list_menu;
+    }
+
+    public function addRoleMenu($data){
+        if($this->menuRepositories->checkRoleMenuExist($data)){
+            throw new Exception('Role Menu Sudah Ada.');
+        }
+
+        $list_menu = $this->menuRepositories->addRoleMenu($data);
+
+        return $list_menu;
+    }
+
+    public function deleteRoleMenu($data){
+        if(!$this->menuRepositories->checkRoleMenuExist($data)){
+            throw new Exception('Role Menu Tidak Ada.');
+        }
+
+        $list_menu = $this->menuRepositories->deleteRoleMenu($data);
+
+        return $list_menu;
+    }
 }

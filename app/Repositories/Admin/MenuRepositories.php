@@ -68,4 +68,67 @@ class MenuRepositories {
 
         return $db;
     }
+
+    public function listRoleMenu($data){
+        $id_parent = 0;
+        if(isset($data['id_parent'])){
+            $id_parent = $data['id_parent'];
+        }
+
+        $db = DB::table('menu')
+            ->select('id_menu', 'name_menu')
+            ->where('id_parent', $id_parent)
+            ->get();
+
+        return $db;
+    }
+
+    public function listSubMenu($id_parent){
+        $db = DB::table('menu')
+            ->where('id_parent', $id_parent)
+            ->pluck('name_menu');
+
+        return $db;
+    }
+
+    public function getMenuByRole($data){
+        $db = DB::table('user_menu')
+            ->where('id_role', $data['id_role'])
+            ->pluck('id_menu')->toArray();
+
+        return $db;
+    }
+
+    public function addRoleMenu($data){
+        $result = DB::table('user_menu')->insert($data);
+
+        if($result){
+            return $result;
+        } else {
+            throw new Exception('Gagal Menambahkan Role Menu Baru.');
+        }
+    }
+
+    public function deleteRoleMenu($data){
+        $result = DB::table('user_menu')
+            ->where('id_menu', $data['id_menu'])
+            ->where('id_role', $data['id_role'])
+            ->delete();
+
+        if($result){
+            return $result;
+        } else {
+            throw new Exception('Gagal Menghapus Role Menu Baru.');
+        }
+    }
+
+    public function checkRoleMenuExist($data){
+        $result = DB::table('user_menu')
+            ->select('id_role', 'id_menu')
+            ->where('id_role', $data['id_role'])
+            ->where('id_menu', $data['id_menu'])
+            ->first();
+
+        return $result ? True : False;
+    }
 }

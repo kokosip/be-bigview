@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\Admin\MenuServices;
 use App\Services\Admin\RoleServices;
 use App\Traits\ApiResponse;
 use Exception;
@@ -13,10 +14,12 @@ class RoleController extends Controller
 {
     use ApiResponse;
     protected $roleService;
+    protected $menuService;
 
-    public function __construct(RoleServices $roleService)
+    public function __construct(RoleServices $roleService, MenuServices $menuService)
     {
         $this->roleService = $roleService;
+        $this->menuService = $menuService;
     }
 
     public function addRole(Request $request){
@@ -85,6 +88,81 @@ class RoleController extends Controller
             $this->roleService->updateRole($validator->validate(), $id_role);
 
             return $this->successResponse(message: "Data Berhasil di Update");
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function listRoleMenu(Request $request){
+        $validator = Validator::make($request->all(), [
+            'id_role' => 'required',
+            'id_parent' => 'nullable'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->menuService->listRoleMenu($validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function listSubMenu(Request $request){
+        $validator = Validator::make($request->all(), [
+            'id_parent' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->menuService->listSubMenu($validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function addRoleMenu(Request $request){
+        $validator = Validator::make($request->all(), [
+            'id_role' => 'required',
+            'id_menu' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $this->menuService->addRoleMenu($validator->validate());
+
+            return $this->successResponse(message: "Role Menu Berhasil ditambahkan");
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function deleteRoleMenu(Request $request){
+        $validator = Validator::make($request->all(), [
+            'id_role' => 'required',
+            'id_menu' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $this->menuService->deleteRoleMenu($validator->validate());
+
+            return $this->successResponse(message: "Role Menu Berhasil dihapus");
         } catch(Exception $e){
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }

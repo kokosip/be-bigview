@@ -34,10 +34,20 @@ Route::prefix('admin')->group(function () {
     Route::delete('/menus/{id}', [MenuController::class, 'deleteMenu']);
     Route::get('/menus/{id}', [MenuController::class, 'getMenuById']);
 
-    // Role Menu
+    // Role
     Route::post('/roles', [RoleController::class, 'addRole']);
     Route::get('/roles', [RoleController::class, 'listRole']);
+
     Route::put('/roles/{id}', [RoleController::class, 'updateRole']);
     Route::delete('/roles/{id}', [RoleController::class, 'deleteRole']);
     Route::get('/roles/{id}', [RoleController::class, 'getRoleById']);
+
+    // Role - Menu
+    Route::prefix('role-menu')->group(function() {
+        Route::get('/', [RoleController::class, 'listRoleMenu']);
+        Route::get('/submenus', [RoleController::class, 'listSubMenu']);
+        Route::post('/', [RoleController::class, 'addRoleMenu']);
+        Route::delete('/', [RoleController::class, 'deleteRoleMenu']);
+    });
+
 });
