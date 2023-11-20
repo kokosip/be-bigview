@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UsecaseController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -49,4 +50,5 @@ Route::prefix('admin')->group(function () {
         Route::delete('/', [RoleController::class, 'deleteRoleMenu']);
     });
 
+    Route::get('/usecase', [UsecaseController::class, 'listUsecase']);
 });
