@@ -96,12 +96,6 @@ class MenuServices {
         return $list_menu;
     }
 
-    public function listSubMenu($data){
-        $list_menu = $this->menuRepositories->listSubMenu($data);
-
-        return $list_menu;
-    }
-
     public function addRoleMenu($data){
         if($this->menuRepositories->checkRoleMenuExist($data)){
             throw new Exception('Role Menu Sudah Ada.');

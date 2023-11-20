@@ -43,7 +43,7 @@ class RoleController extends Controller
 
     public function listRole(Request $request){
         $search = $request->input("search");
-        $perPage = is_null($request->input('per_page')) ? 5 : $request->input('per_page');
+        $perPage = is_null($request->input('per_page')) ? 10 : $request->input('per_page');
 
         try{
             [$data, $metadata] = $this->roleService->getListRole($search, $perPage);
@@ -105,24 +105,6 @@ class RoleController extends Controller
 
         try{
             $data = $this->menuService->listRoleMenu($validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
-    }
-
-    public function listSubMenu(Request $request){
-        $validator = Validator::make($request->all(), [
-            'id_parent' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->validationResponse($validator);
-        }
-
-        try{
-            $data = $this->menuService->listSubMenu($validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){

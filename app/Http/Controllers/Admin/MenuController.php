@@ -52,7 +52,7 @@ class MenuController extends Controller
 
     public function listMenu(Request $request){
         $search = $request->input("search");
-        $perPage = is_null($request->input('per_page')) ? 5 : $request->input('per_page');
+        $perPage = is_null($request->input('per_page')) ? 10 : $request->input('per_page');
 
         try{
             [$data, $metadata] = $this->menuService->getListMenu($search, $perPage);

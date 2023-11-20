@@ -83,14 +83,6 @@ class MenuRepositories {
         return $db;
     }
 
-    public function listSubMenu($id_parent){
-        $db = DB::table('menu')
-            ->where('id_parent', $id_parent)
-            ->pluck('name_menu');
-
-        return $db;
-    }
-
     public function getMenuByRole($data){
         $db = DB::table('user_menu')
             ->where('id_role', $data['id_role'])

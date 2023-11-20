@@ -45,7 +45,6 @@ Route::prefix('admin')->group(function () {
     // Role - Menu
     Route::prefix('role-menu')->group(function() {
         Route::get('/', [RoleController::class, 'listRoleMenu']);
-        Route::get('/submenus', [RoleController::class, 'listSubMenu']);
         Route::post('/', [RoleController::class, 'addRoleMenu']);
         Route::delete('/', [RoleController::class, 'deleteRoleMenu']);
     });
