@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,4 +36,8 @@ Route::prefix('admin')->group(function () {
 
     // Role Menu
     Route::post('/roles', [RoleController::class, 'addRole']);
+    Route::get('/roles', [RoleController::class, 'listRole']);
+    Route::put('/roles/{id}', [RoleController::class, 'updateRole']);
+    Route::delete('/roles/{id}', [RoleController::class, 'deleteRole']);
+    Route::get('/roles/{id}', [RoleController::class, 'getRoleById']);
 });
