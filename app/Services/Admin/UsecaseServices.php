@@ -29,19 +29,9 @@ class UsecaseServices {
         ];
     }
 
-    public function getListProvinsi(){
-        $result = $this->usecaseRepositories->getListProvinsi();
-
-        return $result;
-    }
-
-    public function getListKabkota($id_prov){
-        $result = $this->usecaseRepositories->getListKabkota($id_prov);
-
-        return $result;
-    }
-
     public function addUsecaseGovernment($data){
+        $id_usecase = $this->usecaseRepositories->getLatestIdUsecase();
+
         $key_govern = ["kode_provinsi", "kode_kab_kota", "nama_usecase"];
         $key_usecase = ["nama_usecase", "base_color1", "base_color2", "base_color3", "base_color4"];
 
@@ -49,6 +39,7 @@ class UsecaseServices {
         $data_usecase = array_intersect_key($data, array_flip($key_usecase));
 
         $data_usecase["type_dashboard"] = 'Government';
+        $data_govern["id_usecase"] = $id_usecase->id_usecase + 1;
 
         $result_govern = $this->usecaseRepositories->addUsecaseGovernment($data_govern);
         $result_usecase = $this->usecaseRepositories->addUsecase($data_usecase);
@@ -57,17 +48,20 @@ class UsecaseServices {
     }
 
     public function addUsecaseCustom($data){
-        $key_govern = ["kode_provinsi", "kode_kab_kota", "nama_usecase"];
+        $id_usecase = $this->usecaseRepositories->getLatestIdUsecase();
+
+        $key_custom = ["nama_usecase", "deskripsi"];
         $key_usecase = ["nama_usecase", "base_color1", "base_color2", "base_color3", "base_color4"];
 
-        $data_govern = array_intersect_key($data, array_flip($key_govern));
+        $data_custom = array_intersect_key($data, array_flip($key_custom));
         $data_usecase = array_intersect_key($data, array_flip($key_usecase));
 
-        $data_usecase["type_dashboard"] = 'Government';
+        $data_usecase["type_dashboard"] = 'Custom';
+        $data_custom["id_usecase"] = $id_usecase->id_usecase + 1;
 
-        $result_govern = $this->usecaseRepositories->addUsecaseGovernment($data_govern);
+        $result_custom = $this->usecaseRepositories->addUsecaseCustom($data_custom);
         $result_usecase = $this->usecaseRepositories->addUsecase($data_usecase);
 
-        return [$result_govern, $result_usecase];
+        return [$result_custom, $result_usecase];
     }
 }

@@ -32,37 +32,9 @@ class UsecaseController extends Controller
         }
     }
 
-    public function listProvinsi(){
-        try{
-            $data = $this->usecaseService->getListProvinsi();
-
-            return $this->successResponse($data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
-    }
-
-    public function listKabkota(Request $request){
-        $kode_provinsi = $request->input("kode_provinsi");
-
-        try{
-            $data = $this->usecaseService->getListKabkota($kode_provinsi);
-
-            return $this->successResponse($data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
-    }
-
     public function addUsecaseCustom(Request $request){
         $validator = Validator::make($request->all(), [
-            'kode_provinsi' => 'required',
-            'kode_kab_kota' => 'nullable',
-            'nama_usecase' => 'required',
-            'base_color1' => 'required',
-            'base_color2' => 'required',
-            'base_color3' => 'required',
-            'base_color4' => 'required',
+            'deskripsi' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -70,7 +42,7 @@ class UsecaseController extends Controller
         }
 
         try{
-            [$govern, $usecase] = $this->usecaseService->addUsecaseGovernment($validator->validate());
+            [$govern, $usecase] = $this->usecaseService->addUsecaseCustom($validator->validate());
 
             return $this->successResponse(data: $govern, metadata: $usecase);
         } catch(Exception $e){

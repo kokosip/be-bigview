@@ -19,21 +19,10 @@ class UsecaseRepositories {
         return $result;
     }
 
-    public function getListProvinsi(){
-        $db = DB::table('provinsi_kota')
-            ->selectRaw("DISTINCT kode_provinsi, nama_provinsi")
-            ->orderBy('nama_provinsi')
-            ->get();
-
-        return $db;
-    }
-
-    public function getListKabkota($id_prov){
-        $db = DB::table('provinsi_kota')
-            ->select('kode_provinsi','kode_kab_kota', 'nama_kab_kota')
-            ->where('kode_provinsi', $id_prov)
-            ->orderBy('nama_kab_kota')
-            ->get();
+    public function getLatestIdUsecase(){
+        $db = DB::table('usecase')
+            ->selectRaw('MAX(id_usecase) as id_usecase')
+            ->first();
 
         return $db;
     }
