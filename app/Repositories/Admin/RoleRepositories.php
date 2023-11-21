@@ -22,7 +22,7 @@ class RoleRepositories {
             ->select('id_role', 'nama_role', 'level');
 
         if($search){
-            $db = $db->where('nama_role', 'like', $search);
+            $db = $db->where('nama_role', 'like', "%{$search}%");
         }
         $result = $db->paginate($perPage, $perPage);
         return $result;
