@@ -40,9 +40,11 @@ class MenuController extends Controller
         }
     }
 
-    public function filterMenuUtama(){
+    public function menuUtama(Request $request){
+        $isSubmenu = $request->boolean('submenu') ? true : null;
+
         try{
-            $data = $this->menuService->getMenuUtama();
+            $data = $this->menuService->getMenuUtama($isSubmenu);
 
             return $this->successResponse($data);
         } catch(Exception $e){

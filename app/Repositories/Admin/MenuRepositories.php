@@ -25,11 +25,16 @@ class MenuRepositories {
         return $latesSort;
     }
 
-    public function getMenuUtama(){
-        $result = DB::table('menu')->selectRaw('DISTINCT id_menu, name_menu')
-            ->where('id_parent', 0)->get();
+    public function getMenuUtama($isSubmenu = null){
+        $db = DB::table('menu as a')
+            ->leftJoin('menu as b', 'b.id_parent', '=', 'a.id_menu')
+            ->selectRaw('DISTINCT a.id_menu, a.name_menu')
+            ->where('a.id_parent', 0);
 
-        return $result;
+        if(!is_null($isSubmenu)) $db = $db->whereRaw('b.id_menu is not null');
+        $db = $db->get();
+
+        return $db;
     }
 
     public function getListMenu($search, $perPage){

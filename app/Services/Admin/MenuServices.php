@@ -24,8 +24,8 @@ class MenuServices {
         return $data;
     }
 
-    public function getMenuUtama(){
-        $rows = $this->menuRepositories->getMenuUtama();
+    public function getMenuUtama($isSubmenu){
+        $rows = $this->menuRepositories->getMenuUtama($isSubmenu);
 
         return $rows;
     }
