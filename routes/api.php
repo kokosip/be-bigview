@@ -51,4 +51,7 @@ Route::prefix('admin')->group(function () {
     });
 
     Route::get('/usecase', [UsecaseController::class, 'listUsecase']);
+    Route::post('/usecase/{type}', [UsecaseController::class, 'addUsecaseGovernment']);
+    Route::get('/usecase/prov', [UsecaseController::class, 'listProvinsi']);
+    Route::get('/usecase/kabkota', [UsecaseController::class, 'listKabkota']);
 });
