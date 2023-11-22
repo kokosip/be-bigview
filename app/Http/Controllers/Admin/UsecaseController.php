@@ -47,9 +47,9 @@ class UsecaseController extends Controller
         }
 
         try{
-            [$govern, $usecase] = $this->usecaseService->addUsecaseCustom($validator->validate());
+            $govern = $this->usecaseService->addUsecaseCustom($validator->validate());
 
-            return $this->successResponse(data: $govern, metadata: $usecase);
+            return $this->successResponse(data: $govern, message: "Usecase Custom Berhasil ditambahkan");
         } catch(Exception $e){
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
@@ -71,9 +71,9 @@ class UsecaseController extends Controller
         }
 
         try{
-            [$govern, $usecase] = $this->usecaseService->addUsecaseGovernment($validator->validate());
+            $govern = $this->usecaseService->addUsecaseGovernment($validator->validate());
 
-            return $this->successResponse(data: $govern, metadata: $usecase);
+            return $this->successResponse(data: $govern, message: "Usecase Government Berhasil ditambahkan");
         } catch(Exception $e){
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
