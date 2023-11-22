@@ -78,4 +78,71 @@ class UsecaseController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function updateUsecaseGovern(Request $request, $id_usecase){
+        $validator = Validator::make($request->all(), [
+            'kode_provinsi' => 'required',
+            'kode_kab_kota' => 'nullable',
+            'name_usecase' => 'required',
+            'base_color1' => 'required',
+            'base_color2' => 'required',
+            'base_color3' => 'required',
+            'base_color4' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            [$govern, $usecase] = $this->usecaseService->updateUsecaseGovern($validator->validate(), $id_usecase);
+
+            return $this->successResponse(data: $govern, metadata: $usecase, message: "Usecase Government Berhasil diperbaruhi");
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function updateUsecaseCustom(Request $request, $id_usecase){
+        $validator = Validator::make($request->all(), [
+            'name_usecase' => 'required',
+            'deskripsi' => 'required',
+            'base_color1' => 'required',
+            'base_color2' => 'required',
+            'base_color3' => 'required',
+            'base_color4' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            [$custom, $usecase] = $this->usecaseService->updateUsecaseCustom($validator->validate(), $id_usecase);
+
+            return $this->successResponse(data: $custom, metadata: $usecase, message: "Usecase Custom Berhasil diperbaruhi");
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function deleteUsecaseGovernment($id_usecase){
+        try{
+            $this->usecaseService->deleteUsecaseGovern($id_usecase);
+
+            return $this->successResponse(message: "Data Berhasil dihapus");
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function deleteUsecaseCustom($id_usecase){
+        try{
+            $this->usecaseService->deleteUsecaseCustom($id_usecase);
+
+            return $this->successResponse(message: "Data Berhasil dihapus");
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
 }
