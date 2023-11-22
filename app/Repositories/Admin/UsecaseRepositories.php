@@ -47,4 +47,61 @@ class UsecaseRepositories {
             throw new Exception('Gagal Menambahkan Role Baru.');
         }
     }
+
+    public function updateUsecase($data, $id_usecase){
+        $db = DB::table('usecase')
+            ->where('id_usecase', $id_usecase)
+            ->update($data);
+
+        return $db;
+    }
+
+    public function updateUsecaseGovern($data, $id_usecase){
+        $db = DB::table('usecase_government')
+            ->where('id_usecase', $id_usecase)
+            ->update($data);
+
+        return $db;
+    }
+
+    public function updateUsecaseCustom($data, $id_usecase){
+        $db = DB::table('usecase_custom')
+            ->where('id_usecase', $id_usecase)
+            ->update($data);
+
+        return $db;
+    }
+
+    public function getUsecaseById($id_usecase){
+        $db = DB::table('usecase')
+            ->select('id_usecase', 'name_usecase', 'type_dashboard', 'base_color1', 'base_color2', 'base_color3', 'base_color4')
+            ->where('id_usecase', $id_usecase)
+            ->first();
+
+        return $db;
+    }
+
+    public function deleteUsecase($id_usecase){
+        $db = DB::table('usecase')
+            ->where('id_usecase', $id_usecase)
+            ->delete();
+
+        return $db;
+    }
+
+    public function deleteUsecaseGovern($id_usecase){
+        $db = DB::table('usecase_government')
+            ->where('id_usecase', $id_usecase)
+            ->delete();
+
+        return $db;
+    }
+
+    public function deleteUsecaseCustom($id_usecase){
+        $db = DB::table('usecase_custom')
+            ->where('id_usecase', $id_usecase)
+            ->delete();
+
+        return $db;
+    }
 }

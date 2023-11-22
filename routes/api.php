@@ -55,8 +55,12 @@ Route::prefix('admin')->group(function () {
         Route::delete('/', [RoleController::class, 'deleteRoleMenu']);
     });
 
+    // Usecase
     Route::get('/usecase', [UsecaseController::class, 'listUsecase']);
     Route::post('/usecase/gov', [UsecaseController::class, 'addUsecaseGovernment']);
     Route::post('/usecase/custom', [UsecaseController::class, 'addUsecaseCustom']);
-    Route::put('/usecase/{id}', [UsecaseController::class, 'updateUsecase']);
+    Route::put('/usecase/gov/{id}', [UsecaseController::class, 'updateUsecaseGovern']);
+    Route::put('/usecase/custom/{id}', [UsecaseController::class, 'updateUsecaseCustom']);
+    Route::delete('/usecase/gov/{id}', [UsecaseController::class, 'deleteUsecaseGovernment']);
+    Route::delete('/usecase/custom/{id}', [UsecaseController::class, 'deleteUsecaseCustom']);
 });
