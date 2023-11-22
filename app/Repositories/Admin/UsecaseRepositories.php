@@ -19,14 +19,6 @@ class UsecaseRepositories {
         return $result;
     }
 
-    public function getLatestIdUsecase(){
-        $db = DB::table('usecase')
-            ->selectRaw('MAX(id_usecase) as id_usecase')
-            ->first();
-
-        return $db;
-    }
-
     public function addUsecaseGovernment($data){
         $result = DB::table('usecase_government')->insert($data);
 
@@ -48,10 +40,9 @@ class UsecaseRepositories {
     }
 
     public function addUsecase($data){
-        $result = DB::table('usecase')->insert($data);
-
+        $result = DB::table('usecase')->insertGetId($data);
         if($result){
-            return $data;
+            return $result;
         } else {
             throw new Exception('Gagal Menambahkan Role Baru.');
         }
