@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UsecaseController;
+use App\Http\Controllers\Admin\MasterController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +28,10 @@ Route::post('/login', [AuthController::class, 'login']);
 // });
 
 Route::prefix('admin')->group(function () {
+    // Master
+    Route::get('/prov', [MasterController::class, 'listProvinsi']);
+    Route::get('/kabkota', [MasterController::class, 'listKabkota']);
+
     // Menu Management
     Route::post('/menus', [MenuController::class, 'addMenu']);
     Route::get('/menus', [MenuController::class, 'listMenu']);
@@ -49,4 +55,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('/', [RoleController::class, 'deleteRoleMenu']);
     });
 
+    Route::get('/usecase', [UsecaseController::class, 'listUsecase']);
+    Route::post('/usecase/gov', [UsecaseController::class, 'addUsecaseGovernment']);
+    Route::post('/usecase/custom', [UsecaseController::class, 'addUsecaseCustom']);
 });
