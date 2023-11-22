@@ -34,7 +34,7 @@ class UsecaseController extends Controller
 
     public function addUsecaseCustom(Request $request){
         $validator = Validator::make($request->all(), [
-            'nama_usecase' => 'required',
+            'name_usecase' => 'required',
             'deskripsi' => 'required',
             'base_color1' => 'required',
             'base_color2' => 'required',
@@ -47,9 +47,9 @@ class UsecaseController extends Controller
         }
 
         try{
-            [$govern, $usecase] = $this->usecaseService->addUsecaseCustom($validator->validate());
+            $govern = $this->usecaseService->addUsecaseCustom($validator->validate());
 
-            return $this->successResponse(data: $govern, metadata: $usecase);
+            return $this->successResponse(data: $govern, message: "Usecase Custom Berhasil ditambahkan");
         } catch(Exception $e){
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
@@ -59,7 +59,7 @@ class UsecaseController extends Controller
         $validator = Validator::make($request->all(), [
             'kode_provinsi' => 'required',
             'kode_kab_kota' => 'nullable',
-            'nama_usecase' => 'required',
+            'name_usecase' => 'required',
             'base_color1' => 'required',
             'base_color2' => 'required',
             'base_color3' => 'required',
@@ -71,9 +71,9 @@ class UsecaseController extends Controller
         }
 
         try{
-            [$govern, $usecase] = $this->usecaseService->addUsecaseGovernment($validator->validate());
+            $govern = $this->usecaseService->addUsecaseGovernment($validator->validate());
 
-            return $this->successResponse(data: $govern, metadata: $usecase);
+            return $this->successResponse(data: $govern, message: "Usecase Government Berhasil ditambahkan");
         } catch(Exception $e){
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }

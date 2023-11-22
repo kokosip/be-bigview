@@ -58,4 +58,5 @@ Route::prefix('admin')->group(function () {
     Route::get('/usecase', [UsecaseController::class, 'listUsecase']);
     Route::post('/usecase/gov', [UsecaseController::class, 'addUsecaseGovernment']);
     Route::post('/usecase/custom', [UsecaseController::class, 'addUsecaseCustom']);
+    Route::put('/usecase/{id}', [UsecaseController::class, 'updateUsecase']);
 });
