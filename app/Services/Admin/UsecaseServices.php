@@ -35,8 +35,8 @@ class UsecaseServices {
         try{
             DB::beginTransaction();
 
-            $key_govern = ["kode_provinsi", "kode_kab_kota", "nama_usecase"];
-            $key_usecase = ["nama_usecase", "base_color1", "base_color2", "base_color3", "base_color4"];
+            $key_govern = ["kode_provinsi", "kode_kab_kota", "name_usecase"];
+            $key_usecase = ["name_usecase", "base_color1", "base_color2", "base_color3", "base_color4"];
 
             $data_govern = array_intersect_key($data, array_flip($key_govern));
             $data_usecase = array_intersect_key($data, array_flip($key_usecase));
@@ -60,8 +60,8 @@ class UsecaseServices {
         try{
             DB::beginTransaction();
 
-            $key_custom = ["nama_usecase", "deskripsi"];
-            $key_usecase = ["nama_usecase", "base_color1", "base_color2", "base_color3", "base_color4"];
+            $key_custom = ["name_usecase", "deskripsi"];
+            $key_usecase = ["name_usecase", "base_color1", "base_color2", "base_color3", "base_color4"];
 
             $data_custom = array_intersect_key($data, array_flip($key_custom));
             $data_usecase = array_intersect_key($data, array_flip($key_usecase));
@@ -71,6 +71,8 @@ class UsecaseServices {
 
             $data_custom["id_usecase"] = $result_usecase;
             $this->usecaseRepositories->addUsecaseCustom($data_custom);
+
+            DB::commit();
 
             return $data_custom;
         } catch (\Exception $e) {

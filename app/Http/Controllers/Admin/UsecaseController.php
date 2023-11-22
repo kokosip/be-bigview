@@ -34,7 +34,7 @@ class UsecaseController extends Controller
 
     public function addUsecaseCustom(Request $request){
         $validator = Validator::make($request->all(), [
-            'nama_usecase' => 'required',
+            'name_usecase' => 'required',
             'deskripsi' => 'required',
             'base_color1' => 'required',
             'base_color2' => 'required',
@@ -59,7 +59,7 @@ class UsecaseController extends Controller
         $validator = Validator::make($request->all(), [
             'kode_provinsi' => 'required',
             'kode_kab_kota' => 'nullable',
-            'nama_usecase' => 'required',
+            'name_usecase' => 'required',
             'base_color1' => 'required',
             'base_color2' => 'required',
             'base_color3' => 'required',
