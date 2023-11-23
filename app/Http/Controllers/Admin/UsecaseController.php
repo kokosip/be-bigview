@@ -42,6 +42,16 @@ class UsecaseController extends Controller
         }
     }
 
+    public function getUsecaseById($id_usecase){
+        try{
+            $data = $this->usecaseService->getUsecaseById($id_usecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
     public function addUsecaseCustom(Request $request){
         $validator = Validator::make($request->all(), [
             'name_usecase' => 'required',
