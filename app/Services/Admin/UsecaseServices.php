@@ -31,6 +31,12 @@ class UsecaseServices {
         ];
     }
 
+    public function getListNameUsecase(){
+        $rows = $this->usecaseRepositories->getListNameUsecase();
+
+        return $rows;
+    }
+
     public function addUsecaseGovernment($data){
         try{
             DB::beginTransaction();

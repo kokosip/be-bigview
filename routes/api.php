@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UsecaseController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MasterController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
@@ -57,10 +58,18 @@ Route::prefix('admin')->group(function () {
 
     // Usecase
     Route::get('/usecase', [UsecaseController::class, 'listUsecase']);
+    Route::get('/usecase/names', [UsecaseController::class, 'listNameUsecase']);
     Route::post('/usecase/gov', [UsecaseController::class, 'addUsecaseGovernment']);
     Route::post('/usecase/custom', [UsecaseController::class, 'addUsecaseCustom']);
     Route::put('/usecase/gov/{id}', [UsecaseController::class, 'updateUsecaseGovern']);
     Route::put('/usecase/custom/{id}', [UsecaseController::class, 'updateUsecaseCustom']);
     Route::delete('/usecase/gov/{id}', [UsecaseController::class, 'deleteUsecaseGovernment']);
     Route::delete('/usecase/custom/{id}', [UsecaseController::class, 'deleteUsecaseCustom']);
+
+    // User
+    Route::get('/users', [UserController::class, 'listUser']);
+    Route::post('/users', [UserController::class, 'addUser']);
+    Route::get('/users/{id}', [UserController::class, 'getUserById']);
+    Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
+    Route::put('/users/{id}', [UserController::class, 'updateUser']);
 });
