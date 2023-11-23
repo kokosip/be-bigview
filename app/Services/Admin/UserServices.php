@@ -54,9 +54,21 @@ class UserServices {
 
     public function deleteUser($id_user){
         $this->getUserById($id_user);
-        
+
         $result = $this->userRepositories->deleteUser($id_user);
 
         return $result;
+    }
+
+    public function updateUser($data, $id_user){
+        $this->getUserById($id_user);
+
+        $result = $this->userRepositories->updateMenu($data, $id_user);
+
+        if($result){
+            return $result;
+        } else {
+            throw new Exception('Gagal Update Menu');
+        }
     }
 }

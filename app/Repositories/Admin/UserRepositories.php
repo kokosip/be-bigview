@@ -40,10 +40,18 @@ class UserRepositories {
         }
     }
 
-    public function deleteUser($id_user){
+    public function deleteUser($id_user) {
         $db = DB::table('user')
             ->where('id_user', $id_user)
             ->delete();
+
+        return $db;
+    }
+
+    public function updateMenu($data, $id_user) {
+        $db = DB::table('user')
+            ->where('id_user', $id_user)
+            ->update($data);
 
         return $db;
     }

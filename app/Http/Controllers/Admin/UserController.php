@@ -73,4 +73,27 @@ class UserController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function updateUser(Request $request, $id_user){
+        $validator = Validator::make($request->all(), [
+            'id_usecase' => 'required',
+            'name' => 'required',
+            'username' => 'required',
+            'email' => 'required',
+            'id_role' => 'required',
+            'is_actived' => 'nullable'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->userService->updateUser($validator->validate(), $id_user);
+
+            return $this->successResponse(data: $data, message: "User Berhasil diperbaharui");
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
 }
