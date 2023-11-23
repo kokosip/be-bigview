@@ -19,6 +19,14 @@ class UsecaseRepositories {
         return $result;
     }
 
+    public function getListNameUsecase(){
+        $db = DB::table('usecase')
+            ->select('id_usecase', 'name_usecase')
+            ->get();
+
+        return $db;
+    }
+
     public function addUsecaseGovernment($data){
         $result = DB::table('usecase_government')->insert($data);
 
