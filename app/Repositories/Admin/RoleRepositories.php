@@ -28,6 +28,14 @@ class RoleRepositories {
         return $result;
     }
 
+    public function getListNameRole(){
+        $db = DB::table('role')
+            ->select('id_role', 'nama_role')
+            ->get();
+
+        return $db;
+    }
+
     public function getRoleById($id_role){
         $db = DB::table('role')
             ->select('id_role', 'nama_role', 'level')

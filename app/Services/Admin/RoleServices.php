@@ -35,6 +35,12 @@ class RoleServices {
         ];
     }
 
+    public function getListNameRole(){
+        $rows = $this->roleRepositories->getListNameRole();
+
+        return $rows;
+    }
+
     public function getRoleById($id_role){
         $result = $this->roleRepositories->getRoleById($id_role);
 

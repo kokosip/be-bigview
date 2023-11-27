@@ -44,6 +44,7 @@ Route::prefix('admin')->group(function () {
     // Role
     Route::post('/roles', [RoleController::class, 'addRole']);
     Route::get('/roles', [RoleController::class, 'listRole']);
+    Route::get('/roles/names', [RoleController::class, 'listNamesRole']);
 
     Route::put('/roles/{id}', [RoleController::class, 'updateRole']);
     Route::delete('/roles/{id}', [RoleController::class, 'deleteRole']);

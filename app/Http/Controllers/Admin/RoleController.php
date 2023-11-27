@@ -54,6 +54,16 @@ class RoleController extends Controller
         }
     }
 
+    public function listNamesRole(){
+        try{
+            $data = $this->roleService->getListNameRole();
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
     public function getRoleById($id_role){
         try{
             $data = $this->roleService->getRoleById($id_role);
