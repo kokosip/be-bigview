@@ -34,7 +34,7 @@ class UserServices {
 
     public function insertUser($data) {
         $data["password"] = Hash::make('user123');
-        
+
         $result = $this->userRepositories->insertUser($data);
 
         unset($result["password"]);
@@ -61,6 +61,18 @@ class UserServices {
     }
 
     public function updateUser($data, $id_user){
+        $this->getUserById($id_user);
+
+        $result = $this->userRepositories->updateMenu($data, $id_user);
+
+        if($result){
+            return $result;
+        } else {
+            throw new Exception('Gagal Update Menu');
+        }
+    }
+
+    public function updateIsActived($data, $id_user){
         $this->getUserById($id_user);
 
         $result = $this->userRepositories->updateMenu($data, $id_user);
