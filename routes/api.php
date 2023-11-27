@@ -71,6 +71,7 @@ Route::prefix('admin')->group(function () {
     // User
     Route::get('/users', [UserController::class, 'listUser']);
     Route::post('/users', [UserController::class, 'addUser']);
+    Route::put('/users/active/{id}', [UserController::class, 'updateIsActived']);
     Route::get('/users/{id}', [UserController::class, 'getUserById']);
     Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
     Route::put('/users/{id}', [UserController::class, 'updateUser']);
