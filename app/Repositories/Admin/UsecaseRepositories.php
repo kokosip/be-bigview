@@ -9,7 +9,7 @@ class UsecaseRepositories {
 
     public function getListUsecase($search, $perPage){
         $db = DB::table('usecase')
-            ->select('id_usecase', 'name_usecase', 'base_color1', 'base_color2', 'base_color3', 'base_color4');
+            ->select('id_usecase', 'name_usecase', 'type_dashboard', 'base_color1', 'base_color2', 'base_color3', 'base_color4');
 
         if($search){
             $db = $db->whereRaw("name_usecase LIKE ? ", ["%{$search}%"]);
@@ -81,9 +81,11 @@ class UsecaseRepositories {
     }
 
     public function getUsecaseById($id_usecase){
-        $db = DB::table('usecase')
-            ->select('id_usecase', 'name_usecase', 'type_dashboard', 'base_color1', 'base_color2', 'base_color3', 'base_color4')
-            ->where('id_usecase', $id_usecase)
+        $db = DB::table('usecase as u')
+            ->leftJoin('usecase_government as ug', 'u.id_usecase', '=', 'ug.id_usecase')
+            ->leftJoin('usecase_custom as uc', 'u.id_usecase', '=', 'uc.id_usecase')
+            ->selectRaw('u.*, ug.kode_provinsi, ug.kode_kab_kota, uc.deskripsi')
+            ->where('u.id_usecase', $id_usecase)
             ->first();
 
         return $db;
