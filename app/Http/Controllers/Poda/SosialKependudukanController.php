@@ -44,4 +44,16 @@ class SosialKependudukanController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function barJumlahPenduduk(Request $request){
+        $tahun = $request->input("tahun");
+
+        try{
+            $data = $this->sosialService->getBarJumlahPenduduk($tahun, $this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
 }

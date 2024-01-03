@@ -86,5 +86,6 @@ Route::prefix('poda')->group(function() {
     Route::prefix('penduduk')->group(function() {
         Route::get('/maps', [SosialKependudukanController::class, 'mapJumlahPenduduk']);
         Route::get('/pies', [SosialKependudukanController::class, 'pieJumlahPenduduk']);
+        Route::get('/bars', [SosialKependudukanController::class, 'barJumlahPenduduk']);
     });
 });

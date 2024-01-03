@@ -29,7 +29,7 @@ class SosialKependudukanRepositories {
 
     public function getBarJumlahPenduduk($tahun, $idUsecase){
         $db = DB::table('mart_poda_social_kependudukan_bar_chart')
-            ->select('city', 'datacontent')
+            ->select('city', 'datacontent as data')
             ->where('tahun', $tahun)
             ->where('id_usecase', $idUsecase)
             ->get();

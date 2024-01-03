@@ -2,9 +2,6 @@
 
 namespace App\Traits;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\JsonResponse;
-
 trait FormatChart
 {
     public function mapLeaflet($data) {
@@ -51,23 +48,19 @@ trait FormatChart
         return $response;
     }
 
-    public function barChart($data) {
+    public function barChart($data, $kode_kab_kota) {
         foreach ($data as $key) {
-			$chart_category[] = $data[$key]->city;
-			$chart_data[] = intval($data[$key]->data);
+			$chart_category[] = $key->city;
+			$chart_data[] = intval($key->data);
 		}
 
-		if (substr($this->currentUser->usecase->kode_kab_kota, 2) != "00") {
-			$xAxisTitle = "Kecamatan";
-		} else {
-			$xAxisTitle = "Kab/Kota";
-		}
+        $level = substr($kode_kab_kota, 2) != "00" ? "Kecamatan" : "Kabupaten/Kota";
 
 		$response = [
 			"widget_data" => [
 				"chart_categories" => $chart_category,
 				"chart_data" => $chart_data,
-				"xAxis_title" => $xAxisTitle,
+				"xAxis_title" => $level,
 				"yAxis_title" => "Jumlah Penduduk"
 			]
 		];

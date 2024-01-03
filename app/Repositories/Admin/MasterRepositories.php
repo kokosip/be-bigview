@@ -25,4 +25,13 @@ class MasterRepositories {
 
         return $db;
     }
+
+    public function getKodeKabkota($id_usecase){
+        $db = DB::table('usecase_government')
+            ->select('kode_kab_kota')
+            ->where('id_usecase', $id_usecase)
+            ->first();
+
+        return $db;
+    }
 }
