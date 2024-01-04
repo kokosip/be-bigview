@@ -87,5 +87,25 @@ Route::prefix('poda')->group(function() {
         Route::get('/maps', [SosialKependudukanController::class, 'mapJumlahPenduduk']);
         Route::get('/pies', [SosialKependudukanController::class, 'pieJumlahPenduduk']);
         Route::get('/bars', [SosialKependudukanController::class, 'barJumlahPenduduk']);
+        Route::get('/tahun', [SosialKependudukanController::class, 'tahunJumlahPenduduk']);
+        Route::get('/details', [SosialKependudukanController::class, 'detailJumlahPenduduk']);
+    });
+
+    // Rentang Usia
+    Route::prefix('rentang')->group(function() {
+        Route::get('/maps', [SosialKependudukanController::class, 'mapJumlahPenduduk']);
+        Route::get('/pies', [SosialKependudukanController::class, 'pieJumlahPenduduk']);
+        Route::get('/stacked-bars', [SosialKependudukanController::class, 'stackedBarRentangUsia']);
+        Route::get('/tahun', [SosialKependudukanController::class, 'tahunRentangUsia']);
+        Route::get('/details', [SosialKependudukanController::class, 'detailJumlahPenduduk']);
+    });
+
+    // Kemiskinan
+    Route::prefix('kemiskinan')->group(function() {
+        Route::get('/maps', [SosialKependudukanController::class, 'mapJumlahPenduduk']);
+        Route::get('/pies', [SosialKependudukanController::class, 'pieJumlahPenduduk']);
+        Route::get('/bars', [SosialKependudukanController::class, 'barJumlahPenduduk']);
+        Route::get('/tahun', [SosialKependudukanController::class, 'tahunKemiskinan']);
+        Route::get('/details', [SosialKependudukanController::class, 'detailJumlahPenduduk']);
     });
 });

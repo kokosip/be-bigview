@@ -21,6 +21,17 @@ class SosialKependudukanController extends Controller
         $this->idUsecase = Auth::user()->id_usecase;
     }
 
+    // Start Kependudukan
+    public function tahunJumlahPenduduk(){
+        try{
+            $data = $this->sosialService->getTahunJumlahPenduduk($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
     public function mapJumlahPenduduk(Request $request){
         $tahun = $request->input("tahun");
 
@@ -50,6 +61,53 @@ class SosialKependudukanController extends Controller
 
         try{
             $data = $this->sosialService->getBarJumlahPenduduk($tahun, $this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailJumlahPenduduk(Request $request){
+        $tahun = $request->input("tahun");
+
+        try{
+            $data = $this->sosialService->getDetailJumlahPenduduk($tahun, $this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End Kependudukan
+
+    // Start Rentang Usia
+    public function tahunRentangUsia(){
+        try{
+            $data = $this->sosialService->getTahunRentangUsia($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function stackedBarRentangUsia(Request $request){
+        $tahun = $request->input('tahun');
+        try{
+            $data = $this->sosialService->getStackedBarRentangUsia($tahun, $this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End Rentang Usia
+
+    // Start Kemiskinan
+    public function tahunKemiskinan(){
+        try{
+            $data = $this->sosialService->getTahunKemiskinan($this->idUsecase);
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){

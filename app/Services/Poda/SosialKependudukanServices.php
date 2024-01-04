@@ -19,6 +19,15 @@ class SosialKependudukanServices {
         $this->masterRepositories = $masterRepositories;
     }
 
+    // Start Kependudukan
+    public function getTahunJumlahPenduduk($idUsecase){
+        $rows = $this->sosialRepositories->getTahunJumlahPenduduk($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
     public function getMapJumlahPenduduk($tahun, $idUsecase){
         $rows = $this->sosialRepositories->getMapJumlahPenduduk($tahun, $idUsecase);
 
@@ -44,4 +53,46 @@ class SosialKependudukanServices {
 
         return $response;
     }
+
+    public function getDetailJumlahPenduduk($tahun, $idUsecase){
+        $rows = $this->sosialRepositories->getDetailJumlahPenduduk($tahun, $idUsecase);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Jumlah Penduduk dan jenis Kelamin, $tahun";
+
+        $response = $this->tableDetail($rows, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
+    // End Kependudukan
+
+    // Start Rentang Usia
+    public function getTahunRentangUsia($idUsecase){
+        $rows = $this->sosialRepositories->getTahunRentangUsia($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getStackedBarRentangUsia($tahun, $idUsecase){
+        $rows = $this->sosialRepositories->getStackedBarRentangUsia($tahun, $idUsecase);
+
+        $response = $this->stackedBarChart($tahun, $rows);
+
+        return $response;
+    }
+
+    // End Rentang Usia
+
+    // Start Kemiskinan
+    public function getTahunKemiskinan($idUsecase){
+        $rows = $this->sosialRepositories->getTahunKemiskinan($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+    // End Kemiskinan
 }
