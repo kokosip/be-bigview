@@ -80,6 +80,37 @@ class SosialKependudukanRepositories {
     }
     // End Rentang Usia
 
+    // Start Rasio Jenis Kelamin
+    public function getTahunRasio($idUsecase){
+        $db = DB::table('mart_poda_social_rasio_jk_filter_tahun')
+            ->distinct()->where('id_usecase', $idUsecase)
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
+        return $db;
+    }
+
+    public function getMapRasio($tahun, $idUsecase){
+        $db = DB::table('mart_poda_social_rasio_jk_map_leaflet')
+            ->select('city', 'lat', 'lon', 'rasio as jumlah')
+            ->where('tahun', $tahun)
+            ->where('id_usecase', $idUsecase)
+            ->get();
+
+        return $db;
+    }
+
+    public function getBarRasio($tahun, $idUsecase){
+        $db = DB::table('mart_poda_social_rasio_jk_bar_chart')
+            ->select('chart_categories as city', 'data')
+            ->where('tahun', $tahun)
+            ->where('id_usecase', $idUsecase)
+            ->get();
+
+        return $db;
+    }
+    // End Rasio Jenis Kelamin
+
     // Start Kemiskinan
     public function getTahunKemiskinan($idUsecase){
         $db = DB::table('mart_poda_social_kemiskinan_filter_tahun')

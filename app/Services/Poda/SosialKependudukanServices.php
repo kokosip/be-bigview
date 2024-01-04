@@ -48,8 +48,9 @@ class SosialKependudukanServices {
         $rows = $this->sosialRepositories->getBarJumlahPenduduk($tahun, $idUsecase);
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+        $axis_title = "Jumlah Penduduk";
 
-        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota);
+        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $axis_title);
 
         return $response;
     }
@@ -85,6 +86,35 @@ class SosialKependudukanServices {
     }
 
     // End Rentang Usia
+
+    // Start Rasio Jenis Kelamin
+    public function getTahunRasio($idUsecase){
+        $rows = $this->sosialRepositories->getTahunRasio($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getMapRasio($tahun, $idUsecase){
+        $rows = $this->sosialRepositories->getMapRasio($tahun, $idUsecase);
+
+        $response = $this->mapLeaflet($rows, $tahun);
+
+        return $response;
+    }
+
+    public function getBarRasio($tahun, $idUsecase){
+        $rows = $this->sosialRepositories->getBarRasio($tahun, $idUsecase);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+        $axis_title = "Rasio Jenis Kelamin";
+
+        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $axis_title);
+
+        return $response;
+    }
+    // End Rasio Jenis Kelamin
 
     // Start Kemiskinan
     public function getTahunKemiskinan($idUsecase){

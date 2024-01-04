@@ -59,14 +59,14 @@ trait FormatChart
         return $response;
     }
 
-    public function barChart($data, $kode_kab_kota) {
+    public function barChart($data, $kode_kab_kota, $axis_title) {
         if(empty($data)){
             throw new Exception('Detail Data tidak tersedia.');
         }
 
         foreach ($data as $key) {
             $chart_category[] = $key->city;
-            $chart_data[] = intval($key->data);
+            $chart_data[] = (float)($key->data);
         }
 
         $level = substr($kode_kab_kota, 2) != "00" ? "Kecamatan" : "Kabupaten/Kota";
@@ -76,7 +76,7 @@ trait FormatChart
                 "chart_categories" => $chart_category,
                 "chart_data" => $chart_data,
                 "xAxis_title" => $level,
-                "yAxis_title" => "Jumlah Penduduk"
+                "yAxis_title" => $axis_title
             ]
         ];
 

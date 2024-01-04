@@ -93,19 +93,32 @@ Route::prefix('poda')->group(function() {
 
     // Rentang Usia
     Route::prefix('rentang')->group(function() {
-        Route::get('/maps', [SosialKependudukanController::class, 'mapJumlahPenduduk']);
-        Route::get('/pies', [SosialKependudukanController::class, 'pieJumlahPenduduk']);
         Route::get('/stacked-bars', [SosialKependudukanController::class, 'stackedBarRentangUsia']);
         Route::get('/tahun', [SosialKependudukanController::class, 'tahunRentangUsia']);
-        Route::get('/details', [SosialKependudukanController::class, 'detailJumlahPenduduk']);
+        Route::get('/details', [SosialKependudukanController::class, 'detailRentangUsia']);
+    });
+
+    // Laju Pertumbuhan Penduduk
+    Route::prefix('laju')->group(function() {
+        Route::get('/dual-chart', [SosialKependudukanController::class, 'dualChartLaju']);
+        Route::get('/tahun', [SosialKependudukanController::class, 'tahunLaju']);
+        Route::get('/details', [SosialKependudukanController::class, 'detailLaju']);
+    });
+
+    // Rasio Jenis Kelamin
+    Route::prefix('rasio')->group(function() {
+        Route::get('/bars', [SosialKependudukanController::class, 'barRasio']);
+        Route::get('/maps', [SosialKependudukanController::class, 'mapRasio']);
+        Route::get('/tahun', [SosialKependudukanController::class, 'tahunRasio']);
+        Route::get('/details', [SosialKependudukanController::class, 'detailRasio']);
     });
 
     // Kemiskinan
     Route::prefix('kemiskinan')->group(function() {
-        Route::get('/maps', [SosialKependudukanController::class, 'mapJumlahPenduduk']);
-        Route::get('/pies', [SosialKependudukanController::class, 'pieJumlahPenduduk']);
-        Route::get('/bars', [SosialKependudukanController::class, 'barJumlahPenduduk']);
+        Route::get('/maps', [SosialKependudukanController::class, 'mapKemiskinan']);
+        Route::get('/pies', [SosialKependudukanController::class, 'pieKemiskinan']);
+        Route::get('/bars', [SosialKependudukanController::class, 'barKemiskinan']);
         Route::get('/tahun', [SosialKependudukanController::class, 'tahunKemiskinan']);
-        Route::get('/details', [SosialKependudukanController::class, 'detailJumlahPenduduk']);
+        Route::get('/details', [SosialKependudukanController::class, 'detailKemiskinan']);
     });
 });

@@ -104,6 +104,42 @@ class SosialKependudukanController extends Controller
     }
     // End Rentang Usia
 
+    // Start Rasio Jenis Kelamin
+    public function tahunRasio(){
+        try{
+            $data = $this->sosialService->getTahunRasio($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function mapRasio(Request $request){
+        $tahun = $request->input('tahun');
+
+        try{
+            $data = $this->sosialService->getMapRasio($tahun, $this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function barRasio(Request $request){
+        $tahun = $request->input('tahun');
+
+        try{
+            $data = $this->sosialService->getBarRasio($tahun, $this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End Rasio Jenis Kelamin
+
     // Start Kemiskinan
     public function tahunKemiskinan(){
         try{
