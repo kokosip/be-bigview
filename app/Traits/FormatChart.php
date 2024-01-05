@@ -19,6 +19,53 @@ trait FormatChart
         return $response;
     }
 
+    public function filterPeriode($data) {
+        if(empty($data)){
+            throw new Exception('Filter Tahun Tidak tersedia.');
+        }
+
+        $maxYear = (int)$data->maxYear;
+        $minYear = (int)$data->minYear;
+        $startYear = $maxYear - 2;
+        $selisih = $maxYear - $minYear;
+        if ($selisih < 2) {
+            $startYear = $maxYear - $selisih;
+        }
+
+        $response = [
+            "startYear" => $startYear,
+            "endYear" => $maxYear,
+            "minYear" => $minYear,
+            "maxYear" => $maxYear,
+        ];
+
+        return $response;
+    }
+
+    public function listNamaDaerah($data) {
+        if(empty($data)){
+            throw new Exception('Daftar Nama Daerah Tidak tersedia.');
+        }
+
+        $response = [
+            "nama_daerah" => $data,
+        ];
+
+        return $response;
+    }
+
+    public function listIndikator($data) {
+        if(empty($data)){
+            throw new Exception('Daftar Indikator Tidak tersedia.');
+        }
+
+        $response = [
+            "indikator" => $data,
+        ];
+
+        return $response;
+    }
+
     public function mapLeaflet($data) {
         if(empty($data)){
             throw new Exception('Detail Data tidak tersedia.');
@@ -39,7 +86,7 @@ trait FormatChart
         }
 
         $response = [
-            "year" => $tahun,
+            "year" => $tahun['tahun'],
             "sumber_data" => $data->sumber_data,
             "total_pria" => $data->lakilaki,
             "total_wanita" => $data->Perempuan,
@@ -94,9 +141,9 @@ trait FormatChart
         $yAxis_title = "Jumlah";
 
         if ($data[0]->name == "Jumlah") {
-            foreach ($data as $key => $value) {
-                $chart_categories[] = $data[$key]->chart_categories;
-                $jumlah[] = $data[$key]->data;
+            foreach ($data as $key) {
+                $chart_categories[] = $key->chart_categories;
+                $jumlah[] = $key->data;
             }
 
             $chart_data = $jumlah;
@@ -105,12 +152,12 @@ trait FormatChart
             $xAxis_title = "Rentang Usia";
             $yAxis_title = "Jumlah";
         } else {
-            foreach ($data as $key => $value) {
-                if (strcasecmp($data[$key]->name, 'Laki-Laki')  == 0) {
-                    $chart_categories[] = $data[$key]->chart_categories;
-                    $lakilaki[] = $data[$key]->data;
+            foreach ($data as $key) {
+                if (strcasecmp($key->name, 'Laki-Laki')  == 0) {
+                    $chart_categories[] = $key->chart_categories;
+                    $lakilaki[] = $key->data;
                 } else {
-                    $perempuan[] = $data[$key]->data;
+                    $perempuan[] = $key->data;
                 }
             }
 
@@ -126,7 +173,7 @@ trait FormatChart
         }
 
         $response = [
-                "year" => $tahun,
+                "year" => $tahun['tahun'],
                 "widget_type" => $widget_type,
                 "widget_title" => $widget_title,
                 "widget_data" => $chart_data,

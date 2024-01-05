@@ -8,6 +8,7 @@ use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class SosialKependudukanController extends Controller
 {
@@ -33,10 +34,16 @@ class SosialKependudukanController extends Controller
     }
 
     public function mapJumlahPenduduk(Request $request){
-        $tahun = $request->input("tahun");
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
 
         try{
-            $data = $this->sosialService->getMapJumlahPenduduk($tahun, $this->idUsecase);
+            $data = $this->sosialService->getMapJumlahPenduduk($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
@@ -45,10 +52,16 @@ class SosialKependudukanController extends Controller
     }
 
     public function pieJumlahPenduduk(Request $request){
-        $tahun = $request->input("tahun");
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
 
         try{
-            $data = $this->sosialService->getPieJumlahPenduduk($tahun, $this->idUsecase);
+            $data = $this->sosialService->getPieJumlahPenduduk($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
@@ -57,10 +70,16 @@ class SosialKependudukanController extends Controller
     }
 
     public function barJumlahPenduduk(Request $request){
-        $tahun = $request->input("tahun");
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
 
         try{
-            $data = $this->sosialService->getBarJumlahPenduduk($tahun, $this->idUsecase);
+            $data = $this->sosialService->getBarJumlahPenduduk($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
@@ -72,7 +91,7 @@ class SosialKependudukanController extends Controller
         $tahun = $request->input("tahun");
 
         try{
-            $data = $this->sosialService->getDetailJumlahPenduduk($tahun, $this->idUsecase);
+            $data = $this->sosialService->getDetailJumlahPenduduk($this->idUsecase, $tahun);
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
@@ -93,9 +112,16 @@ class SosialKependudukanController extends Controller
     }
 
     public function stackedBarRentangUsia(Request $request){
-        $tahun = $request->input('tahun');
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
         try{
-            $data = $this->sosialService->getStackedBarRentangUsia($tahun, $this->idUsecase);
+            $data = $this->sosialService->getStackedBarRentangUsia($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
@@ -116,10 +142,16 @@ class SosialKependudukanController extends Controller
     }
 
     public function mapRasio(Request $request){
-        $tahun = $request->input('tahun');
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
 
         try{
-            $data = $this->sosialService->getMapRasio($tahun, $this->idUsecase);
+            $data = $this->sosialService->getMapRasio($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
@@ -128,10 +160,16 @@ class SosialKependudukanController extends Controller
     }
 
     public function barRasio(Request $request){
-        $tahun = $request->input('tahun');
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
 
         try{
-            $data = $this->sosialService->getBarRasio($tahun, $this->idUsecase);
+            $data = $this->sosialService->getBarRasio($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
@@ -139,6 +177,121 @@ class SosialKependudukanController extends Controller
         }
     }
     // End Rasio Jenis Kelamin
+
+    // Start Kepadatan Penduduk
+    public function tahunKepadatan(){
+        try{
+            $data = $this->sosialService->getTahunKepadatan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function mapKepadatan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getMapKepadatan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function barKepadatan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getBarKepadatan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End Kepadatan Penduduk
+
+    // Start IPM
+    public function periodeIPM(Request $request){
+        $validator = Validator::make($request->all(), [
+            'filter' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getPeriodeIPM($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function namaDaerahIPM(Request $request){
+        $validator = Validator::make($request->all(), [
+            'filter' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getNamaDaerahIPM($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function indikatorIPM(){
+        try{
+            $data = $this->sosialService->getIndikatorIPM($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function mapIPM(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+            'filter' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getMapIPM($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End IPM
 
     // Start Kemiskinan
     public function tahunKemiskinan(){

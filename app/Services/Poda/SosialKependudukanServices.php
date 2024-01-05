@@ -28,24 +28,24 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getMapJumlahPenduduk($tahun, $idUsecase){
-        $rows = $this->sosialRepositories->getMapJumlahPenduduk($tahun, $idUsecase);
+    public function getMapJumlahPenduduk($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getMapJumlahPenduduk($idUsecase, $tahun);
 
         $response = $this->mapLeaflet($rows);
 
         return $response;
     }
 
-    public function getPieJumlahPenduduk($tahun, $idUsecase){
-        $rows = $this->sosialRepositories->getPieJumlahPenduduk($tahun, $idUsecase);
+    public function getPieJumlahPenduduk($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getPieJumlahPenduduk($idUsecase, $tahun);
 
         $response = $this->pieChart($rows, $tahun);
 
         return $response;
     }
 
-    public function getBarJumlahPenduduk($tahun, $idUsecase){
-        $rows = $this->sosialRepositories->getBarJumlahPenduduk($tahun, $idUsecase);
+    public function getBarJumlahPenduduk($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getBarJumlahPenduduk($idUsecase, $tahun);
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
         $axis_title = "Jumlah Penduduk";
@@ -55,8 +55,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getDetailJumlahPenduduk($tahun, $idUsecase){
-        $rows = $this->sosialRepositories->getDetailJumlahPenduduk($tahun, $idUsecase);
+    public function getDetailJumlahPenduduk($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getDetailJumlahPenduduk($idUsecase, $tahun);
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
 
@@ -77,8 +77,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getStackedBarRentangUsia($tahun, $idUsecase){
-        $rows = $this->sosialRepositories->getStackedBarRentangUsia($tahun, $idUsecase);
+    public function getStackedBarRentangUsia($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getStackedBarRentangUsia($idUsecase, $tahun);
 
         $response = $this->stackedBarChart($tahun, $rows);
 
@@ -96,16 +96,16 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getMapRasio($tahun, $idUsecase){
-        $rows = $this->sosialRepositories->getMapRasio($tahun, $idUsecase);
+    public function getMapRasio($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getMapRasio($idUsecase, $tahun);
 
-        $response = $this->mapLeaflet($rows, $tahun);
+        $response = $this->mapLeaflet($rows);
 
         return $response;
     }
 
-    public function getBarRasio($tahun, $idUsecase){
-        $rows = $this->sosialRepositories->getBarRasio($tahun, $idUsecase);
+    public function getBarRasio($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getBarRasio($idUsecase, $tahun);
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
         $axis_title = "Rasio Jenis Kelamin";
@@ -115,6 +115,69 @@ class SosialKependudukanServices {
         return $response;
     }
     // End Rasio Jenis Kelamin
+
+    // Start Kepadatan Penduduk
+    public function getTahunKepadatan($idUsecase){
+        $rows = $this->sosialRepositories->getTahunKepadatan($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getMapKepadatan($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getMapKepadatan($idUsecase, $tahun);
+
+        $response = $this->mapLeaflet($rows);
+
+        return $response;
+    }
+
+    public function getBarKepadatan($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getBarKepadatan($idUsecase, $tahun);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+        $axis_title = "Kepadatan Penduduk";
+
+        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $axis_title);
+
+        return $response;
+    }
+    // End Kepadatan Penduduk
+
+    // Start IPM
+    public function getPeriodeIPM($idUsecase, $filter){
+        $rows = $this->sosialRepositories->getPeriodeIPM($idUsecase, $filter);
+
+        $response = $this->filterPeriode($rows);
+
+        return $response;
+    }
+
+    public function getNamaDaerahIPM($idUsecase, $filter){
+        $rows = $this->sosialRepositories->getNamaDaerahIPM($idUsecase, $filter);
+
+        $response = $this->listNamaDaerah($rows);
+
+        return $response;
+    }
+
+    public function getIndikatorIPM($idUsecase){
+        $rows = $this->sosialRepositories->getIndikatorIPM($idUsecase);
+
+        $response = $this->listIndikator($rows);
+
+        return $response;
+    }
+
+    public function getMapIPM($idUsecase, $params){
+        $rows = $this->sosialRepositories->getMapIPM($idUsecase, $params);
+
+        $response = $this->mapLeaflet($rows);
+
+        return $response;
+    }
+    // End IPM
 
     // Start Kemiskinan
     public function getTahunKemiskinan($idUsecase){
