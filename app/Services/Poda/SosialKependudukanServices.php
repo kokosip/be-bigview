@@ -19,6 +19,29 @@ class SosialKependudukanServices {
         $this->masterRepositories = $masterRepositories;
     }
 
+    public function getAxisTitleByIndikator($indikator)
+    {
+        switch($indikator){
+            case "Indeks Pembangunan Manusia":
+                $axis_title = "Indeks";
+                break;
+            case "Harapan Lama Sekolah":
+                $axis_title = "Lama Sekolah (Tahun)";
+                break;
+            case "Rata-rata Lama Sekolah":
+                $axis_title = "Lama Sekolah (Tahun)";
+                break;
+            case "Pengeluaran per Kapita":
+                $axis_title = "Pengeluaran (ribu rupiah/orang/tahun)";
+                break;
+            case "Usia Harapan Hidup":
+                $axis_title = "Rata-rata";
+                break;
+        }
+
+        return $axis_title;
+    }
+
     // Start Kependudukan
     public function getTahunJumlahPenduduk($idUsecase){
         $rows = $this->sosialRepositories->getTahunJumlahPenduduk($idUsecase);
@@ -166,6 +189,16 @@ class SosialKependudukanServices {
         $rows = $this->sosialRepositories->getIndikatorIPM($idUsecase);
 
         $response = $this->listIndikator($rows);
+
+        return $response;
+    }
+
+    public function getAreaIPM($idUsecase, $params){
+        $rows = $this->sosialRepositories->getAreaIPM($idUsecase, $params);
+
+        $axis_title = $this->getAxisTitleByIndikator($params['filter']);
+
+        $response = $this->areaChart($rows, $params, $axis_title);
 
         return $response;
     }

@@ -184,6 +184,40 @@ trait FormatChart
         return $response;
     }
 
+    public function areaChart($data, $params, $yaxis_title){
+        if(empty($data) && empty($params)){
+            throw new Exception('Detail Data tidak tersedia.');
+        }
+
+        foreach ($data as $key) {
+            $chart_category[] = $key->category;
+            $chart_data[] = round($key->data, 2);
+        }
+
+        $indikator_name = $params['filter'];
+
+        $chart_series[] = [
+            'name' => $indikator_name,
+            'data' => $chart_data
+        ];
+
+        $chart = $indikator_name . " Chart";
+        $response = [
+            'widget_type' => "chart_area",
+            'widget_title' => $chart,
+            'widget_subtitle' => "",
+            'widget_data' => [
+                "chart_categories" => $chart_category,
+                "chart_series" => $chart_series,
+                "xAxis_title" => "Tahun",
+                "yAxis_title" => $yaxis_title
+            ]
+
+        ];
+
+        return $response;
+    }
+
     public function tableDetail($data, $kode_kab_kota, $title) {
         if(empty($data)){
             throw new Exception('Detail Data tidak tersedia.');

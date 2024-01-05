@@ -171,6 +171,23 @@ class SosialKependudukanRepositories {
         return $db;
     }
 
+    public function getAreaIPM($idUsecase, $params){
+        $years = explode('-', $params['periode']);
+
+        $startYear = $years[0];
+        $endYear = $years[1]; 
+
+        $db = DB::table('mart_poda_social_ipm_area_chart')
+            ->select('city','tahun as category', 'data')
+            ->where('id_usecase', $idUsecase)
+            ->where('city', $params['nama_daerah'])
+            ->where('filter', $params['filter'])
+            ->whereBetween('tahun', [$startYear, $endYear])
+            ->get();
+
+        return $db;
+    }
+
     public function getMapIPM($idUsecase, $params){
         $db = DB::table('mart_poda_social_ipm_map_leaflet')
             ->select('city','lat','lon','ipm as data')

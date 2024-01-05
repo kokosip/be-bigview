@@ -125,7 +125,7 @@ Route::prefix('poda')->group(function() {
 
         // IPM
         Route::prefix('ipm')->group(function() {
-            Route::get('/area', [SosialKependudukanController::class, 'areaChartIPM']);
+            Route::get('/areas', [SosialKependudukanController::class, 'areaIPM']);
             Route::get('/maps', [SosialKependudukanController::class, 'mapIPM']);
             Route::get('/periode', [SosialKependudukanController::class, 'periodeIPM']);
             Route::get('/daerah', [SosialKependudukanController::class, 'namaDaerahIPM']);

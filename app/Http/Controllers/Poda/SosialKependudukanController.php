@@ -273,6 +273,26 @@ class SosialKependudukanController extends Controller
         }
     }
 
+    public function areaIPM(Request $request){
+        $validator = Validator::make($request->all(), [
+            'periode' => 'required',
+            'filter' => 'required',
+            'nama_daerah' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getAreaIPM($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
     public function mapIPM(Request $request){
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
