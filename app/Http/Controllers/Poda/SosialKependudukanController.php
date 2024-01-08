@@ -314,6 +314,16 @@ class SosialKependudukanController extends Controller
     // End IPM
 
     // Start Kemiskinan
+    public function indikatorKemiskinan(){
+        try{
+            $data = $this->sosialService->getIndikatorKemiskinan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
     public function tahunKemiskinan(){
         try{
             $data = $this->sosialService->getTahunKemiskinan($this->idUsecase);
@@ -323,4 +333,277 @@ class SosialKependudukanController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function daerahKemiskinan(){
+        try{
+            $data = $this->sosialService->getDaerahKemiskinan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function periodeKemiskinan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'filter' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getPeriodeKemiskinan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function mapKemiskinan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+            'filter' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getMapKemiskinan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function areaKemiskinan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'periode' => 'required',
+            'filter' => 'required',
+            'nama_daerah' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getAreaKemiskinan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End Kemiskinan
+
+    // Start Pekerjaan
+    public function indikatorPekerjaan(){
+        try{
+            $data = $this->sosialService->getIndikatorPekerjaan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function tahunPekerjaan(){
+        try{
+            $data = $this->sosialService->getTahunPekerjaan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function tahunJenisPekerjaan(){
+        try{
+            $data = $this->sosialService->getTahunJenisPekerjaan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function periodePekerjaan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'filter' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getPeriodePekerjaan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function barJenisPekerjaan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getBarJenisPekerjaan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function mapPekerjaan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+            'filter' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getMapPekerjaan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function linePekerjaan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'periode' => 'required',
+            'filter' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getLinePekerjaan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End Pekerjaan
+
+    // Start Pendidikan
+    public function tahunAjaranPendidikan(){
+        try{
+            $data = $this->sosialService->getTahunAjaranPendidikan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function tahunPendidikan(){
+        try{
+            $data = $this->sosialService->getTahunPendidikan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function jenjangPendidikan(){
+        try{
+            $data = $this->sosialService->getJenjangPendidikan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function indikatorPendidikan(){
+        try{
+            $data = $this->sosialService->getIndikatorPendidikan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function barPendidikan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+            'jenjang' => 'required',
+            'indikator' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getBarPendidikan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function barJenjangPendidikan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getBarJenjangPendidikan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function mapPendidikan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+            'jenjang' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getMapPendidikan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End Pendidikan
 }

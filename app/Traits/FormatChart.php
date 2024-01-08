@@ -21,7 +21,7 @@ trait FormatChart
 
     public function filterPeriode($data) {
         if(empty($data)){
-            throw new Exception('Filter Tahun Tidak tersedia.');
+            throw new Exception('Filter Periode Tidak tersedia.');
         }
 
         $maxYear = (int)$data->maxYear;
@@ -106,24 +106,29 @@ trait FormatChart
         return $response;
     }
 
-    public function barChart($data, $kode_kab_kota, $axis_title) {
+    public function barChart($data, $kode_kab_kota = "", $yaxis_title = "") {
         if(empty($data)){
-            throw new Exception('Detail Data tidak tersedia.');
+            throw new Exception('Detail Data bar chart tidak tersedia.');
         }
 
         foreach ($data as $key) {
-            $chart_category[] = $key->city;
+            $chart_category[] = $key->chart_categories;
             $chart_data[] = (float)($key->data);
         }
 
-        $level = substr($kode_kab_kota, 2) != "00" ? "Kecamatan" : "Kabupaten/Kota";
+
+        if($kode_kab_kota == ""){
+            $xaxis_title = "Jenis Pekerjaan";
+        } else {
+            $xaxis_title = substr($kode_kab_kota, 2) != "00" ? "Kecamatan" : "Kabupaten/Kota";
+        }
 
         $response = [
             "widget_data" => [
                 "chart_categories" => $chart_category,
                 "chart_data" => $chart_data,
-                "xAxis_title" => $level,
-                "yAxis_title" => $axis_title
+                "xAxis_title" => $xaxis_title,
+                "yAxis_title" => $yaxis_title
             ]
         ];
 
@@ -184,9 +189,9 @@ trait FormatChart
         return $response;
     }
 
-    public function areaChart($data, $params, $yaxis_title){
+    public function areaLineChart($data, $params, $yaxis_title, $type_chart){
         if(empty($data) && empty($params)){
-            throw new Exception('Detail Data tidak tersedia.');
+            throw new Exception("Data $type_chart tidak tersedia.");
         }
 
         foreach ($data as $key) {
@@ -203,7 +208,7 @@ trait FormatChart
 
         $chart = $indikator_name . " Chart";
         $response = [
-            'widget_type' => "chart_area",
+            'widget_type' => $type_chart,
             'widget_title' => $chart,
             'widget_subtitle' => "",
             'widget_data' => [

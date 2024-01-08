@@ -22,6 +22,7 @@ class SosialKependudukanServices {
     public function getAxisTitleByIndikator($indikator)
     {
         switch($indikator){
+            // IPM
             case "Indeks Pembangunan Manusia":
                 $axis_title = "Indeks";
                 break;
@@ -36,6 +37,23 @@ class SosialKependudukanServices {
                 break;
             case "Usia Harapan Hidup":
                 $axis_title = "Rata-rata";
+                break;
+
+            // Kemiskinan
+            case "Garis Kemiskinan":
+                $axis_title = "Garis Kemiskinan (Rp/Kapita/Bulan)";
+                break;
+            case "Jumlah Penduduk Miskin":
+            case "Jumlah Angkatan Kerja":
+                $axis_title = "Jumlah Orang";
+                break;
+            case "Persentase Penduduk Miskin":
+            case "Tingkat Pengangguran Terbuka":
+            case "Tingkat Partisipasi Angkatan Kerja":
+                $axis_title = "Persentase (%)";
+                break;
+            case "Gini Ratio":
+                $axis_title = "Indeks Gini Ratio";
                 break;
         }
 
@@ -54,7 +72,25 @@ class SosialKependudukanServices {
     public function getMapJumlahPenduduk($idUsecase, $tahun){
         $rows = $this->sosialRepositories->getMapJumlahPenduduk($idUsecase, $tahun);
 
-        $response = $this->mapLeaflet($rows);
+        $data = [];
+        foreach($rows as $item){
+            $output[$item->city]["city"] = $item->city;
+            $output[$item->city]["lat"] = $item->lat;
+            $output[$item->city]["lon"] = $item->lon;
+
+            $output[$item->city]["data"] = [
+                [
+                    "label" => "Laki-laki",
+                    "value" => $item->Lakilaki,
+                ],
+                [
+                    "label" => "Perempuan",
+                    "value" => $item->Perempuan,
+                ]
+            ];
+        }
+
+        $response = $this->mapLeaflet($output);
 
         return $response;
     }
@@ -122,7 +158,19 @@ class SosialKependudukanServices {
     public function getMapRasio($idUsecase, $tahun){
         $rows = $this->sosialRepositories->getMapRasio($idUsecase, $tahun);
 
-        $response = $this->mapLeaflet($rows);
+        $data = [];
+        foreach($rows as $item){
+            $output[$item->city]["city"] = $item->city;
+            $output[$item->city]["lat"] = $item->lat;
+            $output[$item->city]["lon"] = $item->lon;
+
+            $output[$item->city]["data"][] = [
+                "label" => "Rasio Jenis Kelamin",
+                "value" => $item->rasio
+            ];
+        }
+
+        $response = $this->mapLeaflet($output);
 
         return $response;
     }
@@ -151,7 +199,18 @@ class SosialKependudukanServices {
     public function getMapKepadatan($idUsecase, $tahun){
         $rows = $this->sosialRepositories->getMapKepadatan($idUsecase, $tahun);
 
-        $response = $this->mapLeaflet($rows);
+        foreach($rows as $item){
+            $output[$item->city]["city"] = $item->city;
+            $output[$item->city]["lat"] = $item->lat;
+            $output[$item->city]["lon"] = $item->lon;
+
+            $output[$item->city]["data"][] = [
+                "label" => "Jumlah Kepadatan Penduduk",
+                "value" => $item->nilai
+            ];
+        }
+
+        $response = $this->mapLeaflet($output);
 
         return $response;
     }
@@ -198,7 +257,7 @@ class SosialKependudukanServices {
 
         $axis_title = $this->getAxisTitleByIndikator($params['filter']);
 
-        $response = $this->areaChart($rows, $params, $axis_title);
+        $response = $this->areaLineChart($rows, $params, $axis_title, "chart_area");
 
         return $response;
     }
@@ -206,13 +265,32 @@ class SosialKependudukanServices {
     public function getMapIPM($idUsecase, $params){
         $rows = $this->sosialRepositories->getMapIPM($idUsecase, $params);
 
-        $response = $this->mapLeaflet($rows);
+        foreach ($rows as $item) {
+            $output[$item->city]["city"] = $item->city;
+            $output[$item->city]["lat"] = $item->lat;
+            $output[$item->city]["lon"] = $item->lon;
+
+            $output[$item->city]["data"][] = [
+                "label" => "Indeks Pembangunan",
+                "value" => $item->data
+            ];
+        }
+
+        $response = $this->mapLeaflet($output);
 
         return $response;
     }
     // End IPM
 
     // Start Kemiskinan
+    public function getIndikatorKemiskinan($idUsecase){
+        $rows = $this->sosialRepositories->getIndikatorKemiskinan($idUsecase);
+
+        $response = $this->listIndikator($rows);
+
+        return $response;
+    }
+
     public function getTahunKemiskinan($idUsecase){
         $rows = $this->sosialRepositories->getTahunKemiskinan($idUsecase);
 
@@ -220,5 +298,196 @@ class SosialKependudukanServices {
 
         return $response;
     }
+
+    public function getDaerahKemiskinan($idUsecase){
+        $rows = $this->sosialRepositories->getDaerahKemiskinan($idUsecase);
+
+        $response = $this->listNamaDaerah($rows);
+
+        return $response;
+    }
+
+    public function getPeriodeKemiskinan($idUsecase, $filter){
+        $rows = $this->sosialRepositories->getPeriodeKemiskinan($idUsecase, $filter);
+
+        $response = $this->filterPeriode($rows);
+
+        return $response;
+    }
+
+    public function getMapKemiskinan($idUsecase, $params){
+        $rows = $this->sosialRepositories->getMapKemiskinan($idUsecase, $params);
+
+        $data = [];
+        foreach($rows as $item){
+            $output[$item->city]["city"] = $item->city;
+            $output[$item->city]["lat"] = $item->lat;
+            $output[$item->city]["lon"] = $item->lon;
+
+            $output[$item->city]["data"][] = [
+                "label" => "Jumlah Kemiskinan",
+                "value" => $item->data
+            ];
+        }
+
+        $response = $this->mapLeaflet($output);
+
+        return $response;
+    }
+
+    public function getAreaKemiskinan($idUsecase, $params){
+        $rows = $this->sosialRepositories->getAreaKemiskinan($idUsecase, $params);
+
+        $axis_title = $this->getAxisTitleByIndikator($params['filter']);
+
+        $response = $this->areaLineChart($rows, $params, $axis_title, "chart_area");
+
+        return $response;
+    }
     // End Kemiskinan
+
+    // Start Pekerjaan dan Angkatan Kerja
+    public function getIndikatorPekerjaan($idUsecase){
+        $rows = $this->sosialRepositories->getIndikatorPekerjaan($idUsecase);
+
+        $response = $this->listIndikator($rows);
+
+        return $response;
+    }
+
+    public function getTahunPekerjaan($idUsecase){
+        $rows = $this->sosialRepositories->getTahunPekerjaan($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getTahunJenisPekerjaan($idUsecase){
+        $rows = $this->sosialRepositories->getTahunJenisPekerjaan($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getPeriodePekerjaan($idUsecase, $filter){
+        $rows = $this->sosialRepositories->getPeriodePekerjaan($idUsecase, $filter);
+
+        $response = $this->filterPeriode($rows);
+
+        return $response;
+    }
+
+    public function getBarJenisPekerjaan($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getBarJenisPekerjaan($idUsecase, $tahun);
+
+        $response = $this->barChart($rows, "", "Jumlah Jiwa");
+
+        return $response;
+    }
+
+    public function getMapPekerjaan($idUsecase, $params){
+        $rows = $this->sosialRepositories->getMapPekerjaan($idUsecase, $params);
+
+        foreach($rows as $item){
+            $output[$item->city]["city"] = $item->city;
+            $output[$item->city]["lat"] = $item->lat;
+            $output[$item->city]["lon"] = $item->lon;
+
+            $output[$item->city]["data"][] = [
+                "label" => $params['filter'],
+                "value" => $item->data
+            ];
+        }
+
+        $response = $this->mapLeaflet($output);
+
+        return $response;
+    }
+
+    public function getLinePekerjaan($idUsecase, $params){
+        $rows = $this->sosialRepositories->getLinePekerjaan($idUsecase, $params);
+
+        $axis_title = $this->getAxisTitleByIndikator($params['filter']);
+
+        $response = $this->areaLineChart($rows, $params, $axis_title, "chart_line_series");
+
+        return $response;
+    }
+    // End Pekerjaan dan Angkatan Kerja
+
+    // Start Pendidikan
+    public function getTahunAjaranPendidikan($idUsecase){
+        $rows = $this->sosialRepositories->getTahunAjaranPendidikan($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getTahunPendidikan($idUsecase){
+        $rows = $this->sosialRepositories->getTahunPendidikan($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getJenjangPendidikan($idUsecase){
+        $rows = $this->sosialRepositories->getJenjangPendidikan($idUsecase);
+
+        $response = $this->listIndikator($rows);
+
+        return $response;
+    }
+
+    public function getIndikatorPendidikan($idUsecase){
+        $rows = $this->sosialRepositories->getIndikatorPendidikan($idUsecase);
+
+        $response = $this->listIndikator($rows);
+
+        return $response;
+    }
+
+    public function getBarPendidikan($idUsecase, $params){
+        $rows = $this->sosialRepositories->getBarPendidikan($idUsecase, $params);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+        $axis_title = "Jumlah";
+
+        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $axis_title);
+
+        return $response;
+    }
+
+    public function getBarJenjangPendidikan($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getBarJenjangPendidikan($idUsecase, $tahun);
+
+        $axis_title = "Jenjang Pendidikan";
+
+        $response = $this->barChart($rows, "", $axis_title);
+
+        return $response;
+    }
+
+    public function getMapPendidikan($idUsecase, $params){
+        $rows = $this->sosialRepositories->getMapPendidikan($idUsecase, $params);
+
+        foreach ($rows as $item) {
+            $output[$item->city]["city"] = $item->city;
+            $output[$item->city]["lat"] = $item->lat;
+            $output[$item->city]["lon"] = $item->lon;
+
+            $output[$item->city]["data"][] = [
+                "jenis" => $item->jenis,
+                "value" => $item->value
+            ];
+        }
+
+        $response = $this->mapLeaflet($output);
+
+        return $response;
+    }
+    // End Pendidikan
 }

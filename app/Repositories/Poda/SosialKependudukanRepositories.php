@@ -39,7 +39,7 @@ class SosialKependudukanRepositories {
 
     public function getBarJumlahPenduduk($idUsecase, $tahun){
         $db = DB::table('mart_poda_social_kependudukan_bar_chart')
-            ->select('city', 'datacontent as data')
+            ->select('city as chart_categories', 'datacontent as data')
             ->where('tahun', $tahun['tahun'])
             ->where('id_usecase', $idUsecase)
             ->get();
@@ -92,7 +92,7 @@ class SosialKependudukanRepositories {
 
     public function getMapRasio($idUsecase, $tahun){
         $db = DB::table('mart_poda_social_rasio_jk_map_leaflet')
-            ->select('city', 'lat', 'lon', 'rasio as jumlah')
+            ->select('city', 'lat', 'lon', 'rasio')
             ->where('tahun', $tahun['tahun'])
             ->where('id_usecase', $idUsecase)
             ->get();
@@ -102,7 +102,7 @@ class SosialKependudukanRepositories {
 
     public function getBarRasio($idUsecase, $tahun){
         $db = DB::table('mart_poda_social_rasio_jk_bar_chart')
-            ->select('chart_categories as city', 'data')
+            ->select('chart_categories', 'data')
             ->where('tahun', $tahun['tahun'])
             ->where('id_usecase', $idUsecase)
             ->get();
@@ -122,8 +122,8 @@ class SosialKependudukanRepositories {
     }
 
     public function getMapKepadatan($idUsecase, $tahun){
-        $db = DB::table('mart_poda_social_rasio_jk_map_leaflet')
-            ->select('city', 'lat', 'lon', 'rasio as jumlah')
+        $db = DB::table('mart_poda_social_kepadatan_penduduk_map_leaflet')
+            ->select('city', 'lat', 'lon', 'nilai')
             ->where('tahun', $tahun['tahun'])
             ->where('id_usecase', $idUsecase)
             ->get();
@@ -132,8 +132,8 @@ class SosialKependudukanRepositories {
     }
 
     public function getBarKepadatan($idUsecase, $tahun){
-        $db = DB::table('mart_poda_social_rasio_jk_bar_chart')
-            ->select('chart_categories as city', 'data')
+        $db = DB::table('mart_poda_social_kepadatan_penduduk_bar_chart')
+            ->select('chart_categories', 'data')
             ->where('tahun', $tahun['tahun'])
             ->where('id_usecase', $idUsecase)
             ->get();
@@ -175,7 +175,7 @@ class SosialKependudukanRepositories {
         $years = explode('-', $params['periode']);
 
         $startYear = $years[0];
-        $endYear = $years[1]; 
+        $endYear = $years[1];
 
         $db = DB::table('mart_poda_social_ipm_area_chart')
             ->select('city','tahun as category', 'data')
@@ -201,6 +201,14 @@ class SosialKependudukanRepositories {
     // End IPM
 
     // Start Kemiskinan
+    public function getIndikatorKemiskinan($idUsecase){
+        $db = DB::table('mart_poda_social_kemiskinan_filter_indikator')
+            ->distinct()->where('id_usecase', $idUsecase)
+            ->pluck('nama');
+
+        return $db;
+    }
+
     public function getTahunKemiskinan($idUsecase){
         $db = DB::table('mart_poda_social_kemiskinan_filter_tahun')
             ->distinct()->where('id_usecase', $idUsecase)
@@ -210,14 +218,194 @@ class SosialKependudukanRepositories {
         return $db;
     }
 
-    public function getMapKemiskinan($tahun, $idUsecase){
+    public function getDaerahKemiskinan($idUsecase){
+        $db = DB::table('mart_poda_social_kemiskinan_filterkab')
+            ->distinct()->where('id_usecase', $idUsecase)
+            ->pluck('city');
+
+        return $db;
+    }
+
+    public function getPeriodeKemiskinan($idUsecase, $filter){
+        $db = DB::table('mart_poda_social_kemiskinan_filter_periode')
+            ->select('startYear', 'endYear', 'minYear', 'maxYear')
+            ->where('id_usecase', $idUsecase)
+            ->where('filter', $filter['filter'])
+            ->first();
+
+        return $db;
+    }
+
+    public function getMapKemiskinan($idUsecase, $params){
         $db = DB::table('mart_poda_social_kemiskinan_map_leaflet')
-            ->select('city', 'filter', 'value', 'lat', 'lon')
+            ->select('city', 'value as data', 'lat', 'lon')
+            ->where('tahun', $params['tahun'])
+            ->where('filter', $params['filter'])
+            ->where('id_usecase', $idUsecase)
+            ->get();
+
+        return $db;
+    }
+
+    public function getAreaKemiskinan($idUsecase, $params){
+        $years = explode('-', $params['periode']);
+
+        $startYear = $years[0];
+        $endYear = $years[1];
+
+        $db = DB::table('mart_poda_social_kemiskinan_area_chart')
+            ->select('kabupaten_kota as city','category', 'data')
+            ->where('id_usecase', $idUsecase)
+            ->where('kabupaten_kota', $params['nama_daerah'])
+            ->where('filter', $params['filter'])
+            ->whereBetween('tahun', [$startYear, $endYear])
+            ->get();
+
+        return $db;
+    }
+    // End Kemiskinan
+
+    // Start Pekerjaan dan Angkatan Kerja
+    public function getIndikatorPekerjaan($idUsecase){
+        $db = DB::table('mart_poda_social_pekerjaan_filter_indikator')
+            ->distinct()->where('id_usecase', $idUsecase)
+            ->pluck('indikator');
+
+        return $db;
+    }
+
+    public function getTahunPekerjaan($idUsecase){
+        $db = DB::table('mart_poda_social_pekerjaan_filter_year_leaflet')
+            ->distinct()->where('id_usecase', $idUsecase)
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
+        return $db;
+    }
+
+    public function getTahunJenisPekerjaan($idUsecase){
+        $db = DB::table('master_poda_social_pekerjaan_type')
+            ->distinct()->where('id_usecase', $idUsecase)
+            ->orderBy('year', 'desc')
+            ->pluck('year as tahun');
+
+        return $db;
+    }
+
+    public function getPeriodePekerjaan($idUsecase, $filter){
+        $db = DB::table('mart_poda_social_pekerjaan_periode')
+            ->select('startYear', 'endYear', 'minYear', 'maxYear')
+            ->where('id_usecase', $idUsecase)
+            ->where('indikator', $filter['filter'])
+            ->first();
+
+        return $db;
+    }
+
+    public function getBarJenisPekerjaan($idUsecase, $tahun){
+        $db = DB::table('master_poda_social_pekerjaan_type')
+            ->selectRaw("jenis as chart_categories, sum(datacontent) as data")
+            ->where('year', $tahun['tahun'])
+            ->where('id_usecase', $idUsecase)
+            ->groupBy('jenis')
+            ->get();
+
+        return $db;
+    }
+
+    public function getMapPekerjaan($idUsecase, $params){
+        $db = DB::table('mart_poda_social_pekerjaan_map_leaflet')
+            ->select('city', 'data', 'lat', 'lon')
+            ->where('tahun', $params['tahun'])
+            ->where('id_usecase', $idUsecase)
+            ->where('indikator', $params['filter'])
+            ->get();
+
+        return $db;
+    }
+
+    public function getLinePekerjaan($idUsecase, $params){
+        $years = explode('-', $params['periode']);
+
+        $startYear = $years[0];
+        $endYear = $years[1];
+
+        $db = DB::table('mart_poda_social_pekerjaan_line_chart')
+            ->select('tahun as category', 'data')
+            ->where('id_usecase', $idUsecase)
+            ->where('indikator', $params['filter'])
+            ->whereBetween('tahun', [$startYear, $endYear])
+            ->get();
+
+        return $db;
+    }
+    // End Pekerjaan dan Angkatan Kerja
+
+    // Start Pendidikan
+    public function getTahunAjaranPendidikan($idUsecase){
+        $db = DB::table('mart_poda_social_pendidikan_filter_tahun_ajaran')
+            ->distinct()->where('id_usecase', $idUsecase)
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
+        return $db;
+    }
+
+    public function getTahunPendidikan($idUsecase){
+        $db = DB::table('mart_poda_social_pendidikan_filter_tahun')
+            ->distinct()->where('id_usecase', $idUsecase)
+            ->orderBy('years', 'desc')
+            ->pluck('years');
+
+        return $db;
+    }
+
+    public function getJenjangPendidikan($idUsecase){
+        $db = DB::table('mart_poda_social_pendidikan_filter_jenjang')
+            ->distinct()->where('id_usecase', $idUsecase)
+            ->pluck('nama');
+
+        return $db;
+    }
+
+    public function getIndikatorPendidikan($idUsecase){
+        $db = DB::table('mart_poda_social_pendidikan_filter_indikator')
+            ->distinct()->where('id_usecase', $idUsecase)
+            ->pluck('nama');
+
+        return $db;
+    }
+
+    public function getBarPendidikan($idUsecase, $params){
+        $db = DB::table('mart_poda_social_pendidikan_bar_chart')
+            ->select('city as chart_categories', 'data')
+            ->where('tahun', $params['tahun'])
+            ->where('sekolah', $params['jenjang'])
+            ->where('jenis', $params['indikator'])
+            ->where('id_usecase', $idUsecase)
+            ->get();
+
+        return $db;
+    }
+
+    public function getBarJenjangPendidikan($idUsecase, $tahun){
+        $db = DB::table('mart_poda_social_pendidikan_jenjang_bar_chart')
+            ->select('sekolah as chart_categories', 'data')
             ->where('tahun', $tahun)
             ->where('id_usecase', $idUsecase)
             ->get();
 
         return $db;
     }
-    // End Kemiskinan
+
+    public function getMapPendidikan($idUsecase, $params){
+        $db = DB::table('mart_poda_social_pendidikan_map_leaflet')
+            ->select('city', 'jenis', 'lat', 'lon', 'value')
+            ->where('tahun', $params['tahun'])
+            ->where('sekolah', $params['jenjang'])
+            ->where('id_usecase', $idUsecase)
+            ->get();
+
+        return $db;
+    }
 }
