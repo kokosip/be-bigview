@@ -490,4 +490,60 @@ class SosialKependudukanServices {
         return $response;
     }
     // End Pendidikan
+
+    // Start Kesehatan
+    public function getTahunKesehatan($idUsecase){
+        $rows = $this->sosialRepositories->getTahunKesehatan($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getIndikatorKesehatan($idUsecase){
+        $rows = $this->sosialRepositories->getIndikatorKesehatan($idUsecase);
+
+        $response = $this->listIndikator($rows);
+
+        return $response;
+    }
+
+    public function getPeriodeKesehatan($idUsecase){
+        $rows = $this->sosialRepositories->getPeriodeKesehatan($idUsecase);
+
+        $response = $this->filterPeriode($rows);
+
+        return $response;
+    }
+
+    public function getBarKesehatan($idUsecase, $params){
+        $rows = $this->sosialRepositories->getBarKesehatan($idUsecase, $params);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+        $axis_title = "Jumlah";
+
+        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $axis_title);
+
+        return $response;
+    }
+
+    public function getMapKesehatan($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getMapKesehatan($idUsecase, $tahun);
+
+        foreach ($rows as $item) {
+            $output[$item->city]["city"] = $item->city;
+            $output[$item->city]["lat"] = $item->lat;
+            $output[$item->city]["lon"] = $item->lon;
+
+            $output[$item->city]["data"][] = [
+                "jenis" => $item->jenis,
+                "value" => $item->data
+            ];
+        }
+
+        $response = $this->mapLeaflet($output);
+
+        return $response;
+    }
+    // End Kesehatan
 }

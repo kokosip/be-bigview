@@ -165,6 +165,16 @@ Route::prefix('poda')->group(function() {
             Route::get('/bars', [SosialKependudukanController::class, 'barPendidikan']);
             Route::get('/bars/jenjang', [SosialKependudukanController::class, 'barJenjangPendidikan']);
         });
+
+        // Kesehatan
+        Route::prefix('kesehatan')->group(function() {
+            Route::get('/tahun', [SosialKependudukanController::class, 'tahunKesehatan']);
+            Route::get('/periode', [SosialKependudukanController::class, 'periodeKesehatan']);
+            Route::get('/indikator', [SosialKependudukanController::class, 'indikatorKesehatan']);
+            Route::get('/maps', [SosialKependudukanController::class, 'mapKesehatan']);
+            Route::get('/bars', [SosialKependudukanController::class, 'barKesehatan']);
+            Route::get('/bars/jenjang', [SosialKependudukanController::class, 'barJenjangPendidikan']);
+        });
     });
 
     Route::prefix('ekonomi')->group(function() {

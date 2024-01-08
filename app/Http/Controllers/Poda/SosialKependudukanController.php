@@ -606,4 +606,73 @@ class SosialKependudukanController extends Controller
         }
     }
     // End Pendidikan
+
+    // Start Kesehatan
+    public function tahunKesehatan(){
+        try{
+            $data = $this->sosialService->getTahunKesehatan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function indikatorKesehatan(){
+        try{
+            $data = $this->sosialService->getIndikatorKesehatan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function periodeKesehatan(Request $request){
+        try{
+            $data = $this->sosialService->getPeriodeKesehatan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function barKesehatan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+            'filter' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getBarKesehatan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function mapKesehatan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getMapKesehatan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End Kesehatan
 }

@@ -408,4 +408,55 @@ class SosialKependudukanRepositories {
 
         return $db;
     }
+    // End Pendidikan
+
+    // Start Kesehatan
+    public function getTahunKesehatan($idUsecase){
+        $db = DB::table('mart_poda_social_kesehatan_filter_tahun')
+            ->distinct()->where('id_usecase', $idUsecase)
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
+        return $db;
+    }
+
+    public function getIndikatorKesehatan($idUsecase){
+        $db = DB::table('mart_poda_social_kesehatan_filter_faskes')
+            ->distinct()->where('id_usecase', $idUsecase)
+            ->orderBy('jenis', 'desc')
+            ->pluck('jenis');
+
+        return $db;
+    }
+
+    public function getPeriodeKesehatan($idUsecase){
+        $db = DB::table('mart_poda_social_kesehatan_filter_periode')
+            ->select('startYear', 'endYear', 'minYear', 'maxYear')
+            ->where('id_usecase', $idUsecase)
+            ->first();
+
+        return $db;
+    }
+
+    public function getBarKesehatan($idUsecase, $params){
+        $db = DB::table('mart_poda_social_kesehatan_bar_chart')
+            ->select('chart_categories','chart_data as data')
+            ->where('id_usecase', $idUsecase)
+            ->where('tahun', $params['tahun'])
+            ->where('widget_title', $params['filter'])
+            ->get();
+
+        return $db;
+    }
+
+    public function getMapKesehatan($idUsecase, $tahun){
+        $db = DB::table('mart_poda_social_kesehatan_map_leaflet')
+            ->select('city','lat','lon','jenis', 'data')
+            ->where('id_usecase', $idUsecase)
+            ->where('tahun', $tahun)
+            ->get();
+
+        return $db;
+    }
+    // End Kesehatan
 }
