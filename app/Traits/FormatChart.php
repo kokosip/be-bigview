@@ -116,7 +116,6 @@ trait FormatChart
             $chart_data[] = (float)($key->data);
         }
 
-
         if($kode_kab_kota == ""){
             $xaxis_title = "Jenis Pekerjaan";
         } else {
@@ -131,6 +130,42 @@ trait FormatChart
                 "yAxis_title" => $yaxis_title
             ]
         ];
+
+        return $response;
+    }
+
+    public function barColumnChart($data, $chart_type) {
+        if(empty($data)){
+            throw new Exception('Detail Data Column Bar chart tidak tersedia.');
+        }
+
+        foreach ($data as $key) {
+            $chart_category[] = $key->tahun;
+            $chart_data[$key->jenis]['nama'] = $key->jenis;
+            $chart_data[$key->jenis]["data"][] = $key->data;
+
+            if($chart_type == 'dual-axes'){
+                if($key->jenis == 'Jumlah'){
+                    $chart_data[$key->jenis]["yAxis_title"] = 'Jumlah Penduduk';
+                } else {
+                    $chart_data[$key->jenis]["yAxis_title"] = 'Persentase (%)';
+                }
+            }
+        }
+
+        $response = [
+            "widget_type" => $chart_type,
+            "widget_data" => [
+                "chart_categories" => array_unique($chart_category),
+                "chart_data" => array_values($chart_data),
+                "xAxis_title" => "Tahun",
+                "yAxis_title" => "Jumlah"
+            ]
+        ];
+
+        if($chart_type == 'dual-axes'){
+            unset($response["widget_data"]["yAxis_title"]);
+        }
 
         return $response;
     }

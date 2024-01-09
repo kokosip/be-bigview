@@ -90,7 +90,7 @@ class SosialKependudukanServices {
             ];
         }
 
-        $response = $this->mapLeaflet($output);
+        $response = $this->mapLeaflet(array_values($output));
 
         return $response;
     }
@@ -146,6 +146,34 @@ class SosialKependudukanServices {
 
     // End Rentang Usia
 
+    // Start Laju Pertumbuhan
+    public function getPeriodeLaju($idUsecase){
+        $rows = $this->sosialRepositories->getPeriodeLaju($idUsecase);
+
+        $response = $this->filterPeriode($rows);
+
+        return $response;
+    }
+
+    public function getNamaDaerahLaju($idUsecase){
+        $rows = $this->sosialRepositories->getNamaDaerahLaju($idUsecase);
+
+        $response = $this->listNamaDaerah($rows);
+
+        return $response;
+    }
+
+    public function getDualAxesLaju($idUsecase, $params){
+        $rows = $this->sosialRepositories->getDualAxesLaju($idUsecase,$params);
+
+        $chart_type = "dual-axes";
+
+        $response = $this->barColumnChart($rows, $chart_type);
+
+        return $response;
+    }
+    // End Laju Pertumbuhan
+
     // Start Rasio Jenis Kelamin
     public function getTahunRasio($idUsecase){
         $rows = $this->sosialRepositories->getTahunRasio($idUsecase);
@@ -170,7 +198,7 @@ class SosialKependudukanServices {
             ];
         }
 
-        $response = $this->mapLeaflet($output);
+        $response = $this->mapLeaflet(array_values($output));
 
         return $response;
     }
@@ -210,7 +238,7 @@ class SosialKependudukanServices {
             ];
         }
 
-        $response = $this->mapLeaflet($output);
+        $response = $this->mapLeaflet(array_values($output));
 
         return $response;
     }
@@ -276,7 +304,7 @@ class SosialKependudukanServices {
             ];
         }
 
-        $response = $this->mapLeaflet($output);
+        $response = $this->mapLeaflet(array_values($output));
 
         return $response;
     }
@@ -330,7 +358,7 @@ class SosialKependudukanServices {
             ];
         }
 
-        $response = $this->mapLeaflet($output);
+        $response = $this->mapLeaflet(array_values($output));
 
         return $response;
     }
@@ -401,7 +429,7 @@ class SosialKependudukanServices {
             ];
         }
 
-        $response = $this->mapLeaflet($output);
+        $response = $this->mapLeaflet(array_values($output));
 
         return $response;
     }
@@ -485,7 +513,7 @@ class SosialKependudukanServices {
             ];
         }
 
-        $response = $this->mapLeaflet($output);
+        $response = $this->mapLeaflet(array_values($output));
 
         return $response;
     }
@@ -527,6 +555,16 @@ class SosialKependudukanServices {
         return $response;
     }
 
+    public function getBarColumnKesehatan($idUsecase, $params){
+        $rows = $this->sosialRepositories->getBarColumnKesehatan($idUsecase, $params);
+
+        $chart_type = "chart-column-series";
+
+        $response = $this->barColumnChart($rows, $chart_type);
+
+        return $response;
+    }
+
     public function getMapKesehatan($idUsecase, $tahun){
         $rows = $this->sosialRepositories->getMapKesehatan($idUsecase, $tahun);
 
@@ -541,7 +579,7 @@ class SosialKependudukanServices {
             ];
         }
 
-        $response = $this->mapLeaflet($output);
+        $response = $this->mapLeaflet(array_values($output));
 
         return $response;
     }

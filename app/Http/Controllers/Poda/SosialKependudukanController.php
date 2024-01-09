@@ -130,6 +130,47 @@ class SosialKependudukanController extends Controller
     }
     // End Rentang Usia
 
+    // Start Laju Pertumbuhan
+    public function periodeLaju(){
+        try{
+            $data = $this->sosialService->getPeriodeLaju($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function namaDaerahLaju(){
+        try{
+            $data = $this->sosialService->getNamaDaerahLaju($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function dualAxesLaju(Request $request){
+        $validator = Validator::make($request->all(), [
+            'periode' => 'required',
+            'nama_daerah' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getDualAxesLaju($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End Laju Pertumbuhan
+
     // Start Rasio Jenis Kelamin
     public function tahunRasio(){
         try{
@@ -650,6 +691,24 @@ class SosialKependudukanController extends Controller
 
         try{
             $data = $this->sosialService->getBarKesehatan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function barColumnKesehatan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'periode' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getBarColumnKesehatan($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){

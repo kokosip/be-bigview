@@ -102,8 +102,9 @@ Route::prefix('poda')->group(function() {
 
         // Laju Pertumbuhan Penduduk
         Route::prefix('laju')->group(function() {
-            Route::get('/dual-chart', [SosialKependudukanController::class, 'dualChartLaju']);
-            Route::get('/tahun', [SosialKependudukanController::class, 'tahunLaju']);
+            Route::get('/dual-axes', [SosialKependudukanController::class, 'dualAxesLaju']);
+            Route::get('/periode', [SosialKependudukanController::class, 'periodeLaju']);
+            Route::get('/daerah', [SosialKependudukanController::class, 'namaDaerahLaju']);
             Route::get('/details', [SosialKependudukanController::class, 'detailLaju']);
         });
 
@@ -173,7 +174,7 @@ Route::prefix('poda')->group(function() {
             Route::get('/indikator', [SosialKependudukanController::class, 'indikatorKesehatan']);
             Route::get('/maps', [SosialKependudukanController::class, 'mapKesehatan']);
             Route::get('/bars', [SosialKependudukanController::class, 'barKesehatan']);
-            Route::get('/bars/jenjang', [SosialKependudukanController::class, 'barJenjangPendidikan']);
+            Route::get('/bars-column', [SosialKependudukanController::class, 'barColumnKesehatan']);
         });
     });
 

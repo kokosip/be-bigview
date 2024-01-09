@@ -80,6 +80,43 @@ class SosialKependudukanRepositories {
     }
     // End Rentang Usia
 
+    // Start Laju Pertumbuhan
+    public function getPeriodeLaju($idUsecase){
+        $db = DB::table('mart_poda_social_lpp_filter_periode')
+            ->select('startYear', 'endYear', 'minYear', 'maxYear')
+            ->where('id_usecase', $idUsecase)
+            ->first();
+
+        return $db;
+    }
+
+    public function getNamaDaerahLaju($idUsecase){
+        $db = DB::table('mart_poda_social_lpp_filter_kabkot')->distinct()
+            ->where('id_usecase', $idUsecase)
+            ->orderBy('city', 'asc')
+            ->pluck('city');
+
+        return $db;
+    }
+
+    public function getDualAxesLaju($idUsecase, $params){
+        $year = explode('-', $params['periode']);
+
+        $startYear = $year[0];
+        $endYear = $year[1];
+
+        $db = DB::table('mart_poda_social_lpp_chart_line_column')
+            ->select('city', 'jenis', 'tahun', 'merged_data as data')
+            ->where('id_usecase', $idUsecase)
+            ->whereBetween('tahun', [$startYear, $endYear])
+            ->where('city', $params['nama_daerah'])
+            ->orderBy('city', 'asc', 'jenis', 'asc', 'tahun', 'desc')
+            ->get();
+
+        return $db;
+    }
+    // End Laju Pertumbuhan
+
     // Start Rasio Jenis Kelamin
     public function getTahunRasio($idUsecase){
         $db = DB::table('mart_poda_social_rasio_jk_filter_tahun')
@@ -444,6 +481,21 @@ class SosialKependudukanRepositories {
             ->where('id_usecase', $idUsecase)
             ->where('tahun', $params['tahun'])
             ->where('widget_title', $params['filter'])
+            ->get();
+
+        return $db;
+    }
+
+    public function getBarColumnKesehatan($idUsecase, $periode){
+        $years = explode('-', $periode['periode']);
+
+        $startYear = $years[0];
+        $endYear = $years[1];
+
+        $db = DB::table('mart_poda_social_kesehatan_column_chart')
+            ->select('jenis','tahun','data')
+            ->where('id_usecase', $idUsecase)
+            ->whereBetween('tahun', [$startYear, $endYear])
             ->get();
 
         return $db;
