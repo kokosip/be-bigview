@@ -6,15 +6,22 @@ use Exception;
 
 trait FormatChart
 {
-    public function filterTahun($data) {
+    public function filterTahun($data, $is_month = false) {
         if(empty($data)){
             throw new Exception('Filter Tahun Tidak tersedia.');
         }
 
-        $response = [
-            'years' => $data,
-            'selected_years' => $data[0]
-        ];
+        if($is_month){
+            $response = [
+                'month' => $data,
+                'selected_month' => $data[count($data) - 1]
+            ];
+        } else {
+            $response = [
+                'years' => $data,
+                'selected_years' => $data[0]
+            ];
+        }
 
         return $response;
     }
@@ -37,6 +44,35 @@ trait FormatChart
             "endYear" => $maxYear,
             "minYear" => $minYear,
             "maxYear" => $maxYear,
+        ];
+
+        return $response;
+    }
+
+    public function filterMonthPeriode($data){
+        if(empty($data)){
+            throw new Exception('Filter Periode Tidak tersedia.');
+        }
+
+        $idx = 2;
+        if(count($data) < 2){
+            $idx = count($data) - 1;
+        }
+
+        $startYear = date('Y', strtotime($data[$idx]->id_bulan));
+        $endYear = date('Y', strtotime($data[0]->id_bulan));
+        $minYear = date('Y', strtotime($data[count($data) - 1]->id_bulan));
+        $startMonth = date('m', strtotime($data[$idx]->id_bulan));
+        $endMonth = date('m', strtotime($data[0]->id_bulan));
+
+        $response = [
+            'startYear' => $startYear,
+            'endYear' => $endYear,
+            'minYear' => $minYear,
+            'maxYear' => $endYear,
+            'months' => true,
+            'startMonth' => (int)$startMonth,
+            'endMonth' => (int)$endMonth
         ];
 
         return $response;
@@ -134,22 +170,27 @@ trait FormatChart
         return $response;
     }
 
-    public function barColumnChart($data, $chart_type) {
+    public function barColumnChart($data, $chart_type, $params = null) {
         if(empty($data)){
             throw new Exception('Detail Data Column Bar chart tidak tersedia.');
         }
 
         foreach ($data as $key) {
-            $chart_category[] = $key->tahun;
-            $chart_data[$key->jenis]['nama'] = $key->jenis;
-            $chart_data[$key->jenis]["data"][] = $key->data;
-
             if($chart_type == 'dual-axes'){
-                if($key->jenis == 'Jumlah'){
-                    $chart_data[$key->jenis]["yAxis_title"] = 'Jumlah Penduduk';
-                } else {
-                    $chart_data[$key->jenis]["yAxis_title"] = 'Persentase (%)';
+                if(in_array($params['name_column'], ['Indeks Harga Konsumen', 'Inflasi'])){
+                    $chart_category[] = substr($key->bulan, 0, 3)." ".$key->tahun;
                 }
+                if($key->jenis == $params['name_column']){
+                    $chart_data[$key->jenis]["data_column"][] = $key->data;
+                    $chart_data[$key->jenis]["yAxis_title"] = $params['column_title'];
+                } else {
+                    $chart_data[$key->jenis]["data_spline"][] = $key->data;
+                    $chart_data[$key->jenis]["yAxis_title"] = $params['line_title'];
+                }
+            } else {
+                $chart_category[] = $key->tahun;
+                $chart_data[$key->jenis]['nama'] = $key->jenis;
+                $chart_data[$key->jenis]["data"][] = $key->data;
             }
         }
 

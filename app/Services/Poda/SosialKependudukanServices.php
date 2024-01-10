@@ -168,7 +168,13 @@ class SosialKependudukanServices {
 
         $chart_type = "dual-axes";
 
-        $response = $this->barColumnChart($rows, $chart_type);
+        $chart_params = [
+            'name_column' => 'Jumlah',
+            'column_title' => 'Jumlah Penduduk',
+            'line_title' => 'Persentase (%)',
+        ];
+
+        $response = $this->barColumnChart($rows, $chart_type, $chart_params);
 
         return $response;
     }

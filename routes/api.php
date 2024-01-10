@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UsecaseController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MasterController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Poda\EkonomiPerdaganganController;
 use App\Http\Controllers\Poda\SosialKependudukanController;
 use App\Services\Admin\SosialKependudukanServices;
 use Illuminate\Http\Request;
@@ -179,7 +180,14 @@ Route::prefix('poda')->group(function() {
     });
 
     Route::prefix('ekonomi')->group(function() {
-
+        Route::prefix('inflasi')->group(function() {
+            Route::get('/periode', [EkonomiPerdaganganController::class, 'monthPeriodeInflasi']);
+            Route::get('/daerah', [EkonomiPerdaganganController::class, 'namaDaerahInflasi']);
+            Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunInflasi']);
+            Route::get('/bulan', [EkonomiPerdaganganController::class, 'bulanInflasi']);
+            Route::get('/maps', [EkonomiPerdaganganController::class, 'mapInflasi']);
+            Route::get('/dual-chart', [EkonomiPerdaganganController::class, 'dualChartInflasi']);
+        });
     });
 
     Route::prefix('sda')->group(function() {
