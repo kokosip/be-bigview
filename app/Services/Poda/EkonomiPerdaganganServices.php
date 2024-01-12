@@ -19,6 +19,7 @@ class EkonomiPerdaganganServices {
         $this->masterRepositories = $masterRepositories;
     }
 
+    // Start Inflasi dan IHK
     public function getMonthPeriodeInflasi($idUsecase){
         $rows = $this->ekonomiRepositories->getMonthPeriodeInflasi($idUsecase);
 
@@ -85,4 +86,58 @@ class EkonomiPerdaganganServices {
 
         return $response;
     }
+    // End Inflasi dan IHK
+
+    // Start PDRB
+    public function getTahunPDRB($idUsecase){
+        $rows = $this->ekonomiRepositories->getTahunPDRB($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getKategoriPDRB($idUsecase){
+        $rows = $this->ekonomiRepositories->getKategoriPDRB($idUsecase);
+
+        $response = $this->listIndikator($rows);
+
+        return $response;
+    }
+
+    public function getSektorPDRB($idUsecase){
+        $rows = $this->ekonomiRepositories->getSektorPDRB($idUsecase);
+
+        $data = [];
+        foreach ($rows as $value) {
+            $data[] = preg_replace('/^[A-Z,]+\. /', '', $value);
+        }
+
+        $response = $this->listIndikator($data);
+
+        return $response;
+    }
+
+    public function getCardPDRB($idUsecase, $params){
+        $rows = $this->ekonomiRepositories->getCardPDRB($idUsecase, $params);
+
+        $response = $this->getCard($rows);
+
+        return $response;
+    }
+
+    public function getBarPDRB($idUsecase, $params){
+        $rows = $this->ekonomiRepositories->getBarPDRB($idUsecase, $params);
+
+        $data = [];
+        foreach ($rows as $value) {
+            $value->chart_categories = preg_replace('/^[A-Z,]+\. /', '', $value->chart_categories);
+            $data[] = $value;
+        }
+
+        $response = $this->barChart($data);
+
+        return $response;
+    }
+    // End PDRB
 }

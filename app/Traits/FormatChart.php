@@ -102,6 +102,18 @@ trait FormatChart
         return $response;
     }
 
+    public function getCard($data) {
+        if(empty($data)){
+            throw new Exception('Daftar Indikator Tidak tersedia.');
+        }
+
+        $response = [
+            "total" => $data,
+        ];
+
+        return $response;
+    }
+
     public function mapLeaflet($data) {
         if(empty($data)){
             throw new Exception('Detail Data tidak tersedia.');

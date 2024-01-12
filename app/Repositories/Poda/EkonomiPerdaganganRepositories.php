@@ -71,4 +71,71 @@ class EkonomiPerdaganganRepositories {
 
         return $db;
     }
+
+    // Start PDRB
+    public function getTahunPDRB($idUsecase){
+        $db = DB::table('mart_poda_eko_pdrb_filter_year')->distinct()
+            ->where('id_usecase', $idUsecase)
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
+        return $db;
+    }
+
+    public function getKategoriPDRB($idUsecase){
+        $db = DB::table('mart_poda_eko_pdrb_filter_kategori')->distinct()
+            ->where('id_usecase', $idUsecase)
+            ->pluck('name');
+
+        return $db;
+    }
+
+    public function getSektorPDRB($idUsecase){
+        $db = DB::table('mart_poda_eko_pdrb_filter_sektor')->distinct()
+            ->where('id_usecase', $idUsecase)
+            ->pluck('name');
+
+        return $db;
+    }
+
+    public function getCardPDRB($idUsecase, $params){
+        $db = DB::table('mart_poda_eko_pdrb_card')
+            ->where('id_usecase', $idUsecase)
+            ->where('tahun', $params['tahun'])
+            ->where('filter', $params['filter'])
+            ->where('jenis', $params['jenis'])
+            ->where('satuan', '=', 'Tahunan')
+            ->sum('datacontent');
+
+        return $db;
+    }
+
+    public function getBarPDRB($idUsecase, $params){
+        $db = DB::table('mart_poda_eko_pdrb_bar_chart')
+            ->select('chart_categories', 'chart_series as data')
+            ->where('id_usecase', $idUsecase)
+            ->where('tahun', $params['tahun'])
+            ->where('filter', $params['filter'])
+            ->where('jenis', $params['jenis'])
+            ->where('satuan', '=', 'Tahunan')
+            ->orderBy('data', 'desc')
+            ->get();
+
+        return $db;
+    }
+
+    public function getAreaPDRB($idUsecase, $params){
+        $db = DB::table('mart_poda_eko_pdrb_bar_chart')
+            ->select('chart_categories', 'chart_series as data')
+            ->where('id_usecase', $idUsecase)
+            ->where('tahun', $params['tahun'])
+            ->where('filter', $params['filter'])
+            ->where('jenis', $params['jenis'])
+            ->where('satuan', '=', 'Tahunan')
+            ->orderBy('data', 'desc')
+            ->get();
+
+        return $db;
+    }
+    // End PDRB
 }

@@ -188,6 +188,14 @@ Route::prefix('poda')->group(function() {
             Route::get('/maps', [EkonomiPerdaganganController::class, 'mapInflasi']);
             Route::get('/dual-chart', [EkonomiPerdaganganController::class, 'dualChartInflasi']);
         });
+
+        Route::prefix('pdrb')->group(function() {
+            Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunPDRB']);
+            Route::get('/kategori', [EkonomiPerdaganganController::class, 'kategoriPDRB']);
+            Route::get('/sektor', [EkonomiPerdaganganController::class, 'sektorPDRB']);
+            Route::get('/card', [EkonomiPerdaganganController::class, 'cardPDRB']);
+            Route::get('/bars', [EkonomiPerdaganganController::class, 'barPDRB']);
+        });
     });
 
     Route::prefix('sda')->group(function() {
