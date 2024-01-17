@@ -180,4 +180,25 @@ class EkonomiPerdaganganController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function areaPDRB(Request $request){
+        $validator = Validator::make($request->all(),[
+            'tahun' => 'required',
+            'filter' => 'required',
+            'jenis' => 'required',
+            'sektor' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getAreaPDRB($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
 }

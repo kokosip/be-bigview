@@ -129,13 +129,38 @@ class EkonomiPerdaganganServices {
     public function getBarPDRB($idUsecase, $params){
         $rows = $this->ekonomiRepositories->getBarPDRB($idUsecase, $params);
 
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
         $data = [];
         foreach ($rows as $value) {
             $value->chart_categories = preg_replace('/^[A-Z,]+\. /', '', $value->chart_categories);
             $data[] = $value;
         }
 
-        $response = $this->barChart($data);
+        $chart_params = [
+            'y_axis_title' => 'Nominal (Rupiah)'
+        ];
+
+        $response = $this->barChart($data, $kode_kabkota->kode_kab_kota, $chart_params);
+
+        return $response;
+    }
+
+    public function getAreaPDRB($idUsecase, $params){
+        $rows = $this->ekonomiRepositories->getAreaPDRB($idUsecase, $params);
+
+        if($rows[1] == 'Tahun'){
+            $x_axis_title = 'Tahun';
+        } else {
+            $x_axis_title = 'Triwulan';
+        }
+
+        $axis_title = [
+            'y_axis_title' => 'Nominal (Rupiah)',
+            'x_axis_title' => $x_axis_title
+        ];
+
+        $response = $this->areaLineChart($rows[0], $params, $axis_title, "chart_area");
 
         return $response;
     }

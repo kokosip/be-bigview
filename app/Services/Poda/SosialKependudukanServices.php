@@ -107,9 +107,12 @@ class SosialKependudukanServices {
         $rows = $this->sosialRepositories->getBarJumlahPenduduk($idUsecase, $tahun);
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
-        $axis_title = "Jumlah Penduduk";
 
-        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $axis_title);
+        $chart_params = [
+            'y_axis_' => 'Jumlah Penduduk',
+        ];
+
+        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $chart_params);
 
         return $response;
     }
@@ -213,9 +216,12 @@ class SosialKependudukanServices {
         $rows = $this->sosialRepositories->getBarRasio($idUsecase, $tahun);
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
-        $axis_title = "Rasio Jenis Kelamin";
 
-        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $axis_title);
+        $chart_params = [
+            'y_axis_title' => 'Rasio Jenis Kelamin'
+        ];
+
+        $response = $this->barChart($rows, $kode_kabkota, $chart_params);
 
         return $response;
     }
@@ -253,9 +259,12 @@ class SosialKependudukanServices {
         $rows = $this->sosialRepositories->getBarKepadatan($idUsecase, $tahun);
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
-        $axis_title = "Kepadatan Penduduk";
 
-        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $axis_title);
+        $chart_params = [
+            'y_axis_title' => "Kepadatan Penduduk"
+        ];
+
+        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $chart_params);
 
         return $response;
     }
@@ -289,7 +298,12 @@ class SosialKependudukanServices {
     public function getAreaIPM($idUsecase, $params){
         $rows = $this->sosialRepositories->getAreaIPM($idUsecase, $params);
 
-        $axis_title = $this->getAxisTitleByIndikator($params['filter']);
+        $y_axis_title = $this->getAxisTitleByIndikator($params['filter']);
+
+        $axis_title = [
+            'y_axis_title' => $y_axis_title,
+            'x_axis_title' => 'Tahun'
+        ];
 
         $response = $this->areaLineChart($rows, $params, $axis_title, "chart_area");
 
@@ -372,7 +386,12 @@ class SosialKependudukanServices {
     public function getAreaKemiskinan($idUsecase, $params){
         $rows = $this->sosialRepositories->getAreaKemiskinan($idUsecase, $params);
 
-        $axis_title = $this->getAxisTitleByIndikator($params['filter']);
+        $y_axis_title = $this->getAxisTitleByIndikator($params['filter']);
+
+        $axis_title = [
+            'y_axis_title' => $y_axis_title,
+            'x_axis_title' => 'Tahun'
+        ];
 
         $response = $this->areaLineChart($rows, $params, $axis_title, "chart_area");
 
@@ -416,7 +435,12 @@ class SosialKependudukanServices {
     public function getBarJenisPekerjaan($idUsecase, $tahun){
         $rows = $this->sosialRepositories->getBarJenisPekerjaan($idUsecase, $tahun);
 
-        $response = $this->barChart($rows, "", "Jumlah Jiwa");
+        $chart_params = [
+            'x_axis_title' => "Jenis Pekerjaan",
+            'y_axis_title' => "Jumlah Jiwa"
+        ];
+
+        $response = $this->barChart($rows, "", $chart_params);
 
         return $response;
     }
@@ -443,7 +467,12 @@ class SosialKependudukanServices {
     public function getLinePekerjaan($idUsecase, $params){
         $rows = $this->sosialRepositories->getLinePekerjaan($idUsecase, $params);
 
-        $axis_title = $this->getAxisTitleByIndikator($params['filter']);
+        $y_axis_title = $this->getAxisTitleByIndikator($params['filter']);
+
+        $axis_title = [
+            'y_axis_title' => $y_axis_title,
+            'x_axis_title' => 'Tahun'
+        ];
 
         $response = $this->areaLineChart($rows, $params, $axis_title, "chart_line_series");
 
@@ -488,9 +517,12 @@ class SosialKependudukanServices {
         $rows = $this->sosialRepositories->getBarPendidikan($idUsecase, $params);
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
-        $axis_title = "Jumlah";
 
-        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $axis_title);
+        $chart_params = [
+            'y_axis_title' => "Jumlah"
+        ];
+
+        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $chart_params);
 
         return $response;
     }
@@ -498,9 +530,11 @@ class SosialKependudukanServices {
     public function getBarJenjangPendidikan($idUsecase, $tahun){
         $rows = $this->sosialRepositories->getBarJenjangPendidikan($idUsecase, $tahun);
 
-        $axis_title = "Jenjang Pendidikan";
+        $chart_params = [
+            'y_axis_title' => "Jenjang Pendidikan"
+        ];
 
-        $response = $this->barChart($rows, "", $axis_title);
+        $response = $this->barChart($rows, "", $chart_params);
 
         return $response;
     }
@@ -554,9 +588,12 @@ class SosialKependudukanServices {
         $rows = $this->sosialRepositories->getBarKesehatan($idUsecase, $params);
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
-        $axis_title = "Jumlah";
 
-        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $axis_title);
+        $chart_params = [
+            'y_axis_title' => 'Jumlah'
+        ];
+
+        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $chart_params);
 
         return $response;
     }

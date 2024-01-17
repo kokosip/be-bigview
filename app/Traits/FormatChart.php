@@ -154,7 +154,7 @@ trait FormatChart
         return $response;
     }
 
-    public function barChart($data, $kode_kab_kota = "", $yaxis_title = "") {
+    public function barChart($data, $kode_kab_kota = "", $chart_params) {
         if(empty($data)){
             throw new Exception('Detail Data bar chart tidak tersedia.');
         }
@@ -165,7 +165,7 @@ trait FormatChart
         }
 
         if($kode_kab_kota == ""){
-            $xaxis_title = "Jenis Pekerjaan";
+            $xaxis_title = $chart_params['x_axis_title'];
         } else {
             $xaxis_title = substr($kode_kab_kota, 2) != "00" ? "Kecamatan" : "Kabupaten/Kota";
         }
@@ -175,7 +175,7 @@ trait FormatChart
                 "chart_categories" => $chart_category,
                 "chart_data" => $chart_data,
                 "xAxis_title" => $xaxis_title,
-                "yAxis_title" => $yaxis_title
+                "yAxis_title" => $chart_params['y_axis_title']
             ]
         ];
 
@@ -277,7 +277,7 @@ trait FormatChart
         return $response;
     }
 
-    public function areaLineChart($data, $params, $yaxis_title, $type_chart){
+    public function areaLineChart($data, $params, $axis_title, $type_chart){
         if(empty($data) && empty($params)){
             throw new Exception("Data $type_chart tidak tersedia.");
         }
@@ -302,8 +302,8 @@ trait FormatChart
             'widget_data' => [
                 "chart_categories" => $chart_category,
                 "chart_series" => $chart_series,
-                "xAxis_title" => "Tahun",
-                "yAxis_title" => $yaxis_title
+                "xAxis_title" => $axis_title['x_axis_title'],
+                "yAxis_title" => $axis_title['y_axis_title']
             ]
 
         ];

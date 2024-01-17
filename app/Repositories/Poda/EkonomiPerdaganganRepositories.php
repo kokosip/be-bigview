@@ -117,25 +117,42 @@ class EkonomiPerdaganganRepositories {
             ->where('tahun', $params['tahun'])
             ->where('filter', $params['filter'])
             ->where('jenis', $params['jenis'])
-            ->where('satuan', '=', 'Tahunan')
+            ->whereIn('satuan', ['Tahunan', 'Tahun'])
             ->orderBy('data', 'desc')
             ->get();
 
         return $db;
     }
 
-    public function getAreaPDRB($idUsecase, $params){
-        $db = DB::table('mart_poda_eko_pdrb_bar_chart')
-            ->select('chart_categories', 'chart_series as data')
+    public function checkAreaPDRB($idUsecase){
+        $db = DB::table('mart_poda_eko_pdrb_area_chart')->distinct()
+            ->select('chart_categories')
             ->where('id_usecase', $idUsecase)
-            ->where('tahun', $params['tahun'])
-            ->where('filter', $params['filter'])
-            ->where('jenis', $params['jenis'])
-            ->where('satuan', '=', 'Tahunan')
-            ->orderBy('data', 'desc')
-            ->get();
+            ->first();
 
         return $db;
+    }
+
+    public function getAreaPDRB($idUsecase, $params){
+        $category = $this->checkAreaPDRB($idUsecase);
+
+        $db = DB::table('mart_poda_eko_pdrb_area_chart');
+
+        if($category->chart_categories == 'Tahun'){
+            $db = $db->select('tahun as category', 'chart_series as data')
+                ->whereBetween('tahun', [$params['tahun'] - 4, $params['tahun']]);
+        } else {
+            $db = $db->select('chart_categories as category', 'chart_series as data')
+                ->where('tahun', $params['tahun']);
+        }
+
+        $db = $db->where('id_usecase', $idUsecase)
+            ->where('filter', $params['filter'])
+            ->where('jenis', $params['jenis'])
+            ->where('name', 'like', '%' . $params['sektor'] . '%')
+            ->get();
+
+        return [$db, $category->chart_categories];
     }
     // End PDRB
 }

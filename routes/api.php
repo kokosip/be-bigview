@@ -195,6 +195,7 @@ Route::prefix('poda')->group(function() {
             Route::get('/sektor', [EkonomiPerdaganganController::class, 'sektorPDRB']);
             Route::get('/card', [EkonomiPerdaganganController::class, 'cardPDRB']);
             Route::get('/bars', [EkonomiPerdaganganController::class, 'barPDRB']);
+            Route::get('/areas', [EkonomiPerdaganganController::class, 'areaPDRB']);
         });
     });
 
