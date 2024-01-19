@@ -6,6 +6,9 @@ use App\Http\Controllers\Admin\UsecaseController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MasterController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Poda\EkonomiPerdaganganController;
+use App\Http\Controllers\Poda\SosialKependudukanController;
+use App\Services\Admin\SosialKependudukanServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -75,4 +78,173 @@ Route::prefix('admin')->group(function () {
     Route::get('/users/{id}', [UserController::class, 'getUserById']);
     Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
     Route::put('/users/{id}', [UserController::class, 'updateUser']);
+
+});
+
+// Poda
+Route::prefix('poda')->group(function() {
+    // Sosial & Kependudukan
+    Route::prefix('sosial')->group(function() {
+        //Kependudukan
+        Route::prefix('penduduk')->group(function() {
+            Route::get('/maps', [SosialKependudukanController::class, 'mapJumlahPenduduk']);
+            Route::get('/pies', [SosialKependudukanController::class, 'pieJumlahPenduduk']);
+            Route::get('/bars', [SosialKependudukanController::class, 'barJumlahPenduduk']);
+            Route::get('/tahun', [SosialKependudukanController::class, 'tahunJumlahPenduduk']);
+            Route::get('/details', [SosialKependudukanController::class, 'detailJumlahPenduduk']);
+        });
+
+        // Rentang Usia
+        Route::prefix('rentang')->group(function() {
+            Route::get('/stacked-bars', [SosialKependudukanController::class, 'stackedBarRentangUsia']);
+            Route::get('/tahun', [SosialKependudukanController::class, 'tahunRentangUsia']);
+            Route::get('/details', [SosialKependudukanController::class, 'detailRentangUsia']);
+        });
+
+        // Laju Pertumbuhan Penduduk
+        Route::prefix('laju')->group(function() {
+            Route::get('/dual-axes', [SosialKependudukanController::class, 'dualAxesLaju']);
+            Route::get('/periode', [SosialKependudukanController::class, 'periodeLaju']);
+            Route::get('/daerah', [SosialKependudukanController::class, 'namaDaerahLaju']);
+            Route::get('/details', [SosialKependudukanController::class, 'detailLaju']);
+        });
+
+        // Rasio Jenis Kelamin
+        Route::prefix('rasio')->group(function() {
+            Route::get('/bars', [SosialKependudukanController::class, 'barRasio']);
+            Route::get('/maps', [SosialKependudukanController::class, 'mapRasio']);
+            Route::get('/tahun', [SosialKependudukanController::class, 'tahunRasio']);
+            Route::get('/details', [SosialKependudukanController::class, 'detailRasio']);
+        });
+
+        // Kepadatan Penduduk
+        Route::prefix('kepadatan')->group(function() {
+            Route::get('/bars', [SosialKependudukanController::class, 'barKepadatan']);
+            Route::get('/maps', [SosialKependudukanController::class, 'mapKepadatan']);
+            Route::get('/tahun', [SosialKependudukanController::class, 'tahunKepadatan']);
+            Route::get('/details', [SosialKependudukanController::class, 'detailKepadatan']);
+        });
+
+        // IPM
+        Route::prefix('ipm')->group(function() {
+            Route::get('/areas', [SosialKependudukanController::class, 'areaIPM']);
+            Route::get('/maps', [SosialKependudukanController::class, 'mapIPM']);
+            Route::get('/periode', [SosialKependudukanController::class, 'periodeIPM']);
+            Route::get('/daerah', [SosialKependudukanController::class, 'namaDaerahIPM']);
+            Route::get('/indikator', [SosialKependudukanController::class, 'indikatorIPM']);
+            Route::get('/details', [SosialKependudukanController::class, 'detailIPM']);
+        });
+
+        // Kemiskinan
+        Route::prefix('kemiskinan')->group(function() {
+            Route::get('/indikator', [SosialKependudukanController::class, 'indikatorKemiskinan']);
+            Route::get('/tahun', [SosialKependudukanController::class, 'tahunKemiskinan']);
+            Route::get('/periode', [SosialKependudukanController::class, 'periodeKemiskinan']);
+            Route::get('/maps', [SosialKependudukanController::class, 'mapKemiskinan']);
+            Route::get('/areas', [SosialKependudukanController::class, 'areaKemiskinan']);
+            Route::get('/daerah', [SosialKependudukanController::class, 'daerahKemiskinan']);
+            Route::get('/details', [SosialKependudukanController::class, 'detailKemiskinan']);
+        });
+
+        // Pekerjaan dan Angkatan Kerja
+        Route::prefix('pekerjaan')->group(function() {
+            Route::get('/indikator', [SosialKependudukanController::class, 'indikatorPekerjaan']);
+            Route::get('/tahun', [SosialKependudukanController::class, 'tahunPekerjaan']);
+            Route::get('/tahun/jenis', [SosialKependudukanController::class, 'tahunJenisPekerjaan']);
+            Route::get('/periode', [SosialKependudukanController::class, 'periodePekerjaan']);
+            Route::get('/bars', [SosialKependudukanController::class, 'barJenisPekerjaan']);
+            Route::get('/maps', [SosialKependudukanController::class, 'mapPekerjaan']);
+            Route::get('/lines', [SosialKependudukanController::class, 'linePekerjaan']);
+        });
+
+        // Pendidikan
+        Route::prefix('pendidikan')->group(function() {
+            Route::get('/tahun/ajaran', [SosialKependudukanController::class, 'tahunAjaranPendidikan']);
+            Route::get('/tahun', [SosialKependudukanController::class, 'tahunPendidikan']);
+            Route::get('/jenjang', [SosialKependudukanController::class, 'jenjangPendidikan']);
+            Route::get('/indikator', [SosialKependudukanController::class, 'indikatorPendidikan']);
+            Route::get('/maps', [SosialKependudukanController::class, 'mapPendidikan']);
+            Route::get('/bars', [SosialKependudukanController::class, 'barPendidikan']);
+            Route::get('/bars/jenjang', [SosialKependudukanController::class, 'barJenjangPendidikan']);
+        });
+
+        // Kesehatan
+        Route::prefix('kesehatan')->group(function() {
+            Route::get('/tahun', [SosialKependudukanController::class, 'tahunKesehatan']);
+            Route::get('/periode', [SosialKependudukanController::class, 'periodeKesehatan']);
+            Route::get('/indikator', [SosialKependudukanController::class, 'indikatorKesehatan']);
+            Route::get('/maps', [SosialKependudukanController::class, 'mapKesehatan']);
+            Route::get('/bars', [SosialKependudukanController::class, 'barKesehatan']);
+            Route::get('/bars-column', [SosialKependudukanController::class, 'barColumnKesehatan']);
+        });
+    });
+
+    Route::prefix('ekonomi')->group(function() {
+        Route::prefix('inflasi')->group(function() {
+            Route::get('/periode', [EkonomiPerdaganganController::class, 'monthPeriodeInflasi']);
+            Route::get('/daerah', [EkonomiPerdaganganController::class, 'namaDaerahInflasi']);
+            Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunInflasi']);
+            Route::get('/bulan', [EkonomiPerdaganganController::class, 'bulanInflasi']);
+            Route::get('/maps', [EkonomiPerdaganganController::class, 'mapInflasi']);
+            Route::get('/dual-chart', [EkonomiPerdaganganController::class, 'dualChartInflasi']);
+        });
+
+        Route::prefix('pdrb')->group(function() {
+            Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunPDRB']);
+            Route::get('/kategori', [EkonomiPerdaganganController::class, 'kategoriPDRB']);
+            Route::get('/sektor', [EkonomiPerdaganganController::class, 'sektorPDRB']);
+            Route::get('/card', [EkonomiPerdaganganController::class, 'cardPDRB']);
+            Route::get('/bars', [EkonomiPerdaganganController::class, 'barPDRB']);
+            Route::get('/areas', [EkonomiPerdaganganController::class, 'areaPDRB']);
+        });
+
+        Route::prefix('pariwisata')->group(function() {
+            Route::get('/indikator', [EkonomiPerdaganganController::class, 'indikatorPariwisata']);
+            // Daya Tarik Wisata
+            Route::prefix('dtw')->group(function() {
+                Route::get('/daerah', [EkonomiPerdaganganController::class, 'namaDaerahPariwisataDTW']);
+                Route::get('/periode', [EkonomiPerdaganganController::class, 'periodePariwisataDTW']);
+                Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunPariwisataDTW']);
+                Route::get('/maps', [EkonomiPerdaganganController::class, 'mapPariwisataDTW']);
+                Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataDTW']);
+            });
+
+            // Daya Tarik Wisata
+            Route::prefix('hotel')->group(function() {
+                Route::get('/periode', [EkonomiPerdaganganController::class, 'periodePariwisataHotel']);
+                Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunPariwisataHotel']);
+                Route::get('/maps', [EkonomiPerdaganganController::class, 'mapPariwisataHotel']);
+                Route::get('/bars', [EkonomiPerdaganganController::class, 'barPariwisataHotel']);
+                Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataHotel']);
+            });
+
+            // Jumlah Wisatawan
+            Route::prefix('wisatawan')->group(function() {
+                Route::get('/periode', [EkonomiPerdaganganController::class, 'periodePariwisataWisatawan']);
+                Route::get('/card', [EkonomiPerdaganganController::class, 'cardPariwisataWisatawan']);
+                Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataWisatawan']);
+            });
+
+            // TPK
+            Route::prefix('tpk')->group(function() {
+                Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunPariwisataTPK']);
+                Route::get('/bulan', [EkonomiPerdaganganController::class, 'bulanPariwisataTPK']);
+                Route::get('/card', [EkonomiPerdaganganController::class, 'cardPariwisataTPK']);
+                Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataTPK']);
+            });
+
+            // Jumlah Restoran dan Rumah Makan
+            Route::prefix('resto')->group(function() {
+                Route::get('/periode', [EkonomiPerdaganganController::class, 'periodePariwisataResto']);
+                Route::get('/daerah', [EkonomiPerdaganganController::class, 'namaDaerahPariwisataResto']);
+                Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunPariwisataResto']);
+                Route::get('/maps', [EkonomiPerdaganganController::class, 'mapPariwisataResto']);
+                Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataResto']);
+            });
+        });
+    });
+
+    Route::prefix('sda')->group(function() {
+
+    });
 });
