@@ -155,4 +155,264 @@ class EkonomiPerdaganganRepositories {
         return [$db, $category->chart_categories];
     }
     // End PDRB
+
+    // Start Pariwisata
+    public function getIndikatorPariwisata($idUsecase){
+        $db = DB::table('mart_poda_eko_pariwisata_filter_indikator')
+            ->where('id_usecase', $idUsecase)
+            ->orderBy('id_jenis')
+            ->pluck('name');
+
+        return $db;
+    }
+
+    public function getNamaDaerahPariwisataDTW($idUsecase){
+        $db = DB::table('mart_poda_eko_pariwisata_dayatarik_filter_kabkot')->distinct()
+            ->where('id_usecase', $idUsecase)
+            ->pluck('city');
+
+        return $db;
+    }
+
+    public function getPeriodePariwisataDTW($idUsecase){
+        $db = DB::table('mart_poda_eko_pariwisata_dayatarik_filter_tahun')
+            ->selectRaw('min(tahun) as minYear, max(tahun) as maxYear')
+            ->where('id_usecase', $idUsecase)
+            ->first();
+
+        return $db;
+    }
+
+    public function getTahunPariwisataDTW($idUsecase){
+        $db = DB::table('mart_poda_eko_pariwisata_dayatarik_filter_map')->distinct()
+            ->where('id_usecase', $idUsecase)
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
+        return $db;
+    }
+
+    public function getMapPariwisataDTW($idUsecase, $tahun){
+        $db = DB::table('mart_poda_eko_pariwisata_dayatarik_map')
+            ->select('city', 'lat', 'lon', 'daya_tarik_wisata as data')
+            ->where('id_usecase', $idUsecase)
+            ->where('tahun', $tahun)
+            ->get();
+
+        return $db;
+    }
+
+    public function getLinePariwisataDTW($idUsecase, $params){
+        $periode = explode('-', $params['periode']);
+        $startYear = $periode[0];
+        $endYear = $periode[1];
+
+        $db = DB::table('mart_poda_eko_pariwisata_dayatarik_line_chart')
+            ->select('tahun as category', 'value as data')
+            ->where('id_usecase', $idUsecase)
+            ->where('city', $params['daerah'])
+            ->whereBetween('tahun', [$startYear, $endYear])
+            ->orderBy('tahun', 'desc')
+            ->get();
+
+        return $db;
+    }
+
+    public function getPeriodePariwisataHotel($idUsecase){
+        $db = DB::table('mart_poda_eko_pariwisata_hotel_filter_tahun')
+            ->selectRaw('min(tahun) as minYear, max(tahun) as maxYear')
+            ->where('id_usecase', $idUsecase)
+            ->first();
+
+        return $db;
+    }
+
+    public function getTahunPariwisataHotel($idUsecase){
+        $db = DB::table('mart_poda_eko_pariwisata_hotel_filter_tahun')
+            ->where('id_usecase', $idUsecase)
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
+        return $db;
+    }
+
+    public function getMapPariwisataHotel($idUsecase, $tahun){
+        $db = DB::table('mart_poda_eko_pariwisata_hotel_map')
+            ->select('vervar as city', 'turvar as jenis', 'lat', 'lon', 'value as data')
+            ->where('id_usecase', $idUsecase)
+            ->where('tahun', $tahun)
+            ->orderBy('tahun', 'desc')
+            ->get();
+
+        return $db;
+    }
+
+    public function getBarPariwisataHotel($idUsecase, $tahun){
+        $db = DB::table('mart_poda_eko_pariwisata_hotel_column_chart')
+            ->selectRaw('jenis_hotel as chart_categories, sum(value) as data')
+            ->where('id_usecase', $idUsecase)
+            ->where('tahun', $tahun)
+            ->groupBy('jenis_hotel')
+            ->orderBy('jenis_hotel')
+            ->get();
+
+        return $db;
+    }
+
+    public function getLinePariwisataHotel($idUsecase, $periode){
+        $tahun = explode('-', $periode['periode']);
+
+        $startYear = $tahun[0];
+        $endYear = $tahun[1];
+
+        $db = DB::table('mart_poda_eko_pariwisata_hotel_line_chart')
+            ->selectRaw('tahun as category, turvar as jenis, sum(value) as data')
+            ->where('id_usecase', $idUsecase)
+            ->whereBetween('tahun', [$startYear, $endYear])
+            ->groupBy('tahun', 'turvar')
+            ->orderBy('tahun', 'asc', 'turvar', 'asc')
+            ->get();
+
+        return $db;
+    }
+
+    public function getPeriodePariwisataWisatawan($idUsecase){
+        $db = DB::table('mart_poda_eko_pariwisata_wisatawan_card')
+            ->selectRaw('min(tahun) as minYear, max(tahun) as maxYear')
+            ->where('id_usecase', $idUsecase)
+            ->first();
+
+        return $db;
+    }
+
+    public function getCardPariwisataWisatawan($idUsecase, $periode){
+        $tahun = explode('-', $periode['periode']);
+
+        $startYear = $tahun[0];
+        $endYear = $tahun[1];
+
+        $db = DB::table('mart_poda_eko_pariwisata_wisatawan_card')
+            ->selectRaw('name, sum(value) as data')
+            ->where('id_usecase', $idUsecase)
+            ->whereBetween('tahun', [$startYear, $endYear])
+            ->groupBy('name')
+            ->get();
+
+        return $db;
+    }
+
+    public function getLinePariwisataWisatawan($idUsecase, $periode){
+        $tahun = explode('-', $periode['periode']);
+
+        $startYear = $tahun[0];
+        $endYear = $tahun[1];
+
+        $db = DB::table('mart_poda_eko_pariwisata_wisatawan_line_series')
+            ->selectRaw('tahun as category, turvar as jenis, sum(value) as data')
+            ->where('id_usecase', $idUsecase)
+            ->whereBetween('tahun', [$startYear, $endYear])
+            ->groupBy('tahun', 'turvar')
+            ->orderBy('tahun', 'asc', 'turvar', 'asc')
+            ->get();
+
+        return $db;
+    }
+
+    public function getTahunPariwisataTPK($idUsecase){
+        $db = DB::table('mart_poda_eko_pariwisata_tpk_filter_tahun')
+            ->where('id_usecase', $idUsecase)
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
+        return $db;
+    }
+
+    public function getBulanPariwisataTPK($idUsecase, $tahun){
+        $db = DB::table('mart_poda_eko_pariwisata_tpk_detail')
+            ->select('bulan','id_bulan')->distinct()
+            ->where('id_usecase', $idUsecase)
+            ->where('tahun', $tahun)
+            ->orderBy('id_bulan', 'asc')
+            ->pluck('bulan');
+
+        return $db;
+    }
+
+    public function getCardPariwisataTPK($idUsecase, $params){
+        $db = DB::table('mart_poda_eko_pariwisata_tpk_detail')
+            ->selectRaw('AVG(value) as data')
+            ->where('id_usecase', $idUsecase)
+            ->where('tahun', $params['tahun'])
+            ->where('bulan', $params['bulan'])
+            ->whereNot('hotel_bintang', 'Total')
+            ->orderBy('id_bulan', 'asc')
+            ->first();
+
+        return $db;
+    }
+
+    public function getLinePariwisataTPK($idUsecase, $tahun){
+        $db = DB::table('mart_poda_eko_pariwisata_tpk_detail')
+            ->selectRaw('id_bulan, bulan as category, hotel_bintang as jenis, sum(value) as data')
+            ->where('id_usecase', $idUsecase)
+            ->where('tahun', $tahun)
+            ->whereNot('hotel_bintang', 'Total')
+            ->groupBy('id_bulan', 'bulan', 'hotel_bintang')
+            ->orderBy('id_bulan', 'asc', 'hotel_bintang', 'asc')
+            ->get();
+
+        return $db;
+    }
+
+    public function getPeriodePariwisataResto($idUsecase){
+        $db = DB::table('mart_poda_eko_pariwisata_restoran_filter_tahun')
+            ->selectRaw('min(tahun) as minYear, max(tahun) as maxYear')
+            ->where('id_usecase', $idUsecase)
+            ->first();
+
+        return $db;
+    }
+
+    public function getTahunPariwisataResto($idUsecase){
+        $db = DB::table('mart_poda_eko_pariwisata_restoran_filter_tahun')
+            ->where('id_usecase', $idUsecase)
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
+        return $db;
+    }
+
+    public function getNamaDaerahPariwisataResto($idUsecase){
+        $db = DB::table('mart_poda_eko_pariwisata_restoran_filter_kabkot')->distinct()
+            ->where('id_usecase', $idUsecase)
+            ->pluck('city');
+
+        return $db;
+    }
+
+    public function getMapPariwisataResto($idUsecase, $tahun){
+        $db = DB::table('mart_poda_eko_pariwisata_restoran_map')
+            ->select('city', 'lat', 'lon', 'value as data')
+            ->where('id_usecase', $idUsecase)
+            ->where('tahun', $tahun)
+            ->get();
+
+        return $db;
+    }
+
+    public function getLinePariwisataResto($idUsecase, $params){
+        $periode = explode('-', $params['periode']);
+        $startYear = $periode[0];
+        $endYear = $periode[1];
+
+        $db = DB::table('mart_poda_eko_pariwisata_restoran_line_chart')
+            ->select('tahun as category', 'value as data')
+            ->where('id_usecase', $idUsecase)
+            ->where('vervar', $params['daerah'])
+            ->whereBetween('tahun', [$startYear, $endYear])
+            ->orderBy('tahun', 'desc')
+            ->get();
+
+        return $db;
+    }
 }

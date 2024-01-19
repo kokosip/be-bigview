@@ -165,4 +165,264 @@ class EkonomiPerdaganganServices {
         return $response;
     }
     // End PDRB
+
+    // Start Pariwisata
+    public function getIndikatorPariwisata($idUsecase){
+        $rows = $this->ekonomiRepositories->getIndikatorPariwisata($idUsecase);
+
+        $response = $this->listIndikator($rows);
+
+        return $response;
+    }
+
+    public function getNamaDaerahPariwisataDTW($idUsecase){
+        $rows = $this->ekonomiRepositories->getNamaDaerahPariwisataDTW($idUsecase);
+
+        $response = $this->listNamaDaerah($rows);
+
+        return $response;
+    }
+
+    public function getPeriodePariwisataDTW($idUsecase){
+        $rows = $this->ekonomiRepositories->getPeriodePariwisataDTW($idUsecase);
+
+        $response = $this->filterPeriode($rows);
+
+        return $response;
+    }
+
+    public function getTahunPariwisataDTW($idUsecase){
+        $rows = $this->ekonomiRepositories->getTahunPariwisataDTW($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getMapPariwisataDTW($idUsecase, $tahun){
+        $rows = $this->ekonomiRepositories->getMapPariwisataDTW($idUsecase, $tahun);
+
+        foreach ($rows as $item) {
+            $output[$item->city]["city"] = $item->city;
+            $output[$item->city]["lat"] = $item->lat;
+            $output[$item->city]["lon"] = $item->lon;
+
+            $output[$item->city]["data"][] = [
+                "label" => "Daya Tarik Wisata",
+                "value" => $item->data
+            ];
+        }
+
+        $response = $this->mapLeaflet(array_values($output));
+
+        return $response;
+    }
+
+    public function getLinePariwisataDTW($idUsecase, $params){
+        $rows = $this->ekonomiRepositories->getLinePariwisataDTW($idUsecase, $params);
+
+        $axis_title = [
+            'filter' => 'Daya Tarik Wisata',
+            'y_axis_title' => 'Jumlah',
+            'x_axis_title' => 'Tahun'
+        ];
+
+        $response = $this->areaLineChart($rows, $axis_title, $axis_title, "chart_line_series");
+
+        return $response;
+    }
+
+    public function getPeriodePariwisataHotel($idUsecase){
+        $rows = $this->ekonomiRepositories->getPeriodePariwisataHotel($idUsecase);
+
+        $response = $this->filterPeriode($rows);
+
+        return $response;
+    }
+
+    public function getTahunPariwisataHotel($idUsecase){
+        $rows = $this->ekonomiRepositories->getTahunPariwisataHotel($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getMapPariwisataHotel($idUsecase, $tahun){
+        $rows = $this->ekonomiRepositories->getMapPariwisataHotel($idUsecase, $tahun);
+
+        foreach ($rows as $item) {
+            $output[$item->city]["city"] = $item->city;
+            $output[$item->city]["lat"] = $item->lat;
+            $output[$item->city]["lon"] = $item->lon;
+
+            $output[$item->city]["data"][] = [
+                "label" => $item->jenis,
+                "value" => (int) $item->data
+            ];
+        }
+
+        $response = $this->mapLeaflet(array_values($output));
+
+        return $response;
+    }
+
+    public function getBarPariwisataHotel($idUsecase, $tahun){
+        $rows = $this->ekonomiRepositories->getBarPariwisataHotel($idUsecase, $tahun);
+
+        $chart_params = [
+            'x_axis_title' => 'Jenis Hotel',
+            'y_axis_title' => 'Jumlah'
+        ];
+
+        $response = $this->barChart($rows, "", $chart_params);
+
+        return $response;
+    }
+
+    public function getLinePariwisataHotel($idUsecase, $periode){
+        $rows = $this->ekonomiRepositories->getLinePariwisataHotel($idUsecase, $periode);
+
+        $axis_title = [
+            'y_axis_title' => 'Jumlah',
+            'x_axis_title' => 'Tahun'
+        ];
+
+        $response = $this->multiLineChart($rows, $axis_title);
+
+        return $response;
+    }
+
+    public function getPeriodePariwisataWisatawan($idUsecase){
+        $rows = $this->ekonomiRepositories->getPeriodePariwisataWisatawan($idUsecase);
+
+        $response = $this->filterPeriode($rows);
+
+        return $response;
+    }
+
+    public function getCardPariwisataWisatawan($idUsecase, $periode){
+        $rows = $this->ekonomiRepositories->getCardPariwisataWisatawan($idUsecase, $periode);
+
+        $total = 0;
+        foreach ($rows as $item) {
+            $total = $total + $item->data;
+        }
+
+        $rows[] = [
+            "name"=> "Total",
+            "data"=> $total
+        ];
+
+        $response = $this->getCard($rows);
+
+        return $response;
+    }
+
+    public function getLinePariwisataWisatawan($idUsecase, $periode){
+        $rows = $this->ekonomiRepositories->getLinePariwisataWisatawan($idUsecase, $periode);
+
+        $axis_title = [
+            'y_axis_title' => 'Jumlah',
+            'x_axis_title' => 'Tahun'
+        ];
+
+        $response = $this->multiLineChart($rows, $axis_title);
+
+        return $response;
+    }
+
+    public function getTahunPariwisataTPK($idUsecase){
+        $rows = $this->ekonomiRepositories->getTahunPariwisataTPK($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getBulanPariwisataTPK($idUsecase, $tahun){
+        $rows = $this->ekonomiRepositories->getBulanPariwisataTPK($idUsecase, $tahun);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getCardPariwisataTPK($idUsecase, $params){
+        $rows = $this->ekonomiRepositories->getCardPariwisataTPK($idUsecase, $params);
+
+        $response = $this->getCard($rows);
+
+        return $response;
+    }
+
+    public function getLinePariwisataTPK($idUsecase, $tahun){
+        $rows = $this->ekonomiRepositories->getLinePariwisataTPK($idUsecase, $tahun);
+
+        $axis_title = [
+            'y_axis_title' => 'Jumlah',
+            'x_axis_title' => 'Bulan'
+        ];
+
+        $response = $this->multiLineChart($rows, $axis_title);
+
+        return $response;
+    }
+
+    public function getPeriodePariwisataResto($idUsecase){
+        $rows = $this->ekonomiRepositories->getPeriodePariwisataResto($idUsecase);
+
+        $response = $this->filterPeriode($rows);
+
+        return $response;
+    }
+
+    public function getTahunPariwisataResto($idUsecase){
+        $rows = $this->ekonomiRepositories->getTahunPariwisataResto($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getNamaDaerahPariwisataResto($idUsecase){
+        $rows = $this->ekonomiRepositories->getNamaDaerahPariwisataResto($idUsecase);
+
+        $response = $this->listNamaDaerah($rows);
+
+        return $response;
+    }
+
+    public function getMapPariwisataResto($idUsecase, $tahun){
+        $rows = $this->ekonomiRepositories->getMapPariwisataResto($idUsecase, $tahun);
+
+        foreach ($rows as $item) {
+            $output[$item->city]["city"] = $item->city;
+            $output[$item->city]["lat"] = $item->lat;
+            $output[$item->city]["lon"] = $item->lon;
+
+            $output[$item->city]["data"][] = [
+                "label" => 'Jumlah Restoran',
+                "value" => (int)$item->data
+            ];
+        }
+
+        $response = $this->mapLeaflet(array_values($output));
+
+        return $response;
+    }
+
+    public function getLinePariwisataResto($idUsecase, $params){
+        $rows = $this->ekonomiRepositories->getLinePariwisataResto($idUsecase, $params);
+
+        $axis_title = [
+            'filter' => 'Jumlah Restoran/Rumah Makan',
+            'y_axis_title' => 'Jumlah',
+            'x_axis_title' => 'Tahun'
+        ];
+
+        $response = $this->areaLineChart($rows, $axis_title, $axis_title, "chart_line_series");
+
+        return $response;
+    }
 }

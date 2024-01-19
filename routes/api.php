@@ -197,6 +197,51 @@ Route::prefix('poda')->group(function() {
             Route::get('/bars', [EkonomiPerdaganganController::class, 'barPDRB']);
             Route::get('/areas', [EkonomiPerdaganganController::class, 'areaPDRB']);
         });
+
+        Route::prefix('pariwisata')->group(function() {
+            Route::get('/indikator', [EkonomiPerdaganganController::class, 'indikatorPariwisata']);
+            // Daya Tarik Wisata
+            Route::prefix('dtw')->group(function() {
+                Route::get('/daerah', [EkonomiPerdaganganController::class, 'namaDaerahPariwisataDTW']);
+                Route::get('/periode', [EkonomiPerdaganganController::class, 'periodePariwisataDTW']);
+                Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunPariwisataDTW']);
+                Route::get('/maps', [EkonomiPerdaganganController::class, 'mapPariwisataDTW']);
+                Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataDTW']);
+            });
+
+            // Daya Tarik Wisata
+            Route::prefix('hotel')->group(function() {
+                Route::get('/periode', [EkonomiPerdaganganController::class, 'periodePariwisataHotel']);
+                Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunPariwisataHotel']);
+                Route::get('/maps', [EkonomiPerdaganganController::class, 'mapPariwisataHotel']);
+                Route::get('/bars', [EkonomiPerdaganganController::class, 'barPariwisataHotel']);
+                Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataHotel']);
+            });
+
+            // Jumlah Wisatawan
+            Route::prefix('wisatawan')->group(function() {
+                Route::get('/periode', [EkonomiPerdaganganController::class, 'periodePariwisataWisatawan']);
+                Route::get('/card', [EkonomiPerdaganganController::class, 'cardPariwisataWisatawan']);
+                Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataWisatawan']);
+            });
+
+            // TPK
+            Route::prefix('tpk')->group(function() {
+                Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunPariwisataTPK']);
+                Route::get('/bulan', [EkonomiPerdaganganController::class, 'bulanPariwisataTPK']);
+                Route::get('/card', [EkonomiPerdaganganController::class, 'cardPariwisataTPK']);
+                Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataTPK']);
+            });
+
+            // Jumlah Restoran dan Rumah Makan
+            Route::prefix('resto')->group(function() {
+                Route::get('/periode', [EkonomiPerdaganganController::class, 'periodePariwisataResto']);
+                Route::get('/daerah', [EkonomiPerdaganganController::class, 'namaDaerahPariwisataResto']);
+                Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunPariwisataResto']);
+                Route::get('/maps', [EkonomiPerdaganganController::class, 'mapPariwisataResto']);
+                Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataResto']);
+            });
+        });
     });
 
     Route::prefix('sda')->group(function() {

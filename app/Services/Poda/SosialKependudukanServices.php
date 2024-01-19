@@ -548,7 +548,7 @@ class SosialKependudukanServices {
             $output[$item->city]["lon"] = $item->lon;
 
             $output[$item->city]["data"][] = [
-                "jenis" => $item->jenis,
+                "label" => $item->jenis,
                 "value" => $item->value
             ];
         }
@@ -617,7 +617,7 @@ class SosialKependudukanServices {
             $output[$item->city]["lon"] = $item->lon;
 
             $output[$item->city]["data"][] = [
-                "jenis" => $item->jenis,
+                "label" => $item->jenis,
                 "value" => $item->data
             ];
         }

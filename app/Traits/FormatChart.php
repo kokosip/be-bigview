@@ -34,9 +34,10 @@ trait FormatChart
         $maxYear = (int)$data->maxYear;
         $minYear = (int)$data->minYear;
         $startYear = $maxYear - 2;
-        $selisih = $maxYear - $minYear;
-        if ($selisih < 2) {
-            $startYear = $maxYear - $selisih;
+        $diff = $maxYear - $minYear;
+
+        if ($diff < 2) {
+            $startYear = $maxYear - $diff;
         }
 
         $response = [
@@ -306,6 +307,30 @@ trait FormatChart
                 "yAxis_title" => $axis_title['y_axis_title']
             ]
 
+        ];
+
+        return $response;
+    }
+
+    public function multiLineChart($data, $axis_title){
+        if(empty($data)){
+            throw new Exception('Detail Data Multi Line chart tidak tersedia.');
+        }
+
+        foreach ($data as $key) {
+            $chart_category[] = $key->category;
+            $chart_data[$key->jenis]["name"] = $key->jenis;
+            $chart_data[$key->jenis]["data"][] = $key->data;
+        }
+
+        $response = [
+            "widget_type" => 'multi-line',
+            "widget_data" => [
+                "chart_categories" => array_values(array_unique($chart_category)),
+                "chart_data" => array_values($chart_data),
+                "xAxis_title" => $axis_title['x_axis_title'],
+                "yAxis_title" => $axis_title['y_axis_title']
+            ]
         ];
 
         return $response;
