@@ -21,4 +21,8 @@ class SumberDayaAlamController extends Controller
         $this->sdaService = $sdaService;
         $this->idUsecase = Auth::user()->id_usecase;
     }
+
+    public function listIndikator(){
+
+    }
 }
