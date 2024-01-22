@@ -288,7 +288,11 @@ trait FormatChart
             $chart_data[] = round($key->data, 2);
         }
 
-        $indikator_name = $params['filter'];
+        if(isset($params['filter'])){
+            $indikator_name = $params['filter'];
+        } else {
+            $indikator_name = $axis_title['y_axis_title'];
+        }
 
         $chart_series[] = [
             'name' => $indikator_name,

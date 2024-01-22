@@ -109,7 +109,7 @@ class SosialKependudukanServices {
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
 
         $chart_params = [
-            'y_axis_' => 'Jumlah Penduduk',
+            'y_axis_title' => 'Jumlah Penduduk',
         ];
 
         $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $chart_params);

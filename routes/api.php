@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\MasterController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Poda\EkonomiPerdaganganController;
 use App\Http\Controllers\Poda\SosialKependudukanController;
+use App\Http\Controllers\Poda\SumberDayaAlamController;
 use App\Services\Admin\SosialKependudukanServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -245,6 +246,12 @@ Route::prefix('poda')->group(function() {
     });
 
     Route::prefix('sda')->group(function() {
-
+        Route::get('/{subject}/indikator', [SumberDayaAlamController::class, 'listIndikator']);
+        Route::get('/{subject}/jenis', [SumberDayaAlamController::class, 'listJenis']);
+        Route::get('/{subject}/tahun', [SumberDayaAlamController::class, 'listTahun']);
+        Route::get('/{subject}/periode', [SumberDayaAlamController::class, 'periodeSda']);
+        Route::get('/{subject}/maps', [SumberDayaAlamController::class, 'mapSda']);
+        Route::get('/{subject}/bars', [SumberDayaAlamController::class, 'barSda']);
+        Route::get('/{subject}/areas', [SumberDayaAlamController::class, 'areaSda']);
     });
 });
