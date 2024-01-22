@@ -48,11 +48,10 @@ class SosialKependudukanRepositories {
     }
 
     public function getDetailJumlahPenduduk($idUsecase, $tahun){
-        $db = DB::table('mart_poda_social_kependudukan_detail')
-            ->select('city', 'sumber', 'tahun', 'Lakilaki', 'Perempuan', 'jumlah')
+        $db = DB::table('mart_poda_social_kependudukan_detail_merged')
+            ->select('city as category', 'jenis as column', 'data')
             ->where('tahun', $tahun)
             ->where('id_usecase', $idUsecase)
-            ->orderBy('jumlah', 'desc')
             ->get();
 
         return $db;
@@ -74,6 +73,16 @@ class SosialKependudukanRepositories {
             ->select('name', 'chart_categories', 'data')
             ->where('id_usecase', $idUsecase)
             ->where('tahun', $tahun['tahun'])
+            ->get();
+
+        return $db;
+    }
+
+    public function getDetailRentangUsia($idUsecase, $tahun){
+        $db = DB::table('mart_poda_social_rentang_usia_detail_merged')
+            ->select('kelompok_umur as category', 'jenis as column', 'data')
+            ->where('tahun', $tahun)
+            ->where('id_usecase', $idUsecase)
             ->get();
 
         return $db;
@@ -111,6 +120,21 @@ class SosialKependudukanRepositories {
             ->whereBetween('tahun', [$startYear, $endYear])
             ->where('city', $params['nama_daerah'])
             ->orderBy('city', 'asc', 'jenis', 'asc', 'tahun', 'desc')
+            ->get();
+
+        return $db;
+    }
+
+    public function getDetailLaju($idUsecase, $periode){
+        $tahun = explode('-', $periode['periode']);
+
+        $startYear = $tahun[0];
+        $endYear = $tahun[1];
+
+        $db = DB::table('mart_poda_social_lpp_chart_line_column')
+            ->select('city as category', 'tahun as column', 'merged_data as data')
+            ->whereBetween('tahun', [$startYear, $endYear])
+            ->where('id_usecase', $idUsecase)
             ->get();
 
         return $db;
@@ -231,6 +255,22 @@ class SosialKependudukanRepositories {
             ->where('id_usecase', $idUsecase)
             ->where('filter', $params['filter'])
             ->where('tahun', $params['tahun'])
+            ->get();
+
+        return $db;
+    }
+
+    public function getDetailIPM($idUsecase, $params){
+        $periode = explode('-', $params['periode']);
+
+        $startYear = $periode[0];
+        $endYear = $periode[1];
+
+        $db = DB::table('mart_poda_social_ipm_detail')
+            ->select('city as category', 'tahun as column', 'value as data')
+            ->where('id_usecase', $idUsecase)
+            ->where('filter', $params['filter'])
+            ->whereBetween('tahun', [$startYear, $endYear])
             ->get();
 
         return $db;

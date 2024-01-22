@@ -6,6 +6,15 @@ use Exception;
 
 trait FormatChart
 {
+    public function getPeriode($params) {
+        $periode = explode('-', $params['periode']);
+
+        $startYear = $periode[0];
+        $endYear = $periode[1];
+
+        return [$startYear, $endYear];
+    }
+
     public function filterTahun($data, $is_month = false) {
         if(empty($data)){
             throw new Exception('Filter Tahun Tidak tersedia.');
@@ -340,42 +349,27 @@ trait FormatChart
         return $response;
     }
 
-    public function tableDetail($data, $kode_kab_kota, $title) {
+    public function detailTable($data, $kode_kab_kota, $title) {
         if(empty($data)){
             throw new Exception('Detail Data tidak tersedia.');
         }
 
-        foreach ($data as $key) {
-            $data_tmp = [];
+        $level = substr($kode_kab_kota, 2) != "00" ? "Kecamatan" : "Kabupaten/Kota";
 
-            $data_tmp['daerah'] = $key->city;
-            $data_tmp['laki_laki'] = $key->Lakilaki;
-            $data_tmp['perempuan'] = $key->Perempuan;
-            $data_tmp['total'] = $key->jumlah;
-
-            $data_final[] = $data_tmp;
+        foreach ($data as $item) {
+            $output[$item->category][$level] = $item->category;
+            $output[$item->category][$item->column] = $item->data;
         }
 
-        $level = substr($kode_kab_kota, 2) != "00" ? "Kecamatan" : "Kabupaten/Kota";
+        $output = array_values($output);
 
         $response = [
             "widget_type"=> "datatable-server",
             "title"=> $title,
-            "sumber_data"=> $data[0]->sumber,
+            "sumber_data"=> "",
             "widget_data"=> [
-                "order_col"=> [
-                    "daerah",
-                    "laki_laki",
-                    "perempuan",
-                    "total"
-                ],
-                "t_head"=> [
-                    "daerah" => $level,
-                    "laki_laki" => "Laki-laki",
-                    "perempuan" => "Perempuan",
-                    "total" => "Total"
-                ],
-                "t_body"=> $data_final
+                "t_head"=> array_map('strval', array_keys($output[0])),
+                "t_body"=> $output
             ]
         ];
 

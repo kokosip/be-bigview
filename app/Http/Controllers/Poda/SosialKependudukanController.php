@@ -88,10 +88,16 @@ class SosialKependudukanController extends Controller
     }
 
     public function detailJumlahPenduduk(Request $request){
-        $tahun = $request->input("tahun");
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
 
         try{
-            $data = $this->sosialService->getDetailJumlahPenduduk($this->idUsecase, $tahun);
+            $data = $this->sosialService->getDetailJumlahPenduduk($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
@@ -122,6 +128,24 @@ class SosialKependudukanController extends Controller
 
         try{
             $data = $this->sosialService->getStackedBarRentangUsia($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailRentangUsia(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getDetailRentangUsia($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
@@ -163,6 +187,24 @@ class SosialKependudukanController extends Controller
 
         try{
             $data = $this->sosialService->getDualAxesLaju($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailLaju(Request $request){
+        $validator = Validator::make($request->all(), [
+            'periode' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getDetailLaju($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
@@ -346,6 +388,25 @@ class SosialKependudukanController extends Controller
 
         try{
             $data = $this->sosialService->getMapIPM($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailIPM(Request $request){
+        $validator = Validator::make($request->all(), [
+            'periode' => 'required',
+            'filter' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getDetailIPM($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){

@@ -122,9 +122,9 @@ class SosialKependudukanServices {
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
 
-        $title = "Detail Jumlah Penduduk dan jenis Kelamin, $tahun";
+        $title = "Detail Jumlah Penduduk dan jenis Kelamin, ". $tahun['tahun'];
 
-        $response = $this->tableDetail($rows, $kode_kabkota->kode_kab_kota, $title);
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
         return $response;
     }
@@ -147,6 +147,17 @@ class SosialKependudukanServices {
         return $response;
     }
 
+    public function getDetailRentangUsia($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getDetailRentangUsia($idUsecase, $tahun);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Rentang Usia Menurut Jenis Kelamin, ". $tahun['tahun'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
     // End Rentang Usia
 
     // Start Laju Pertumbuhan
@@ -178,6 +189,18 @@ class SosialKependudukanServices {
         ];
 
         $response = $this->barColumnChart($rows, $chart_type, $chart_params);
+
+        return $response;
+    }
+
+    public function getDetailLaju($idUsecase, $periode){
+        $rows = $this->sosialRepositories->getDetailLaju($idUsecase, $periode);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Laju Pertumbuhan Penduduk (%), ". $periode['periode'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
         return $response;
     }
@@ -325,6 +348,18 @@ class SosialKependudukanServices {
         }
 
         $response = $this->mapLeaflet(array_values($output));
+
+        return $response;
+    }
+
+    public function getDetailIPM($idUsecase, $params){
+        $rows = $this->sosialRepositories->getDetailIPM($idUsecase, $params);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = $params['filter'].", ". $params['periode'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
         return $response;
     }
