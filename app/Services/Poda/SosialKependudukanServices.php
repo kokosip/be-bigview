@@ -248,6 +248,18 @@ class SosialKependudukanServices {
 
         return $response;
     }
+
+    public function getDetailRasio($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getDetailRasio($idUsecase, $tahun);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Rasio Jenis Kelamin, ". $tahun['tahun'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
     // End Rasio Jenis Kelamin
 
     // Start Kepadatan Penduduk
@@ -288,6 +300,18 @@ class SosialKependudukanServices {
         ];
 
         $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $chart_params);
+
+        return $response;
+    }
+
+    public function getDetailKepadatan($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getDetailKepadatan($idUsecase, $tahun);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Kepadatan Penduduk, ". $tahun['tahun'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
         return $response;
     }
@@ -432,6 +456,18 @@ class SosialKependudukanServices {
 
         return $response;
     }
+
+    public function getDetailKemiskinan($idUsecase, $params){
+        $rows = $this->sosialRepositories->getDetailKemiskinan($idUsecase, $params);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Kemiskinan Penduduk, ". $params['tahun'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
     // End Kemiskinan
 
     // Start Pekerjaan dan Angkatan Kerja
@@ -510,6 +546,28 @@ class SosialKependudukanServices {
         ];
 
         $response = $this->areaLineChart($rows, $params, $axis_title, "chart_line_series");
+
+        return $response;
+    }
+
+    public function getDetailJenisPekerjaan($idUsecase, $params){
+        $rows = $this->sosialRepositories->getDetailJenisPekerjaan($idUsecase, $params);
+
+        $title = "Detail Pekerjaan dan Angkatan Kerja berdasarkan Jenis Pekerjaan, ". $params['tahun'];
+
+        $response = $this->detailTable($rows, "", $title, "Jenis Pekerjaan");
+
+        return $response;
+    }
+
+    public function getDetailPekerjaan($idUsecase, $params){
+        $rows = $this->sosialRepositories->getDetailPekerjaan($idUsecase, $params);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Pekerjaan dan Angkatan Kerja berdasarkan Jenis Pekerjaan, ". $params['periode'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
         return $response;
     }
@@ -592,6 +650,18 @@ class SosialKependudukanServices {
 
         return $response;
     }
+
+    public function getDetailPendidikan($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getDetailPendidikan($idUsecase, $tahun);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Jumlah Infrastruktur Pendidikan, ". $tahun['tahun'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
     // End Pendidikan
 
     // Start Kesehatan
@@ -658,6 +728,18 @@ class SosialKependudukanServices {
         }
 
         $response = $this->mapLeaflet(array_values($output));
+
+        return $response;
+    }
+
+    public function getDetailKesehatan($idUsecase, $tahun){
+        $rows = $this->sosialRepositories->getDetailKesehatan($idUsecase, $tahun);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Jumlah Infrastruktur Kesehatan, ". $tahun['tahun'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
         return $response;
     }

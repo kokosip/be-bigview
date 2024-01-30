@@ -349,12 +349,16 @@ trait FormatChart
         return $response;
     }
 
-    public function detailTable($data, $kode_kab_kota, $title) {
+    public function detailTable($data, $kode_kab_kota, $title, $alt_title = "") {
         if(empty($data)){
             throw new Exception('Detail Data tidak tersedia.');
         }
 
-        $level = substr($kode_kab_kota, 2) != "00" ? "Kecamatan" : "Kabupaten/Kota";
+        if($kode_kab_kota != ""){
+            $level = substr($kode_kab_kota, 2) != "00" ? "Kecamatan" : "Kabupaten/Kota";
+        } else {
+            $level = $alt_title;
+        }
 
         foreach ($data as $item) {
             $output[$item->category][$level] = $item->category;

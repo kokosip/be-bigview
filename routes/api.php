@@ -156,6 +156,8 @@ Route::prefix('poda')->group(function() {
             Route::get('/bars', [SosialKependudukanController::class, 'barJenisPekerjaan']);
             Route::get('/maps', [SosialKependudukanController::class, 'mapPekerjaan']);
             Route::get('/lines', [SosialKependudukanController::class, 'linePekerjaan']);
+            Route::get('/details', [SosialKependudukanController::class, 'detailPekerjaan']);
+            Route::get('/details/jenis', [SosialKependudukanController::class, 'detailJenisPekerjaan']);
         });
 
         // Pendidikan
@@ -167,6 +169,7 @@ Route::prefix('poda')->group(function() {
             Route::get('/maps', [SosialKependudukanController::class, 'mapPendidikan']);
             Route::get('/bars', [SosialKependudukanController::class, 'barPendidikan']);
             Route::get('/bars/jenjang', [SosialKependudukanController::class, 'barJenjangPendidikan']);
+            Route::get('/details', [SosialKependudukanController::class, 'detailPendidikan']);
         });
 
         // Kesehatan
@@ -177,6 +180,7 @@ Route::prefix('poda')->group(function() {
             Route::get('/maps', [SosialKependudukanController::class, 'mapKesehatan']);
             Route::get('/bars', [SosialKependudukanController::class, 'barKesehatan']);
             Route::get('/bars-column', [SosialKependudukanController::class, 'barColumnKesehatan']);
+            Route::get('/details', [SosialKependudukanController::class, 'detailKesehatan']);
         });
     });
 
@@ -188,6 +192,7 @@ Route::prefix('poda')->group(function() {
             Route::get('/bulan', [EkonomiPerdaganganController::class, 'bulanInflasi']);
             Route::get('/maps', [EkonomiPerdaganganController::class, 'mapInflasi']);
             Route::get('/dual-chart', [EkonomiPerdaganganController::class, 'dualChartInflasi']);
+            Route::get('/details', [EkonomiPerdaganganController::class, 'detailInflasi']);
         });
 
         Route::prefix('pdrb')->group(function() {
@@ -197,6 +202,7 @@ Route::prefix('poda')->group(function() {
             Route::get('/card', [EkonomiPerdaganganController::class, 'cardPDRB']);
             Route::get('/bars', [EkonomiPerdaganganController::class, 'barPDRB']);
             Route::get('/areas', [EkonomiPerdaganganController::class, 'areaPDRB']);
+            Route::get('/details', [EkonomiPerdaganganController::class, 'detailPDRB']);
         });
 
         Route::prefix('pariwisata')->group(function() {
@@ -208,6 +214,7 @@ Route::prefix('poda')->group(function() {
                 Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunPariwisataDTW']);
                 Route::get('/maps', [EkonomiPerdaganganController::class, 'mapPariwisataDTW']);
                 Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataDTW']);
+                Route::get('/details', [EkonomiPerdaganganController::class, 'detailPariwisataDTW']);
             });
 
             // Daya Tarik Wisata
@@ -217,6 +224,7 @@ Route::prefix('poda')->group(function() {
                 Route::get('/maps', [EkonomiPerdaganganController::class, 'mapPariwisataHotel']);
                 Route::get('/bars', [EkonomiPerdaganganController::class, 'barPariwisataHotel']);
                 Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataHotel']);
+                Route::get('/details', [EkonomiPerdaganganController::class, 'detailPariwisataHotel']);
             });
 
             // Jumlah Wisatawan
@@ -224,6 +232,7 @@ Route::prefix('poda')->group(function() {
                 Route::get('/periode', [EkonomiPerdaganganController::class, 'periodePariwisataWisatawan']);
                 Route::get('/card', [EkonomiPerdaganganController::class, 'cardPariwisataWisatawan']);
                 Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataWisatawan']);
+                Route::get('/details', [EkonomiPerdaganganController::class, 'detailPariwisataWisatawan']);
             });
 
             // TPK
@@ -232,6 +241,7 @@ Route::prefix('poda')->group(function() {
                 Route::get('/bulan', [EkonomiPerdaganganController::class, 'bulanPariwisataTPK']);
                 Route::get('/card', [EkonomiPerdaganganController::class, 'cardPariwisataTPK']);
                 Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataTPK']);
+                Route::get('/details', [EkonomiPerdaganganController::class, 'detailPariwisataTPK']);
             });
 
             // Jumlah Restoran dan Rumah Makan
@@ -241,6 +251,7 @@ Route::prefix('poda')->group(function() {
                 Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunPariwisataResto']);
                 Route::get('/maps', [EkonomiPerdaganganController::class, 'mapPariwisataResto']);
                 Route::get('/lines', [EkonomiPerdaganganController::class, 'linePariwisataResto']);
+                Route::get('/details', [EkonomiPerdaganganController::class, 'detailPariwisataResto']);
             });
         });
     });
@@ -253,5 +264,6 @@ Route::prefix('poda')->group(function() {
         Route::get('/{subject}/maps', [SumberDayaAlamController::class, 'mapSda']);
         Route::get('/{subject}/bars', [SumberDayaAlamController::class, 'barSda']);
         Route::get('/{subject}/areas', [SumberDayaAlamController::class, 'areaSda']);
+        Route::get('/{subject}/details', [SumberDayaAlamController::class, 'detailSda']);
     });
 });

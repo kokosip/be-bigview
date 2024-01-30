@@ -259,6 +259,24 @@ class SosialKependudukanController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function detailRasio(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getDetailRasio($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
     // End Rasio Jenis Kelamin
 
     // Start Kepadatan Penduduk
@@ -301,6 +319,24 @@ class SosialKependudukanController extends Controller
 
         try{
             $data = $this->sosialService->getBarKepadatan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailKepadatan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getDetailKepadatan($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
@@ -502,6 +538,25 @@ class SosialKependudukanController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function detailKemiskinan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+            'filter' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getDetailKemiskinan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
     // End Kemiskinan
 
     // Start Pekerjaan
@@ -608,6 +663,43 @@ class SosialKependudukanController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function detailJenisPekerjaan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getDetailJenisPekerjaan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailPekerjaan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'periode' => 'required',
+            'indikator' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getDetailPekerjaan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
     // End Pekerjaan
 
     // Start Pendidikan
@@ -707,6 +799,24 @@ class SosialKependudukanController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function detailPendidikan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getDetailPendidikan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
     // End Pendidikan
 
     // Start Kesehatan
@@ -788,6 +898,24 @@ class SosialKependudukanController extends Controller
 
         try{
             $data = $this->sosialService->getMapKesehatan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailKesehatan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sosialService->getDetailKesehatan($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
