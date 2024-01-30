@@ -362,7 +362,7 @@ trait FormatChart
 
         foreach ($data as $item) {
             $output[$item->category][$level] = $item->category;
-            $output[$item->category][$item->column] = $item->data;
+            $output[$item->category][$item->column] = (double) $item->data;
         }
 
         $output = array_values($output);
