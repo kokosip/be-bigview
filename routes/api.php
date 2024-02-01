@@ -185,6 +185,29 @@ Route::prefix('poda')->group(function() {
     });
 
     Route::prefix('ekonomi')->group(function() {
+        Route::prefix('pad')->group(function() {
+            Route::get('/areas', [EkonomiPerdaganganController::class, 'areaPad']);
+            Route::get('/details', [EkonomiPerdaganganController::class, 'detailPad']);
+        });
+
+        Route::prefix('trend')->group(function() {
+            Route::get('/periode', [EkonomiPerdaganganController::class, 'periodeTrendPerdagangan']);
+            Route::get('/areas', [EkonomiPerdaganganController::class, 'areaTrendPerdagangan']);
+            Route::get('/details', [EkonomiPerdaganganController::class, 'detailTrendPerdagangan']);
+        });
+
+        Route::prefix('komoditas')->group(function() {
+            Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunKomoditas']);
+            Route::get('/bars', [EkonomiPerdaganganController::class, 'barKomoditas']);
+            Route::get('/details', [EkonomiPerdaganganController::class, 'detailKomoditas']);
+        });
+
+        Route::prefix('pad-kabkot')->group(function() {
+            Route::get('/tahun', [EkonomiPerdaganganController::class, 'tahunPadKabKota']);
+            Route::get('/bars', [EkonomiPerdaganganController::class, 'barPadKabKota']);
+            Route::get('/details', [EkonomiPerdaganganController::class, 'detailPadKabKota']);
+        });
+
         Route::prefix('inflasi')->group(function() {
             Route::get('/periode', [EkonomiPerdaganganController::class, 'monthPeriodeInflasi']);
             Route::get('/daerah', [EkonomiPerdaganganController::class, 'namaDaerahInflasi']);

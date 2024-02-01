@@ -19,6 +19,138 @@ class EkonomiPerdaganganServices {
         $this->masterRepositories = $masterRepositories;
     }
 
+    //Start Ekonomi PAD
+    public function getAreaPad($idUsecase){
+        $rows = $this->ekonomiRepositories->getAreaPad($idUsecase);
+
+        $axis_title = [
+            'y_axis_title' => 'Nominal (Rupiah)',
+            'x_axis_title' => 'Tahun'
+        ];
+
+        $response = $this->areaLineChart($rows, null, $axis_title, "chart_area");
+
+        return $response;
+    }
+
+    public function getDetailPad($idUsecase){
+        $rows = $this->ekonomiRepositories->getDetailPad($idUsecase);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Pendapatan PAD";
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
+    // End Ekonomi PAD
+
+    // Start Trend Perdagangan
+    public function getPeriodeTrendPerdagangan($idUsecase){
+        $rows = $this->ekonomiRepositories->getPeriodeTrendPerdagangan($idUsecase);
+
+        $response = $this->filterPeriode($rows);
+
+        return $response;
+    }
+
+    public function getAreaTrendPerdagangan($idUsecase, $periode){
+        $rows = $this->ekonomiRepositories->getAreaTrendPerdagangan($idUsecase, $periode);
+
+        $axis_title = [
+            'y_axis_title' => 'Nominal (Rupiah)',
+            'x_axis_title' => 'Tahun'
+        ];
+
+        $response = $this->areaLineChart($rows, null, $axis_title, "chart_area");
+
+        return $response;
+    }
+
+    public function getDetailTrendPerdagangan($idUsecase, $periode){
+        $rows = $this->ekonomiRepositories->getDetailTrendPerdagangan($idUsecase, $periode);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Trend Perdagangan PAD";
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
+    // End Trend Perdagangan
+
+    // Start Top Komoditas
+    public function getTahunKomoditas($idUsecase){
+        $rows = $this->ekonomiRepositories->getTahunKomoditas($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getBarKomoditas($idUsecase, $tahun){
+        $rows = $this->ekonomiRepositories->getBarKomoditas($idUsecase, $tahun);
+
+        $chart_params = [
+            'x_axis_title' => 'Nominal',
+            'y_axis_title' => 'Komoditas'
+        ];
+
+        $response = $this->barChart($rows, "", $chart_params);
+
+        return $response;
+    }
+
+    public function getDetailKomoditas($idUsecase, $tahun){
+        $rows = $this->ekonomiRepositories->getDetailKomoditas($idUsecase, $tahun);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Top 10 Komoditas Perdagangan, ". $tahun['tahun'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
+    // End Top Komoditas
+
+    // Start Pad KabKota
+    public function getTahunPadKabkota($idUsecase){
+        $rows = $this->ekonomiRepositories->getTahunPadKabkota($idUsecase);
+
+        $response = $this->filterTahun($rows);
+
+        return $response;
+    }
+
+    public function getBarPadKabkota($idUsecase, $tahun){
+        $rows = $this->ekonomiRepositories->getBarPadKabkota($idUsecase, $tahun);
+
+        $chart_params = [
+            'x_axis_title' => 'Nominal',
+            'y_axis_title' => 'Kab/Kota'
+        ];
+
+        $response = $this->barChart($rows, "", $chart_params);
+
+        return $response;
+    }
+
+    public function getDetailPadKabkota($idUsecase, $tahun){
+        $rows = $this->ekonomiRepositories->getDetailPadKabkota($idUsecase, $tahun);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Top 10 Kab/Kota by PAD, ". $tahun['tahun'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
+    // End Pad KabKota
+
     // Start Inflasi dan IHK
     public function getMonthPeriodeInflasi($idUsecase){
         $rows = $this->ekonomiRepositories->getMonthPeriodeInflasi($idUsecase);

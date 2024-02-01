@@ -22,7 +22,173 @@ class EkonomiPerdaganganController extends Controller
         $this->idUsecase = Auth::user()->id_usecase;
     }
 
-    // Inflasi dan IHK
+    // Start Ekonomi PAD
+    public function areaPad(){
+        try{
+            $data = $this->ekonomiService->getAreaPad($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailPad(){
+        try{
+            $data = $this->ekonomiService->getDetailPad($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End Ekonomi PAD
+
+    // Start Trend Perdagangan
+    public function periodeTrendPerdagangan(){
+        try{
+            $data = $this->ekonomiService->getPeriodeTrendPerdagangan($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function areaTrendPerdagangan(Request $request){
+        $validator = Validator::make($request->all(),[
+            'periode' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getAreaTrendPerdagangan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailTrendPerdagangan(Request $request){
+        $validator = Validator::make($request->all(),[
+            'periode' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getDetailTrendPerdagangan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End Perdagangan
+
+    // Start Top Komoditas
+    public function tahunKomoditas(){
+        try{
+            $data = $this->ekonomiService->getTahunKomoditas($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function barKomoditas(Request $request){
+        $validator = Validator::make($request->all(),[
+            'tahun' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getBarKomoditas($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailKomoditas(Request $request){
+        $validator = Validator::make($request->all(),[
+            'tahun' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getDetailKomoditas($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End Top Komoditas
+
+    // Start Top Pad KabKota
+    public function tahunPadKabKota(){
+        try{
+            $data = $this->ekonomiService->getTahunPadKabKota($this->idUsecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function barPadKabKota(Request $request){
+        $validator = Validator::make($request->all(),[
+            'tahun' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getBarPadKabKota($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailPadKabKota(Request $request){
+        $validator = Validator::make($request->all(),[
+            'tahun' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getDetailPadKabKota($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+    // End Top Komoditas
+
+    // Start Inflasi dan IHK
     public function monthPeriodeInflasi(){
         try{
             $data = $this->ekonomiService->getMonthPeriodeInflasi($this->idUsecase);
