@@ -218,6 +218,18 @@ class EkonomiPerdaganganServices {
 
         return $response;
     }
+
+    public function getDetailInflasi($idUsecase, $tahun){
+        $rows = $this->ekonomiRepositories->getDetailInflasi($idUsecase, $tahun);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Inflasi dan IHK, ". $tahun['tahun'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
     // End Inflasi dan IHK
 
     // Start PDRB
@@ -296,6 +308,24 @@ class EkonomiPerdaganganServices {
 
         return $response;
     }
+
+    public function getDetailPDRB($idUsecase, $params){
+        $rows = $this->ekonomiRepositories->getDetailPDRB($idUsecase, $params);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail PDRB Berdasarkan ".$params['filter']. " - " .$params['jenis']." (Rupiah), ". $params['tahun'];
+
+        $data = [];
+        foreach ($rows as $value) {
+            $value->category = preg_replace('/^[A-Z,]+\. /', '', $value->category);
+            $data[] = $value;
+        }
+
+        $response = $this->detailTable($data, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
     // End PDRB
 
     // Start Pariwisata
@@ -364,6 +394,18 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
+    public function getDetailPariwisataDTW($idUsecase, $periode){
+        $rows = $this->ekonomiRepositories->getDetailPariwisataDTW($idUsecase, $periode);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Daya Tarik Wisata, ". $periode['periode'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
+
     public function getPeriodePariwisataHotel($idUsecase){
         $rows = $this->ekonomiRepositories->getPeriodePariwisataHotel($idUsecase);
 
@@ -425,6 +467,18 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
+    public function getDetailPariwisataHotel($idUsecase, $tahun){
+        $rows = $this->ekonomiRepositories->getDetailPariwisataHotel($idUsecase, $tahun);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Jumlah Hotel, ". $tahun['tahun'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
+
     public function getPeriodePariwisataWisatawan($idUsecase){
         $rows = $this->ekonomiRepositories->getPeriodePariwisataWisatawan($idUsecase);
 
@@ -464,6 +518,16 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
+    public function getDetailPariwisataWisatawan($idUsecase, $periode){
+        $rows = $this->ekonomiRepositories->getDetailPariwisataWisatawan($idUsecase, $periode);
+
+        $title = "Detail Jumlah Wisatawan, ". $periode['periode'];
+
+        $response = $this->detailTable($rows, "", $title, 'Tahun');
+
+        return $response;
+    }
+
     public function getTahunPariwisataTPK($idUsecase){
         $rows = $this->ekonomiRepositories->getTahunPariwisataTPK($idUsecase);
 
@@ -497,6 +561,16 @@ class EkonomiPerdaganganServices {
         ];
 
         $response = $this->multiLineChart($rows, $axis_title);
+
+        return $response;
+    }
+
+    public function getDetailPariwisataTPK($idUsecase, $tahun){
+        $rows = $this->ekonomiRepositories->getDetailPariwisataTPK($idUsecase, $tahun);
+
+        $title = "Detail Tingkat Penghunian Kamar, ". $tahun['tahun'];
+
+        $response = $this->detailTable($rows, "", $title, "Jenis Hotel");
 
         return $response;
     }
@@ -554,6 +628,18 @@ class EkonomiPerdaganganServices {
         ];
 
         $response = $this->areaLineChart($rows, $axis_title, $axis_title, "chart_line_series");
+
+        return $response;
+    }
+
+    public function getDetailPariwisataResto($idUsecase, $periode){
+        $rows = $this->ekonomiRepositories->getDetailPariwisataResto($idUsecase, $periode);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail Jumlah Restoran/Rumah Makan, ". $periode['periode'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
         return $response;
     }

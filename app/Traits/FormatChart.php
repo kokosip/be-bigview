@@ -15,6 +15,10 @@ trait FormatChart
         return [$startYear, $endYear];
     }
 
+    public function getLowerCase($str){
+        return str_replace(['/', ' '], '_', strtolower(($str)));
+    }
+
     public function filterTahun($data, $is_month = false) {
         if(empty($data)){
             throw new Exception('Filter Tahun Tidak tersedia.');
@@ -361,8 +365,11 @@ trait FormatChart
         }
 
         foreach ($data as $item) {
-            $output[$item->category][$level] = $item->category;
-            $output[$item->category][$item->column] = (double) $item->data;
+            $output[$item->category][$this->getLowerCase($level)] = $item->category;
+            if(isset($item->category2)){
+                $output[$item->category]['month'] = $item->category2;
+            }
+            $output[$item->category][$this->getLowerCase($item->column)] = (double) $item->data;
         }
 
         $output = array_values($output);

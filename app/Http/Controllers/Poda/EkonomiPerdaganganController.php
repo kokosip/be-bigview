@@ -274,6 +274,24 @@ class EkonomiPerdaganganController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function detailInflasi(Request $request){
+        $validator = Validator::make($request->all(),[
+            'tahun' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getDetailInflasi($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
     // End Infalsi dan IHK
 
     // Start PDRB
@@ -367,6 +385,26 @@ class EkonomiPerdaganganController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function detailPDRB(Request $request){
+        $validator = Validator::make($request->all(),[
+            'tahun' => 'required',
+            'filter' => 'required',
+            'jenis' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getDetailPDRB($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
     // End PDRB
 
     // Start Pariwisata
@@ -440,6 +478,24 @@ class EkonomiPerdaganganController extends Controller
 
         try{
             $data = $this->ekonomiService->getLinePariwisataDTW($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailPariwisataDTW(Request $request){
+        $validator = Validator::make($request->all(),[
+            'periode' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getDetailPariwisataDTW($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
@@ -521,6 +577,24 @@ class EkonomiPerdaganganController extends Controller
         }
     }
 
+    public function detailPariwisataHotel(Request $request){
+        $validator = Validator::make($request->all(),[
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getDetailPariwisataHotel($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
     public function periodePariwisataWisatawan(){
         try{
             $data = $this->ekonomiService->getPeriodePariwisataWisatawan($this->idUsecase);
@@ -560,6 +634,24 @@ class EkonomiPerdaganganController extends Controller
 
         try{
             $data = $this->ekonomiService->getLinePariwisataWisatawan($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailPariwisataWisatawan(Request $request){
+        $validator = Validator::make($request->all(),[
+            'periode' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getDetailPariwisataWisatawan($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
@@ -632,6 +724,24 @@ class EkonomiPerdaganganController extends Controller
         }
     }
 
+    public function detailPariwisataTPK(Request $request){
+        $validator = Validator::make($request->all(),[
+            'tahun' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getDetailPariwisataTPK($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
     public function periodePariwisataResto(){
         try{
             $data = $this->ekonomiService->getPeriodePariwisataResto($this->idUsecase);
@@ -692,6 +802,24 @@ class EkonomiPerdaganganController extends Controller
 
         try{
             $data = $this->ekonomiService->getLinePariwisataResto($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function detailPariwisataResto(Request $request){
+        $validator = Validator::make($request->all(),[
+            'periode' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->ekonomiService->getDetailPariwisataResto($this->idUsecase, $validator->validate());
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){
