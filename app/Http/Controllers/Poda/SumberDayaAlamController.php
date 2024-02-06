@@ -145,4 +145,24 @@ class SumberDayaAlamController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function detailSda(Request $request, $subject){
+        $validator = Validator::make($request->all(), [
+            'indikator' => 'required',
+            'jenis' => 'required',
+            'periode' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->sdaService->getDetailSda($this->idUsecase, $subject, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
 }

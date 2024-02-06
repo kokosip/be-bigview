@@ -99,4 +99,16 @@ class SumberDayaAlamServices {
 
         return $response;
     }
+
+    public function getDetailSda($idUsecase, $subject, $params){
+        $rows = $this->sdaRepositories->getDetailSda($idUsecase, $this->getSubjectName($subject), $params);
+
+        $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
+
+        $title = "Detail ". $params['indikator']. " ".$params['jenis'].", ". $params['periode'];
+
+        $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
+
+        return $response;
+    }
 }

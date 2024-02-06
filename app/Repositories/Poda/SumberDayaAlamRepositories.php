@@ -92,4 +92,22 @@ class SumberDayaAlamRepositories {
 
         return $db;
     }
+
+    public function getDetailSda($idUsecase, $subject, $params){
+        $periode = explode('-', $params['periode']);
+
+        $startYear = $periode[0];
+        $endYear = $periode[1];
+
+        $db = DB::table('mart_poda_sda_detail_data')
+            ->select('kabupaten_kota as category', 'tahun as column', 'data')
+            ->where('id_usecase', $idUsecase)
+            ->where('subject', $subject)
+            ->where('indikator', $params['indikator'])
+            ->where('jenis', $params['jenis'])
+            ->whereBetween('tahun', [$startYear, $endYear])
+            ->get();
+
+        return $db;
+    }
 }
