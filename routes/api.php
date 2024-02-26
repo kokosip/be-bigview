@@ -6,11 +6,10 @@ use App\Http\Controllers\Admin\UsecaseController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MasterController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Content\LogoController;
 use App\Http\Controllers\Poda\EkonomiPerdaganganController;
 use App\Http\Controllers\Poda\SosialKependudukanController;
 use App\Http\Controllers\Poda\SumberDayaAlamController;
-use App\Services\Admin\SosialKependudukanServices;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -80,6 +79,10 @@ Route::prefix('admin')->group(function () {
     Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
     Route::put('/users/{id}', [UserController::class, 'updateUser']);
 
+});
+
+Route::prefix('content')->group(function () {
+    Route::post('/upload/gov', [LogoController::class, 'uploadLogoGovern']);
 });
 
 // Poda

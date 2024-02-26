@@ -33,7 +33,7 @@ class UsecaseRepositories {
         if($result){
             return $result;
         } else {
-            throw new Exception('Gagal Menambahkan Role Baru.');
+            throw new Exception('Gagal Menambahkan Usecase Pemerintah Baru.');
         }
     }
 
@@ -43,7 +43,7 @@ class UsecaseRepositories {
         if($result){
             return $result;
         } else {
-            throw new Exception('Gagal Menambahkan Role Baru.');
+            throw new Exception('Gagal Menambahkan Usecase Custom Baru.');
         }
     }
 
@@ -52,7 +52,7 @@ class UsecaseRepositories {
         if($result){
             return $result;
         } else {
-            throw new Exception('Gagal Menambahkan Role Baru.');
+            throw new Exception('Gagal Menambahkan Usecase Baru.');
         }
     }
 

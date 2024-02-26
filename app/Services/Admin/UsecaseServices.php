@@ -104,6 +104,20 @@ class UsecaseServices {
         }
     }
 
+    public function updateLogoUsecaseGovern($data, $id_usecase){
+        $pic_data = [
+            "pic_logo" => $data,
+        ];
+
+        $result = $this->usecaseRepositories->updateUsecaseGovern($pic_data, $id_usecase);
+
+        if($result){
+            return $result;
+        } else {
+            throw new Exception('Gagal Update Logo Usecase Pemerintah');
+        }
+    }
+
     public function updateUsecaseCustom($data, $id_usecase){
         $key_custom = ["name_usecase", "deskripsi"];
         $key_usecase = ["name_usecase", "base_color1", "base_color2", "base_color3", "base_color4"];
