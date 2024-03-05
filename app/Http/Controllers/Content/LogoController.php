@@ -16,13 +16,11 @@ class LogoController extends Controller
 {
     use ApiResponse;
     protected $logoService;
-    protected $usecaseService;
     protected $idUsecase;
 
-    public function __construct(LogoServices $logoService, UsecaseServices $usecaseService)
+    public function __construct(LogoServices $logoService)
     {
         $this->logoService = $logoService;
-        $this->usecaseService = $usecaseService;
         $this->idUsecase = Auth::user()->id_usecase;
     }
 
@@ -37,6 +35,16 @@ class LogoController extends Controller
 
         try{
             $data = $this->logoService->setLogoGovernment($this->idUsecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function getLogo(){
+        try{
+            $data = $this->logoService->getLogo($this->idUsecase);
 
             return $this->successResponse(data: $data);
         } catch(Exception $e){

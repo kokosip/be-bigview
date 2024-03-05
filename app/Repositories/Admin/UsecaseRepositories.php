@@ -84,7 +84,7 @@ class UsecaseRepositories {
         $db = DB::table('usecase as u')
             ->leftJoin('usecase_government as ug', 'u.id_usecase', '=', 'ug.id_usecase')
             ->leftJoin('usecase_custom as uc', 'u.id_usecase', '=', 'uc.id_usecase')
-            ->selectRaw('u.*, ug.kode_provinsi, ug.kode_kab_kota, uc.deskripsi')
+            ->selectRaw("u.*, ug.kode_provinsi, ug.kode_kab_kota, uc.deskripsi, if(type_dashboard = 'Government', ug.pic_logo, uc.pic_logo) as logo")
             ->where('u.id_usecase', $id_usecase)
             ->first();
 

@@ -20,4 +20,12 @@ trait FileStorage
             throw new Exception('File gagal di upload, coba beberapa saat lagi');
         }
     }
+
+    public function getFile($path){
+        Storage::setVisibility($path, 'public');
+
+        $url = Storage::url($path);
+
+        return $url;
+    }
 }

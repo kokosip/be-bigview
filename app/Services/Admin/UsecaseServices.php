@@ -111,11 +111,7 @@ class UsecaseServices {
 
         $result = $this->usecaseRepositories->updateUsecaseGovern($pic_data, $id_usecase);
 
-        if($result){
-            return $result;
-        } else {
-            throw new Exception('Gagal Update Logo Usecase Pemerintah');
-        }
+        return [$result, $data];
     }
 
     public function updateUsecaseCustom($data, $id_usecase){

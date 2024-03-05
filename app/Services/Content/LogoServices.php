@@ -33,7 +33,38 @@ class LogoServices {
 
         $result = $this->usecaseService->updateLogoUsecaseGovern($url, $idUsecase);
 
-        return $result;
+        if($result[0] == 1){
+            $message = 'Berhasil mengunggah Logo '.$data->name_usecase;
+        } else if($result[0] == 0){
+            $message = 'Berhasil memperbarui Logo '.$data->name_usecase;
+        } else {
+            throw new Exception('Gagal menambahkan Logo');
+        }
+
+        $response = [
+            'message' => $message,
+            'filename' => pathinfo($result[1], PATHINFO_BASENAME),
+            'url' => $result[1]
+        ];
+
+        return $response;
+    }
+
+    public function getLogo($idUsecase){
+        $data = $this->usecaseService->getUsecaseById($idUsecase);
+
+        $path = pathinfo($data->logo, PATHINFO_BASENAME);
+
+        if(empty($path)) $path = 'image_not_found.png';
+
+        $url = $this->getFile($path);
+
+        $response = [
+            'filename' => $path,
+            'url' => $url
+        ];
+
+        return $response;
     }
 
 }

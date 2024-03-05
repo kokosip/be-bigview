@@ -83,6 +83,7 @@ Route::prefix('admin')->group(function () {
 
 Route::prefix('content')->group(function () {
     Route::post('/upload/gov', [LogoController::class, 'uploadLogoGovern']);
+    Route::get('/logo', [LogoController::class, 'getLogo']);
 });
 
 // Poda
