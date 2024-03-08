@@ -3,11 +3,14 @@
 namespace App\Services\Admin;
 
 use App\Repositories\Admin\UsecaseRepositories;
+use App\Traits\FileStorage;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class UsecaseServices {
+
+    use FileStorage;
     protected $usecaseRepositories;
 
     public function __construct(UsecaseRepositories $usecaseRepositories)
@@ -104,12 +107,12 @@ class UsecaseServices {
         }
     }
 
-    public function updateLogoUsecaseGovern($data, $id_usecase){
+    public function updateLogoUsecase($data, $id_usecase){
         $pic_data = [
             "pic_logo" => $data,
         ];
 
-        $result = $this->usecaseRepositories->updateUsecaseGovern($pic_data, $id_usecase);
+        $result = $this->usecaseRepositories->updateUsecase($pic_data, $id_usecase);
 
         return [$result, $data];
     }
@@ -166,5 +169,51 @@ class UsecaseServices {
         } else {
             throw new Exception('Gagal Delete Usecase Custom');
         }
+    }
+
+    public function setLogo($idUsecase, $file){
+        $data = $this->getUsecaseById($idUsecase);
+
+        $name_usecase = str_replace(' ', '', strtolower($data->name_usecase));
+
+        $params = [
+            'name_usecase' => $name_usecase,
+            'type' => 'logo'
+        ];
+
+        $url = $this->uploadFile($idUsecase, $file, $params);
+
+        $result = $this->updateLogoUsecase($url, $idUsecase);
+
+        if($result[0] == 1){
+            $message = 'Berhasil mengunggah Logo '.$data->name_usecase;
+        } else if($result[0] == 0){
+            $message = 'Berhasil memperbarui Logo '.$data->name_usecase;
+        } else {
+            throw new Exception('Gagal menambahkan Logo');
+        }
+
+        $response = [
+            'message' => $message,
+            'filename' => pathinfo($result[1], PATHINFO_BASENAME),
+            'url' => $result[1]
+        ];
+
+        return $response;
+    }
+
+    public function getLogo($idUsecase){
+        $data = $this->getUsecaseById($idUsecase);
+
+        $path = pathinfo($data->pic_logo, PATHINFO_BASENAME);
+
+        $url = $this->getFile($path);
+
+        $response = [
+            'filename' => $path,
+            'url' => $url
+        ];
+
+        return $response;
     }
 }

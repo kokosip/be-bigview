@@ -22,6 +22,8 @@ trait FileStorage
     }
 
     public function getFile($path){
+        if(empty($path)) $path = 'image_not_found.png';
+
         Storage::setVisibility($path, 'public');
 
         $url = Storage::url($path);
