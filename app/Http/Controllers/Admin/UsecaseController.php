@@ -165,4 +165,32 @@ class UsecaseController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function uploadLogo(Request $request, $id_usecase){
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|file',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        try{
+            $data = $this->usecaseService->setLogo($id_usecase, $validator->validate());
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function getLogo($id_usecase){
+        try{
+            $data = $this->usecaseService->getLogo($id_usecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
+        }
+    }
 }

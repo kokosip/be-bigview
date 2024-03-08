@@ -6,11 +6,10 @@ use App\Http\Controllers\Admin\UsecaseController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MasterController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Content\LogoController;
 use App\Http\Controllers\Poda\EkonomiPerdaganganController;
 use App\Http\Controllers\Poda\SosialKependudukanController;
 use App\Http\Controllers\Poda\SumberDayaAlamController;
-use App\Services\Admin\SosialKependudukanServices;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -62,15 +61,19 @@ Route::prefix('admin')->group(function () {
     });
 
     // Usecase
-    Route::get('/usecase', [UsecaseController::class, 'listUsecase']);
-    Route::get('/usecase/names', [UsecaseController::class, 'listNameUsecase']);
-    Route::post('/usecase/gov', [UsecaseController::class, 'addUsecaseGovernment']);
-    Route::post('/usecase/custom', [UsecaseController::class, 'addUsecaseCustom']);
-    Route::get('/usecase/{id}', [UsecaseController::class, 'getUsecaseById']);
-    Route::put('/usecase/gov/{id}', [UsecaseController::class, 'updateUsecaseGovern']);
-    Route::put('/usecase/custom/{id}', [UsecaseController::class, 'updateUsecaseCustom']);
-    Route::delete('/usecase/gov/{id}', [UsecaseController::class, 'deleteUsecaseGovernment']);
-    Route::delete('/usecase/custom/{id}', [UsecaseController::class, 'deleteUsecaseCustom']);
+    Route::prefix('usecase')->group(function() {
+        Route::get('/', [UsecaseController::class, 'listUsecase']);
+        Route::get('/names', [UsecaseController::class, 'listNameUsecase']);
+        Route::post('/gov', [UsecaseController::class, 'addUsecaseGovernment']);
+        Route::post('/custom', [UsecaseController::class, 'addUsecaseCustom']);
+        Route::post('/upload/{id}', [UsecaseController::class, 'uploadLogo']);
+        Route::get('/logo/{id}', [UsecaseController::class, 'getLogo']);
+        Route::get('/{id}', [UsecaseController::class, 'getUsecaseById']);
+        Route::put('/gov/{id}', [UsecaseController::class, 'updateUsecaseGovern']);
+        Route::put('/custom/{id}', [UsecaseController::class, 'updateUsecaseCustom']);
+        Route::delete('/gov/{id}', [UsecaseController::class, 'deleteUsecaseGovernment']);
+        Route::delete('/custom/{id}', [UsecaseController::class, 'deleteUsecaseCustom']);
+    });
 
     // User
     Route::get('/users', [UserController::class, 'listUser']);

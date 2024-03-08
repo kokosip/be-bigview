@@ -33,7 +33,7 @@ class UsecaseRepositories {
         if($result){
             return $result;
         } else {
-            throw new Exception('Gagal Menambahkan Role Baru.');
+            throw new Exception('Gagal Menambahkan Usecase Pemerintah Baru.');
         }
     }
 
@@ -43,7 +43,7 @@ class UsecaseRepositories {
         if($result){
             return $result;
         } else {
-            throw new Exception('Gagal Menambahkan Role Baru.');
+            throw new Exception('Gagal Menambahkan Usecase Custom Baru.');
         }
     }
 
@@ -52,7 +52,7 @@ class UsecaseRepositories {
         if($result){
             return $result;
         } else {
-            throw new Exception('Gagal Menambahkan Role Baru.');
+            throw new Exception('Gagal Menambahkan Usecase Baru.');
         }
     }
 
@@ -84,7 +84,7 @@ class UsecaseRepositories {
         $db = DB::table('usecase as u')
             ->leftJoin('usecase_government as ug', 'u.id_usecase', '=', 'ug.id_usecase')
             ->leftJoin('usecase_custom as uc', 'u.id_usecase', '=', 'uc.id_usecase')
-            ->selectRaw('u.*, ug.kode_provinsi, ug.kode_kab_kota, uc.deskripsi')
+            ->selectRaw("u.*, ug.kode_provinsi, ug.kode_kab_kota, uc.deskripsi, u.pic_logo")
             ->where('u.id_usecase', $id_usecase)
             ->first();
 
