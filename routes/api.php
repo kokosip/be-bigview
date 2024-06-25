@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/testmino', [UsecaseController::class,'testMinioCredentials']);
 
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -66,13 +67,20 @@ Route::prefix('admin')->group(function () {
         Route::get('/names', [UsecaseController::class, 'listNameUsecase']);
         Route::post('/gov', [UsecaseController::class, 'addUsecaseGovernment']);
         Route::post('/custom', [UsecaseController::class, 'addUsecaseCustom']);
-        Route::post('/upload/{id}', [UsecaseController::class, 'uploadLogo']);
+        Route::post('/upload', [UsecaseController::class, 'uploadLogo']);
         Route::get('/logo/{id}', [UsecaseController::class, 'getLogo']);
         Route::get('/{id}', [UsecaseController::class, 'getUsecaseById']);
         Route::put('/gov/{id}', [UsecaseController::class, 'updateUsecaseGovern']);
         Route::put('/custom/{id}', [UsecaseController::class, 'updateUsecaseCustom']);
         Route::delete('/gov/{id}', [UsecaseController::class, 'deleteUsecaseGovernment']);
         Route::delete('/custom/{id}', [UsecaseController::class, 'deleteUsecaseCustom']);
+    });
+
+    // Content
+    Route::prefix('content')->group(function() {
+        Route::post('uploadlogo/{id}', [UsecaseController::class,'uploadLogo']);
+        Route::get('getlogo/{id}', [UsecaseController::class,'getLogo']);
+        Route::delete('deletelogo/{id}', [UsecaseController::class,'deleteLogo']);
     });
 
     // User
@@ -293,3 +301,4 @@ Route::prefix('poda')->group(function() {
         Route::get('/{subject}/details', [SumberDayaAlamController::class, 'detailSda']);
     });
 });
+

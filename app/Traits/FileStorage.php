@@ -3,31 +3,85 @@
 namespace App\Traits;
 
 use Exception;
-use Illuminate\Support\Facades\Storage;
+use Aws\S3\S3Client;
+use Aws\Exception\AwsException;
+use Illuminate\Support\Facades\Log;
 
 trait FileStorage
+
 {
-    public function uploadFile($idUsecase, $data, $params){
+    public function uploadFile($idUsecase, $data, $params) {
         try {
             $file = $data['file'];
-            $path = Storage::putFileAs($params['type'], $file, "{$params['type']}_{$params['name_usecase']}_{$idUsecase}.{$file->extension()}");
+    
+            $s3Client = new S3Client([
+                'version' => env('MINIO_VERSION', 'latest'),
+                'region'  => env('MINIO_REGION', 'us-east-1'),
+                'endpoint' => env('MINIO_ENDPOINT'),
+                'use_path_style_endpoint' => true,
+                'credentials' => [
+                    'key'    => env('MINIO_KEY'),
+                    'secret' => env('MINIO_SECRET'),
+                ],
+            ]);
 
-            Storage::disk('minio')->setVisibility($path, 'public');
-            $url = Storage::url($path);
+            $bucket = env('MINIO_BUCKET');
+            $key = "{$params['type']}/{$params['type']}_{$params['name_usecase']}_{$idUsecase}.{$file->extension()}";
 
-            return $url;
+            $contentType = mime_content_type($file->getPathname());
+    
+            $result = $s3Client->putObject([
+                'Bucket' => $bucket,
+                'Key'    => $key,
+                'SourceFile' => $file->getPathname(),
+                'ContentType' => $contentType,
+                'ContentDisposition' => 'inline',
+            ]);
+            return $key;
+        } catch (AwsException $e) {
+            Log::error('AWS Error', ['error' => $e->getMessage()]);
+            throw new Exception('Gagal Upload File. Error: ' . $e->getMessage());
         } catch (Exception $err) {
-            throw new Exception('File gagal di upload, coba beberapa saat lagi');
+            Log::error('Error', ['error' => $err->getMessage()]);
+            throw new Exception('Gagal Upload File: ' . $err->getMessage());
         }
     }
 
     public function getFile($path){
         if(empty($path)) $path = 'image_not_found.png';
 
-        Storage::setVisibility($path, 'public');
-
-        $url = Storage::url($path);
+        $url = env('MINIO_ENDPOINT') . '/' . env('MINIO_BUCKET') . '/' . $path;
 
         return $url;
     }
+
+    public function deleteFile($path){
+        try {
+            $s3Client = new S3Client([
+                'version' => env('MINIO_VERSION', 'latest'),
+                'region'  => env('MINIO_REGION', 'us-east-1'),
+                'endpoint' => env('MINIO_ENDPOINT'),
+                'use_path_style_endpoint' => true,
+                'credentials' => [
+                    'key'    => env('MINIO_KEY'),
+                    'secret' => env('MINIO_SECRET'),
+                ],
+            ]);
+
+            $bucket = env('MINIO_BUCKET');
+
+            $result = $s3Client->deleteObject([
+                'Bucket' => $bucket,
+                'Key'    => $path,
+            ]);
+    
+            return true;
+        } catch (AwsException $e) {
+            Log::error('AWS Error', ['error' => $e->getMessage()]);
+            throw new Exception('Gagal Menghapus File. Error: ' . $e->getMessage());
+        } catch (Exception $err) {
+            Log::error('Error', ['error' => $err->getMessage()]);
+            throw new Exception('Gagal Menghapus File: ' . $err->getMessage());
+        }
+    } 
 }

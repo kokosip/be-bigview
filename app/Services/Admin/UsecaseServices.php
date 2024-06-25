@@ -181,12 +181,23 @@ class UsecaseServices {
             'type' => 'logo'
         ];
 
-        $url = $this->uploadFile($idUsecase, $file, $params);
+        $path = $this->uploadFile($idUsecase, $file, $params);
 
-        $result = $this->updateLogoUsecase($url, $idUsecase);
+        $result = $this->updateLogoUsecase($path, $idUsecase);
+
+        // Delete file lama dengan extension yang berbeda
+        $key = "{$params['type']}/{$params['type']}_{$params['name_usecase']}_{$idUsecase}";
+        $oldImg = $data->pic_logo;
+        if (($oldImg != $path) && ($oldImg && strpos($oldImg, $key) === 0)) {
+            $deleteOldImg = $this->deleteFile($oldImg);
+        }
 
         if($result[0] == 1){
-            $message = 'Berhasil mengunggah Logo '.$data->name_usecase;
+            if ($oldImg == $path) {
+                $message = 'Berhasil mengunggah Logo '.$data->name_usecase;
+            } else {
+                $message = 'Berhasil memperbarui Logo '.$data->name_usecase;
+            }
         } else if($result[0] == 0){
             $message = 'Berhasil memperbarui Logo '.$data->name_usecase;
         } else {
@@ -196,7 +207,7 @@ class UsecaseServices {
         $response = [
             'message' => $message,
             'filename' => pathinfo($result[1], PATHINFO_BASENAME),
-            'url' => $result[1]
+            'path' => $result[1]
         ];
 
         return $response;
@@ -205,14 +216,45 @@ class UsecaseServices {
     public function getLogo($idUsecase){
         $data = $this->getUsecaseById($idUsecase);
 
-        $path = pathinfo($data->pic_logo, PATHINFO_BASENAME);
+        $path = $data->pic_logo;
 
         $url = $this->getFile($path);
 
         $response = [
-            'filename' => $path,
+            'filename' => pathinfo($path, PATHINFO_BASENAME),
             'url' => $url
         ];
+
+        return $response;
+    }
+
+    public function deleteLogo($idUsecase) {
+        $data = $this->getUsecaseById($idUsecase);
+
+        $path = $data->pic_logo;
+
+        $newData = [
+            "pic_logo" => null,
+        ];
+
+        if ($path == null){
+            $response = [
+                "message"=> " Logo " . $data->name_usecase . " sudah null",
+                'path' => null,
+            ];
+            return $response;
+        }
+        $delete = $this->deleteFile($path);
+
+        if ($delete) {
+            $result = $this->usecaseRepositories->updateUsecase($newData, $idUsecase);
+            $response = [
+                "message"=> "Berhasil menghapus logo " . $data->name_usecase,
+                'path' => null,
+            ];
+        } else {
+            throw new Exception('Gagal menghapus logo');
+        }
 
         return $response;
     }

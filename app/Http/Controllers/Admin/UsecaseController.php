@@ -193,4 +193,15 @@ class UsecaseController extends Controller
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
     }
+
+    public function deleteLogo($id_usecase){
+        try {
+            $data = $this->usecaseService->deleteLogo($id_usecase);
+
+            return $this->successResponse(data: $data);
+        } catch(Exception $e){
+            return $this->errorResponse(type:"Failed", message: $e->getMessage(), statusCode:400);
+        }
+    }
+
 }
