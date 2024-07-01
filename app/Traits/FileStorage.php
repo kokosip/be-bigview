@@ -8,7 +8,6 @@ use Aws\Exception\AwsException;
 use Illuminate\Support\Facades\Log;
 
 trait FileStorage
-
 {
     public function uploadFile($idUsecase, $data, $params) {
         try {
@@ -26,7 +25,7 @@ trait FileStorage
             ]);
 
             $bucket = env('MINIO_BUCKET');
-            $key = "{$params['type']}/{$params['type']}_{$params['name_usecase']}_{$idUsecase}.{$file->extension()}";
+            $key = "{$params['dir']}/{$params['type']}_{$params['name_usecase']}_{$idUsecase}.{$file->extension()}";
 
             $contentType = mime_content_type($file->getPathname());
     
@@ -40,10 +39,10 @@ trait FileStorage
             return $key;
         } catch (AwsException $e) {
             Log::error('AWS Error', ['error' => $e->getMessage()]);
-            throw new Exception('Gagal Upload File. Error: ' . $e->getMessage());
+            throw new Exception('Pengunggahan file tidak berhasil akibat masalah storage server. Mohon coba lagi nanti');
         } catch (Exception $err) {
             Log::error('Error', ['error' => $err->getMessage()]);
-            throw new Exception('Gagal Upload File: ' . $err->getMessage());
+            throw new Exception('Pengunggahan file tidak berhasil. Mohon coba lagi nanti');
         }
     }
 
@@ -78,10 +77,10 @@ trait FileStorage
             return true;
         } catch (AwsException $e) {
             Log::error('AWS Error', ['error' => $e->getMessage()]);
-            throw new Exception('Gagal Menghapus File. Error: ' . $e->getMessage());
+            throw new Exception('Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat');
         } catch (Exception $err) {
             Log::error('Error', ['error' => $err->getMessage()]);
-            throw new Exception('Gagal Menghapus File: ' . $err->getMessage());
+            throw new Exception('Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat');
         }
     } 
 }
