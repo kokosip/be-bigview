@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/testmino', [UsecaseController::class,'testMinioCredentials']);
 
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -78,9 +77,37 @@ Route::prefix('admin')->group(function () {
 
     // Content
     Route::prefix('content')->group(function() {
-        Route::post('uploadlogo/{id}', [UsecaseController::class,'uploadLogo']);
-        Route::get('getlogo/{id}', [UsecaseController::class,'getLogo']);
-        Route::delete('deletelogo/{id}', [UsecaseController::class,'deleteLogo']);
+        Route::prefix('logo')->group(function() {
+            Route::post('upload/{id}', [UsecaseController::class,'uploadLogo']);
+            Route::get('get/{id}', [UsecaseController::class,'getLogo']);
+            Route::delete('delete/{id}', [UsecaseController::class,'deleteLogo']);
+        });
+        Route::prefix('beranda')->group(function() {
+            Route::prefix('pimpinan-daerah')->group(function() {
+                Route::post('upload/{id}', [UsecaseController::class, 'uploadProfilePimpinan']);
+            });
+            Route::prefix('kontak')->group(function() {
+                Route::post('update/{id}', [UsecaseController::class, 'updateContact']);
+            });
+        });
+        Route::prefix('visi-misi')->group(function() {
+            Route::post('periode/{id}', [UsecaseController::class,'addPeriode']);
+            Route::prefix('visi')->group(function() {
+                Route::post('{id}', [UsecaseController::class,'addVisi']);
+                Route::put('{id}', [UsecaseController::class,'updateVisi']);
+                Route::delete('{id}', [UsecaseController::class, 'deleteVisi']);
+                Route::get('{id}', [UsecaseController::class,'listVisi']);
+            });
+            Route::prefix('misi')->group(function() {
+                Route::post('{id}', [UsecaseController::class,'addMisi']);
+                Route::put('{id}', [UsecaseController::class,'updateMisi']);
+                Route::delete('{id}', [UsecaseController::class,'deleteMisi']);
+                Route::get('{id}', [UsecaseController::class,'listMisi']);
+            });
+        });
+        Route::prefix('sektor')->group(function() {
+            Route::post('{id}', [UsecaseController::class,'addSektor']);
+        });
     });
 
     // User

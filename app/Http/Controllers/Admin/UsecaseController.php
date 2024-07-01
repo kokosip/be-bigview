@@ -176,9 +176,9 @@ class UsecaseController extends Controller
         }
 
         try{
-            $data = $this->usecaseService->setLogo($id_usecase, $validator->validate());
+            [$message, $data] = $this->usecaseService->setLogo($id_usecase, $validator->validate());
 
-            return $this->successResponse(data: $data);
+            return $this->successResponse(data: $data, message: $message);
         } catch(Exception $e){
             return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
         }
@@ -196,12 +196,268 @@ class UsecaseController extends Controller
 
     public function deleteLogo($id_usecase){
         try {
-            $data = $this->usecaseService->deleteLogo($id_usecase);
+            [$data, $message] = $this->usecaseService->deleteLogo($id_usecase);
 
-            return $this->successResponse(data: $data);
+            return $this->successResponse(data: $data, message: $message);
         } catch(Exception $e){
             return $this->errorResponse(type:"Failed", message: $e->getMessage(), statusCode:400);
         }
     }
 
+    public function uploadProfilePimpinan(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'leader' => 'file',
+            'vice' => 'file',
+            'leader_name' => 'string',
+            'vice_name' => 'string',
+        ], [
+            'required' => 'At least one of Leader file, Vice file, Leader name, or Vice name is required.',
+        ]);
+    
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+    
+        $validatedData = $validator->validated();
+    
+        try {
+            [$data, $message] = $this->usecaseService->setProfile($id_usecase, $validatedData);
+    
+            return $this->successResponse(data: $data, message: $message);
+        } catch(Exception $e) {
+            return $this->errorResponse(type: "Failed", message: $e->getMessage(), statusCode: 400);
+        }
+    }
+
+    public function updateContact(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'address' => 'sometimes|string',
+            'phone' => 'sometimes|string',
+            'link_map' => 'sometimes|string',
+        ]);
+    
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+    
+        $validatedData = $validator->validated();
+    
+        try {
+            [$data, $message] = $this->usecaseService->updateContact($id_usecase, $validatedData);
+            return $this->successResponse(data: $data, message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type: "Failed", message: $e->getMessage(), statusCode: 400);
+        }
+    }
+
+    public function addPeriode(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'start_year' => 'required|string',
+            'end_year' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            [$data, $message] = $this->usecaseService->addPeriode($id_usecase, $validatedData);
+            return $this->successResponse(data: $data, message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'Failed', message: $e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function addVisi(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'short_desc' => 'required|string',
+            'description' => 'sometimes|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            [$data, $message] = $this->usecaseService->addVisi($id_usecase, $validatedData);
+            return $this->successResponse(data: $data, message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'Failed', message: $e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function updateVisi(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'id_visi' => 'required|string',
+            'short_desc' => 'required|string',
+            'description' => 'sometimes|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            [$data, $message] = $this->usecaseService->updateVisi($id_usecase, $validatedData);
+            return $this->successResponse(data: $data, message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'Failed', message: $e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function deleteVisi(Request $request, $id_usecase) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'id_visi' => 'required|string',
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
+    
+            $validatedData = $validator->validated();
+
+            $message = $this->usecaseService->deleteVisi($id_usecase, $validatedData);
+            return $this->successResponse(message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message: $e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function listVisi(Request $request, $id_usecase) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'perPage' => 'required|string',
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
+
+            $validatedData = $validator->validated();
+
+            [$data, $metadata] = $this->usecaseService->getListVisi($id_usecase, $validatedData);
+
+            return $this->successResponse(data: $data, metadata: $metadata);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function addMisi(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'short_desc' => 'required|string',
+            'description' => 'sometimes|string',
+            'urutan' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            [$data, $message] = $this->usecaseService->addMisi($id_usecase, $validatedData);
+            return $this->successResponse(data: $data, message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'Failed', message: $e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function updateMisi(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'id_misi' => 'required|string',
+            'short_desc' => 'required|string',
+            'description' => 'sometimes|string',
+            'urutan' => 'sometimes|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            [$data, $message] = $this->usecaseService->updateMisi($id_usecase, $validatedData);
+            return $this->successResponse(data: $data, message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'Failed', message: $e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function deleteMisi(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'id_misi' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            $message = $this->usecaseService->deleteMisi($id_usecase, $validatedData);
+            return $this->successResponse(message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'Failed', message: $e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function listMisi(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'perPage' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+        try {
+            [$data, $metadata] = $this->usecaseService->getListMisi($id_usecase, $validatedData);
+
+            return $this->successResponse(data: $data, metadata: $metadata);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    // public function addSektor(Request $request, $id_usecase) {
+    //     $validator = Validator::make($request->all(), [
+    //         'id_sektor' => 'required',
+    //         'nama_sektor' => 'required',
+    //         'id_usecase' => 'required',
+    //         'state_iku' => 'required|string',
+    //         'kode_sektor' => 'required',
+    //         'id_menu' => 'required',
+    //         'link_iku' => 'required_if:state_iku,Embed',
+    //         'nama_alamat' => 'required',
+    //         'deskripsi' => 'required',
+    //         'short_desc' => 'required',
+    //         'deskripsi_detail' => 'required',
+    //         'alamat' => 'required',
+    //         'telepon' => 'required',
+    //         'link_map' => 'required',
+    //         'state_non_iku' => 'required',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return $this->validationResponse($validator);
+    //     }
+
+    //     $validatedData = $validator->validated();
+
+    //     try {
+    //         [$data, $message] = $this->usecaseService->addSektor($id_usecase, $validatedData);
+    //     }
+    // }
 }
