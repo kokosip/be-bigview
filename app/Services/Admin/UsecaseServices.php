@@ -354,6 +354,9 @@ class UsecaseServices {
 
     public function updateContact($idUsecase, $data) {
         try {
+            $data['address'] = null;
+            $data['phone'] = null;
+            $data['link_map'] = null;
             $result = $this->usecaseRepositories->updateUsecaseGovern($data, $idUsecase);
 
             $successItems = [];
@@ -567,6 +570,264 @@ class UsecaseServices {
 
             return [$rows->items(), $pagination];
         } catch (\Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function addSektor($idUsecase, $data) {
+        try {
+            DB::beginTransaction();
+
+            $dataSektor = [
+                'nama_sektor' => $data['nama_sektor'],
+                'id_usecase' => $data['id_usecase'],
+                'state_iku' => $data['state_iku'],
+                'kode_sektor' => $data['kode_sektor'],
+                'id_menu' => $data['id_menu'],
+                'link_iku' => isset($data['link_iku']) ? $data['link_iku'] : null,
+                'nama_alamat' => $data['nama_alamat'],
+                'deskripsi' => $data['deskripsi'],
+                'short_desc' => $data['short_desc'],
+                'deskripsi_detail' => $data['deskripsi_detail'],
+                'alamat' => $data['alamat'],
+                'telepon' => $data['telepon'],
+                'link_map' => $data['link_map'],
+                'state_non_iku' => $data['state_non_iku'],
+            ];
+
+            $result = $this->usecaseRepositories->addSektor($dataSektor);
+
+            DB::commit();
+            $message = "Sektor berhasil ditambahkan";
+            return [$result, $message];
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function getListSektor($idUsecase) {
+        try {
+            $data = $this->usecaseRepositories->getListSektor($idUsecase);
+
+            $formatData = [];
+            foreach ($data as $row) {
+                $formatData[] = [
+                    'label' => $row->sector,
+                    'value' => $row->sector,
+                ];
+            }
+
+            return $formatData;
+        } catch (\Exception $e) {
+            throw new exception ($e->getMessage());
+        }
+    }
+
+    public function getListDataSektor($idUsecase, $data) {
+        try {
+            $sektor = $data['sektor'];
+            $data = $this->usecaseRepositories->getListDataSektor($idUsecase, $sektor);
+            
+            return $data;
+        } catch (\Exception$e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function getListIndikator($idUsecase, $data) {
+        try {
+            $sektor = $data['sektor'];
+            $data = $this->usecaseRepositories->getListIndikator($idUsecase, $sektor);
+            
+            return $data;
+        } catch (\Exception$e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function getListSatuan() {
+        try {
+            $data = $this->usecaseRepositories->getListSatuan();
+
+            $formatData = [];
+            foreach ($data as $row) {
+                $formatData[] = [
+                    'label' => $row->satuan,
+                    'value' => $row->satuan,
+                ];
+            }
+            return $formatData;
+        } catch (\Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function getListOpd($idUsecase, $data) {
+        try {
+            $sektor = $data['sektor'];
+            $data = $this->usecaseRepositories->getListOpd($idUsecase, $sektor);
+
+            $formatData = [];
+            foreach ($data as $row) {
+                $formatData[] = [
+                    'label' => $row->opd,
+                    'value' => $row->opd,
+                ];
+            }
+            
+            return $formatData;
+        } catch (\Exception$e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function addSektorIku($idUsecase, $data) {
+        try {
+            DB::beginTransaction();
+
+            $provinsi_kota = $this->usecaseRepositories->getProvinsiKotaByIdUsecase($idUsecase);
+
+            $decodeSektor = ucwords(urldecode($data['sektor']));
+
+            $dataSektorIku = [
+                'id_usecase' => $idUsecase,
+                'provinsi' => $provinsi_kota->nama_provinsi,
+                'kategori' => $provinsi_kota->kategori,
+                'kabkot' => $provinsi_kota->nama_kab_kota,
+                'indikator' => $data['indikator'],
+                'satuan' => $data['satuan'],
+                'tahun' => $data['tahun'],
+                'nilai' => $data['nilai'],
+                'flag_public' => $data['public'],
+                'opd' => $data['opd'],
+            ];
+            $dataSektorIku['urusan'] = $decodeSektor;
+    
+
+            $result = $this->usecaseRepositories->addSektorIku($dataSektorIku);
+
+            DB::commit();
+            $message = "Sektor IKU berhasil ditambahkan";
+            return [$result, $message];
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function updateSektorIku($id_usecase, $data) {
+        try {    
+            DB::beginTransaction();
+
+            $dataSektorIku = [
+                'indikator' => $data['indikator'],
+                'satuan' => $data['satuan'],
+                'tahun' => $data['tahun'],
+                'nilai' => $data['nilai'],
+                'flag_public' => $data['public'],
+                'opd' => $data['opd'],
+            ];
+
+            $idSektor = $data['id_sektor'];
+
+            $result = $this->usecaseRepositories->updateSektorIku($dataSektorIku, $idSektor);
+
+            DB::commit();
+            $message = "Sektor IKU berhasil diperbarui";
+            return [$result, $message];
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function deleteSektorIku($id_usecase, $data) {
+        try {    
+            DB::beginTransaction();
+
+            $idSektor = $data['id_sektor'];
+
+            $result = $this->usecaseRepositories->deleteSektorIku($idSektor);
+
+            DB::commit();
+            $message = "Sektor IKU berhasil dihapus";
+            return [$message];
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function addIndikator($data) {
+        try {
+            DB::beginTransaction();
+            $sektor = $data['sektor'];
+            $maxIkk = $this->usecaseRepositories->getMaxIkk($sektor);
+
+            $decodeIndikator = ucwords($data['indikator']);
+            $dataIndikator = [
+                'indikatorkinerja' => $decodeIndikator,
+                'ikk' => $maxIkk->no_urut + 1,
+                'sektor' => $sektor,
+                'no_urut' => $maxIkk->no_urut + 1,
+            ];
+    
+
+            $result = $this->usecaseRepositories->addIndikator($dataIndikator);
+
+            DB::commit();
+            $message = "Indikator berhasil ditambahkan";
+            return [$result, $message];
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function importSektorIku($idUsecase, $sektor, $data) {
+        try {
+            DB::beginTransaction();
+
+            if (count($data) < 2) {
+                throw new exception("data csv kosong/tidak sesuai format");
+            }
+
+            $provinsi_kota = $this->usecaseRepositories->getProvinsiKotaByIdUsecase($idUsecase);
+
+            // Loop data csv
+            foreach ($data as $i => $val) {
+                if ($i == 0) continue;
+                if ($val[4] == "") continue;
+
+                $flag_public = $val[5] == "Public" ? 2 : 1;
+
+                $tahun = intval($val[2]);
+                $nilai = floatval($val[3]);
+
+                $dataIku = [
+                    'id_usecase' => $idUsecase,
+                    'provinsi' => $provinsi_kota->nama_provinsi,
+                    'kategori' => $provinsi_kota->kategori,
+                    'kabkot' => $provinsi_kota->nama_kab_kota,
+                    'urusan' => ucwords(urldecode($sektor)),
+                    'indikator' => $val[0],
+                    'satuan' => $val[1],
+                    'tahun' => $tahun,
+                    'nilai' => $nilai,
+                    'opd' => $val[4],
+                    'flag_cms' => 2,
+                    'flag_public' => $flag_public,
+                ];
+                $result[] = $this->usecaseRepositories->addSektorIku($dataIku);
+            }
+
+            $message = 'Success import data IKU';
+
+            DB::commit();
+            return [$result, $message];
+        } catch (\Exception $e) {
+            DB::rollback();
             throw new Exception($e->getMessage());
         }
     }
