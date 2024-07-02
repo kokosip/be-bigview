@@ -431,33 +431,227 @@ class UsecaseController extends Controller
         }
     }
 
-    // public function addSektor(Request $request, $id_usecase) {
-    //     $validator = Validator::make($request->all(), [
-    //         'id_sektor' => 'required',
-    //         'nama_sektor' => 'required',
-    //         'id_usecase' => 'required',
-    //         'state_iku' => 'required|string',
-    //         'kode_sektor' => 'required',
-    //         'id_menu' => 'required',
-    //         'link_iku' => 'required_if:state_iku,Embed',
-    //         'nama_alamat' => 'required',
-    //         'deskripsi' => 'required',
-    //         'short_desc' => 'required',
-    //         'deskripsi_detail' => 'required',
-    //         'alamat' => 'required',
-    //         'telepon' => 'required',
-    //         'link_map' => 'required',
-    //         'state_non_iku' => 'required',
-    //     ]);
+    public function addSektor(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'nama_sektor' => 'required',
+            'id_usecase' => 'required',
+            'state_iku' => 'required|string',
+            'kode_sektor' => 'required',
+            'id_menu' => 'required',
+            'link_iku' => 'required_if:state_iku,Embed',
+            'nama_alamat' => 'required',
+            'deskripsi' => 'required',
+            'short_desc' => 'required',
+            'deskripsi_detail' => 'required',
+            'alamat' => 'required',
+            'telepon' => 'required',
+            'link_map' => 'required',
+            'state_non_iku' => 'required',
+        ]);
 
-    //     if ($validator->fails()) {
-    //         return $this->validationResponse($validator);
-    //     }
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
 
-    //     $validatedData = $validator->validated();
+        $validatedData = $validator->validated();
 
-    //     try {
-    //         [$data, $message] = $this->usecaseService->addSektor($id_usecase, $validatedData);
-    //     }
-    // }
+        try {
+            [$data, $message] = $this->usecaseService->addSektor($id_usecase, $validatedData);
+            return $this->successResponse(data: $data, message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function listSektor($id_usecase) {
+        try {
+            $data = $this->usecaseService->getListSektor($id_usecase);
+            return $this->successResponse(data: $data);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function listDataSektor(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'sektor' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            $data = $this->usecaseService->getListDataSektor($id_usecase, $validatedData);
+            return $this->successResponse(data: $data);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function listIndikator(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'sektor' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            $data = $this->usecaseService->getListIndikator($id_usecase, $validatedData);
+            return $this->successResponse(data: $data);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function listSatuan() {
+        try {
+            $data = $this->usecaseService->getListSatuan();
+            return $this->successResponse(data: $data);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function listOpd(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'sektor' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            $data = $this->usecaseService->getListOpd($id_usecase, $validatedData);
+            return $this->successResponse(data: $data);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function addSektorIku(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'indikator' => 'required',
+            'satuan' => 'required',
+            'opd' => 'required',
+            'tahun' => 'required',
+            'nilai' => 'required',
+            'public' => 'required',
+            'sektor' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            [$data, $message] = $this->usecaseService->addSektorIku($id_usecase, $validatedData);
+            return $this->successResponse(data: $data, message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        }
+        
+    }
+
+    public function updateSektorIku(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'id_sektor' => 'required',
+            'indikator' => 'required',
+            'satuan' => 'required',
+            'opd' => 'required',
+            'tahun' => 'required',
+            'nilai' => 'required',
+            'public' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            [$data, $message] = $this->usecaseService->updateSektorIku($id_usecase, $validatedData);
+            return $this->successResponse(data: $data, message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function deleteSektorIku(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'id_sektor' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            $message = $this->usecaseService->deleteSektorIku($id_usecase, $validatedData);
+            return $this->successResponse(message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function addIndikator(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'sektor' => 'required',
+            'indikator' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+            [$data, $message] = $this->usecaseService-> addIndikator($validatedData);
+            return $this->successResponse(data: $data, message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        }
+    }
+
+    public function importSektorIKU(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'sektor' => 'required',
+            'file' => 'required|file|mimes:csv,txt',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $requestFile = $request->file('file');
+        $file_to_read = fopen($requestFile, 'r');
+        while (!feof($file_to_read)) {
+            $data[] = fgetcsv($file_to_read, 10000, ',');
+        }
+        fclose($file_to_read);
+
+        $sektor = $request->sektor;
+
+        try {
+            [$data, $message] = $this->usecaseService-> importSektorIku($id_usecase, $sektor, $data);
+            return $this->successResponse(data: $data, message: $message);
+        } catch (Exception $e) {
+            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        }
+    }
 }

@@ -91,7 +91,6 @@ Route::prefix('admin')->group(function () {
             });
         });
         Route::prefix('visi-misi')->group(function() {
-            Route::post('periode/{id}', [UsecaseController::class,'addPeriode']);
             Route::prefix('visi')->group(function() {
                 Route::post('{id}', [UsecaseController::class,'addVisi']);
                 Route::put('{id}', [UsecaseController::class,'updateVisi']);
@@ -108,6 +107,19 @@ Route::prefix('admin')->group(function () {
         Route::prefix('sektor')->group(function() {
             Route::post('{id}', [UsecaseController::class,'addSektor']);
         });
+    });
+
+    Route::prefix('cms')->group(function() {
+        Route::get('sektor/{id}', [UsecaseController::class,'listSektor']);
+        Route::get('data/{id}', [UsecaseController::class,'listDataSektor']);
+        Route::get('indikator/{id}', [UsecaseController::class,'listIndikator']);
+        Route::get('satuan', [UsecaseController::class,'listSatuan']);
+        Route::get('opd/{id}', [UsecaseController::class,'listOpd']);
+        Route::post('sektor/{id}', [UsecaseController::class,'addSektorIku']);
+        Route::put('sektor/{id}', [UsecaseController::class,'updateSektorIku']);
+        Route::delete('sektor/{id}', [UsecaseController::class,'deleteSektorIku']);
+        Route::post('indikator/{id}', [UsecaseController::class,'addIndikator']);
+        Route::post('sektor/import/{id}', [UsecaseController::class,'importSektorIKU']);
     });
 
     // User
