@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Exceptions\ErrorResponse;
 use Exception;
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
@@ -39,10 +40,10 @@ trait FileStorage
             return $key;
         } catch (AwsException $e) {
             Log::error('AWS Error', ['error' => $e->getMessage()]);
-            throw new Exception('Pengunggahan file tidak berhasil akibat masalah storage server. Mohon coba lagi nanti');
+            throw new ErrorResponse(type: 'AWS Server Error', message: 'Pengunggahan file tidak berhasil. Mohon coba lagi nanti', statusCode:500);
         } catch (Exception $err) {
             Log::error('Error', ['error' => $err->getMessage()]);
-            throw new Exception('Pengunggahan file tidak berhasil. Mohon coba lagi nanti');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Pengunggahan file tidak berhasil. Mohon coba lagi nanti', statusCode:500);
         }
     }
 
@@ -77,10 +78,10 @@ trait FileStorage
             return true;
         } catch (AwsException $e) {
             Log::error('AWS Error', ['error' => $e->getMessage()]);
-            throw new Exception('Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat');
+            throw new ErrorResponse(type: 'AWS Error', message: 'Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat', statusCode: 403);
         } catch (Exception $err) {
             Log::error('Error', ['error' => $err->getMessage()]);
-            throw new Exception('Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat');
+            throw new ErrorResponse(type:'Internal Server Error', message:'Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat', statusCode:500);
         }
     } 
 }
