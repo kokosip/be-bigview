@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\ErrorResponse;
 use App\Http\Controllers\Controller;
 use App\Services\Admin\UsecaseServices;
 use App\Traits\ApiResponse;
@@ -20,36 +21,31 @@ class UsecaseController extends Controller
     }
 
     public function listUsecase(Request $request){
+        $validator = Validator::make($request->all(), [
+            'search' => 'required',
+            'per_page'=> 'sometimes',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
         $search = $request->input("search");
         $perPage = is_null($request->input('per_page')) ? 10 : $request->input('per_page');
 
-        try{
-            [$data, $metadata] = $this->usecaseService->getListUsecase($search, $perPage);
-
-            return $this->successResponse(data: $data, metadata: $metadata);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        [$data, $metadata] = $this->usecaseService->getListUsecase($search, $perPage);
+        return $this->successResponse(data: $data, metadata: $metadata);
     }
 
     public function listNameUsecase(){
-        try{
-            $data = $this->usecaseService->getListNameUsecase();
+        $data = $this->usecaseService->getListNameUsecase();
 
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        return $this->successResponse(data: $data);
     }
-
     public function getUsecaseById($id_usecase){
-        try{
-            $data = $this->usecaseService->getUsecaseById($id_usecase);
+        $data = $this->usecaseService->getUsecaseById($id_usecase);
 
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        return $this->successResponse(data: $data);
     }
 
     public function addUsecaseCustom(Request $request){
@@ -65,14 +61,9 @@ class UsecaseController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
+        [$govern, $message] = $this->usecaseService->addUsecaseCustom($validator->validate());
 
-        try{
-            $govern = $this->usecaseService->addUsecaseCustom($validator->validate());
-
-            return $this->successResponse(data: $govern, message: "Usecase Custom Berhasil ditambahkan");
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        return $this->successResponse(data: $govern, message: $message);
     }
 
     public function addUsecaseGovernment(Request $request){
@@ -89,14 +80,9 @@ class UsecaseController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
+        [$govern, $message] = $this->usecaseService->addUsecaseGovernment($validator->validate());
 
-        try{
-            $govern = $this->usecaseService->addUsecaseGovernment($validator->validate());
-
-            return $this->successResponse(data: $govern, message: "Usecase Government Berhasil ditambahkan");
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        return $this->successResponse(data: $govern, message: $message);
     }
 
     public function updateUsecaseGovern(Request $request, $id_usecase){
@@ -114,13 +100,9 @@ class UsecaseController extends Controller
             return $this->validationResponse($validator);
         }
 
-        try{
-            [$govern, $usecase] = $this->usecaseService->updateUsecaseGovern($validator->validate(), $id_usecase);
+        [$govern, $usecase, $message] = $this->usecaseService->updateUsecaseGovern($validator->validate(), $id_usecase);
 
-            return $this->successResponse(data: $govern, metadata: $usecase, message: "Usecase Government Berhasil diperbaruhi");
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        return $this->successResponse(data: $govern, metadata: $usecase, message: $message);
     }
 
     public function updateUsecaseCustom(Request $request, $id_usecase){
@@ -136,34 +118,20 @@ class UsecaseController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
+        [$custom, $usecase, $message] = $this->usecaseService->updateUsecaseCustom($validator->validate(), $id_usecase);
 
-        try{
-            [$custom, $usecase] = $this->usecaseService->updateUsecaseCustom($validator->validate(), $id_usecase);
-
-            return $this->successResponse(data: $custom, metadata: $usecase, message: "Usecase Custom Berhasil diperbaruhi");
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        return $this->successResponse(data: $custom, metadata: $usecase, message: $message);
     }
 
     public function deleteUsecaseGovernment($id_usecase){
-        try{
-            $this->usecaseService->deleteUsecaseGovern($id_usecase);
-
-            return $this->successResponse(message: "Data Berhasil dihapus");
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $message = $this->usecaseService->deleteUsecaseGovern($id_usecase);
+        return $this->successResponse(message: $message);
     }
 
     public function deleteUsecaseCustom($id_usecase){
-        try{
-            $this->usecaseService->deleteUsecaseCustom($id_usecase);
+        $message = $this->usecaseService->deleteUsecaseCustom($id_usecase);
 
-            return $this->successResponse(message: "Data Berhasil dihapus");
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        return $this->successResponse(message: $message);
     }
 
     public function uploadLogo(Request $request, $id_usecase){
@@ -174,24 +142,14 @@ class UsecaseController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            [$message, $data] = $this->usecaseService->setLogo($id_usecase, $validator->validate());
-
-            return $this->successResponse(data: $data, message: $message);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        [$message, $data] = $this->usecaseService->setLogo($id_usecase, $validator->validate());
+        return $this->successResponse(data: $data, message: $message);
     }
 
     public function getLogo($id_usecase){
-        try{
-            $data = $this->usecaseService->getLogo($id_usecase);
+        $data = $this->usecaseService->getLogo($id_usecase);
 
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        return $this->successResponse(data: $data);
     }
 
     public function deleteLogo($id_usecase){
@@ -242,32 +200,8 @@ class UsecaseController extends Controller
     
         $validatedData = $validator->validated();
     
-        try {
-            [$data, $message] = $this->usecaseService->updateContact($id_usecase, $validatedData);
-            return $this->successResponse(data: $data, message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type: "Failed", message: $e->getMessage(), statusCode: 400);
-        }
-    }
-
-    public function addPeriode(Request $request, $id_usecase) {
-        $validator = Validator::make($request->all(), [
-            'start_year' => 'required|string',
-            'end_year' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->validationResponse($validator);
-        }
-
-        $validatedData = $validator->validated();
-
-        try {
-            [$data, $message] = $this->usecaseService->addPeriode($id_usecase, $validatedData);
-            return $this->successResponse(data: $data, message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'Failed', message: $e->getMessage(), statusCode:400);
-        }
+        [$data, $message] = $this->usecaseService->updateContact($id_usecase, $validatedData);
+        return $this->successResponse(data: $data, message: $message);
     }
 
     public function addVisi(Request $request, $id_usecase) {
@@ -282,12 +216,8 @@ class UsecaseController extends Controller
 
         $validatedData = $validator->validated();
 
-        try {
-            [$data, $message] = $this->usecaseService->addVisi($id_usecase, $validatedData);
-            return $this->successResponse(data: $data, message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'Failed', message: $e->getMessage(), statusCode:400);
-        }
+        [$data, $message] = $this->usecaseService->addVisi($id_usecase, $validatedData);
+        return $this->successResponse(data: $data, message: $message);
     }
 
     public function updateVisi(Request $request, $id_usecase) {
@@ -312,42 +242,34 @@ class UsecaseController extends Controller
     }
 
     public function deleteVisi(Request $request, $id_usecase) {
-        try {
-            $validator = Validator::make($request->all(), [
-                'id_visi' => 'required|string',
-            ]);
-    
-            if ($validator->fails()) {
-                return $this->validationResponse($validator);
-            }
-    
-            $validatedData = $validator->validated();
 
-            $message = $this->usecaseService->deleteVisi($id_usecase, $validatedData);
-            return $this->successResponse(message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message: $e->getMessage(), statusCode:400);
+        $validator = Validator::make($request->all(), [
+            'id_visi' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
         }
+        $validatedData = $validator->validated();
+
+        $message = $this->usecaseService->deleteVisi($id_usecase, $validatedData);
+
+        return $this->successResponse(message: $message);
     }
 
     public function listVisi(Request $request, $id_usecase) {
-        try {
-            $validator = Validator::make($request->all(), [
-                'perPage' => 'required|string',
-            ]);
-    
-            if ($validator->fails()) {
-                return $this->validationResponse($validator);
-            }
+        $validator = Validator::make($request->all(), [
+            'perPage' => 'required|string',
+        ]);
 
-            $validatedData = $validator->validated();
-
-            [$data, $metadata] = $this->usecaseService->getListVisi($id_usecase, $validatedData);
-
-            return $this->successResponse(data: $data, metadata: $metadata);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
         }
+
+        $validatedData = $validator->validated();
+
+        [$data, $metadata] = $this->usecaseService->getListVisi($id_usecase, $validatedData);
+
+        return $this->successResponse(data: $data, metadata: $metadata);
     }
 
     public function addMisi(Request $request, $id_usecase) {
@@ -363,12 +285,8 @@ class UsecaseController extends Controller
 
         $validatedData = $validator->validated();
 
-        try {
-            [$data, $message] = $this->usecaseService->addMisi($id_usecase, $validatedData);
-            return $this->successResponse(data: $data, message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'Failed', message: $e->getMessage(), statusCode:400);
-        }
+        [$data, $message] = $this->usecaseService->addMisi($id_usecase, $validatedData);
+        return $this->successResponse(data: $data, message: $message);
     }
 
     public function updateMisi(Request $request, $id_usecase) {
@@ -385,12 +303,8 @@ class UsecaseController extends Controller
 
         $validatedData = $validator->validated();
 
-        try {
-            [$data, $message] = $this->usecaseService->updateMisi($id_usecase, $validatedData);
-            return $this->successResponse(data: $data, message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'Failed', message: $e->getMessage(), statusCode:400);
-        }
+        [$data, $message] = $this->usecaseService->updateMisi($id_usecase, $validatedData);
+        return $this->successResponse(data: $data, message: $message);
     }
 
     public function deleteMisi(Request $request, $id_usecase) {
@@ -404,12 +318,8 @@ class UsecaseController extends Controller
 
         $validatedData = $validator->validated();
 
-        try {
-            $message = $this->usecaseService->deleteMisi($id_usecase, $validatedData);
-            return $this->successResponse(message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'Failed', message: $e->getMessage(), statusCode:400);
-        }
+        $message = $this->usecaseService->deleteMisi($id_usecase, $validatedData);
+        return $this->successResponse(message: $message);
     }
 
     public function listMisi(Request $request, $id_usecase) {
@@ -420,56 +330,13 @@ class UsecaseController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        $validatedData = $validator->validated();
-        try {
-            [$data, $metadata] = $this->usecaseService->getListMisi($id_usecase, $validatedData);
-
-            return $this->successResponse(data: $data, metadata: $metadata);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
-        }
-    }
-
-    public function addSektor(Request $request, $id_usecase) {
-        $validator = Validator::make($request->all(), [
-            'nama_sektor' => 'required',
-            'id_usecase' => 'required',
-            'state_iku' => 'required|string',
-            'kode_sektor' => 'required',
-            'id_menu' => 'required',
-            'link_iku' => 'required_if:state_iku,Embed',
-            'nama_alamat' => 'required',
-            'deskripsi' => 'required',
-            'short_desc' => 'required',
-            'deskripsi_detail' => 'required',
-            'alamat' => 'required',
-            'telepon' => 'required',
-            'link_map' => 'required',
-            'state_non_iku' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->validationResponse($validator);
-        }
-
-        $validatedData = $validator->validated();
-
-        try {
-            [$data, $message] = $this->usecaseService->addSektor($id_usecase, $validatedData);
-            return $this->successResponse(data: $data, message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
-        }
+        [$data, $metadata] = $this->usecaseService->getListMisi($id_usecase, $validator->validated());
+        return $this->successResponse(data: $data, metadata: $metadata);
     }
 
     public function listSektor($id_usecase) {
-        try {
-            $data = $this->usecaseService->getListSektor($id_usecase);
-            return $this->successResponse(data: $data);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->usecaseService->getListSektor($id_usecase);
+        return $this->successResponse(data: $data);
     }
 
     public function listDataSektor(Request $request, $id_usecase) {
@@ -480,15 +347,8 @@ class UsecaseController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        $validatedData = $validator->validated();
-
-        try {
-            $data = $this->usecaseService->getListDataSektor($id_usecase, $validatedData);
-            return $this->successResponse(data: $data);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->usecaseService->getListDataSektor($id_usecase, $validator->validated());
+        return $this->successResponse(data: $data);
     }
 
     public function listIndikator(Request $request, $id_usecase) {
@@ -499,24 +359,13 @@ class UsecaseController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        $validatedData = $validator->validated();
-
-        try {
-            $data = $this->usecaseService->getListIndikator($id_usecase, $validatedData);
-            return $this->successResponse(data: $data);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->usecaseService->getListIndikator($id_usecase, $validator->validated());
+        return $this->successResponse(data: $data);
     }
 
     public function listSatuan() {
-        try {
-            $data = $this->usecaseService->getListSatuan();
-            return $this->successResponse(data: $data);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->usecaseService->getListSatuan();
+        return $this->successResponse(data: $data);
     }
 
     public function listOpd(Request $request, $id_usecase) {
@@ -527,15 +376,8 @@ class UsecaseController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        $validatedData = $validator->validated();
-
-        try {
-            $data = $this->usecaseService->getListOpd($id_usecase, $validatedData);
-            return $this->successResponse(data: $data);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->usecaseService->getListOpd($id_usecase, $validator->validated());
+        return $this->successResponse(data: $data);
     }
 
     public function addSektorIku(Request $request, $id_usecase) {
@@ -552,16 +394,8 @@ class UsecaseController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        $validatedData = $validator->validated();
-
-        try {
-            [$data, $message] = $this->usecaseService->addSektorIku($id_usecase, $validatedData);
-            return $this->successResponse(data: $data, message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
-        }
-        
+        [$data, $message] = $this->usecaseService->addSektorIku($id_usecase, $validator->validated());
+        return $this->successResponse(data: $data, message: $message);
     }
 
     public function updateSektorIku(Request $request, $id_usecase) {
@@ -579,14 +413,8 @@ class UsecaseController extends Controller
             return $this->validationResponse($validator);
         }
 
-        $validatedData = $validator->validated();
-
-        try {
-            [$data, $message] = $this->usecaseService->updateSektorIku($id_usecase, $validatedData);
-            return $this->successResponse(data: $data, message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
-        }
+        [$data, $message] = $this->usecaseService->updateSektorIku($id_usecase, $validator->validated());
+        return $this->successResponse(data: $data, message: $message);
     }
 
     public function deleteSektorIku(Request $request, $id_usecase) {
@@ -600,12 +428,8 @@ class UsecaseController extends Controller
 
         $validatedData = $validator->validated();
 
-        try {
-            $message = $this->usecaseService->deleteSektorIku($id_usecase, $validatedData);
-            return $this->successResponse(message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
-        }
+        $message = $this->usecaseService->deleteSektorIku($id_usecase, $validatedData);
+        return $this->successResponse(message: $message);
     }
 
     public function addIndikator(Request $request) {
@@ -620,12 +444,8 @@ class UsecaseController extends Controller
 
         $validatedData = $validator->validated();
 
-        try {
-            [$data, $message] = $this->usecaseService-> addIndikator($validatedData);
-            return $this->successResponse(data: $data, message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
-        }
+        [$data, $message] = $this->usecaseService-> addIndikator($validatedData);
+        return $this->successResponse(data: $data, message: $message);
     }
 
     public function importSektorIKU(Request $request, $id_usecase) {
@@ -644,14 +464,9 @@ class UsecaseController extends Controller
             $data[] = fgetcsv($file_to_read, 10000, ',');
         }
         fclose($file_to_read);
-
         $sektor = $request->sektor;
 
-        try {
-            [$data, $message] = $this->usecaseService-> importSektorIku($id_usecase, $sektor, $data);
-            return $this->successResponse(data: $data, message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'failed', message:$e->getMessage(), statusCode:400);
-        }
+        [$data, $message] = $this->usecaseService-> importSektorIku($id_usecase, $sektor, $data);
+        return $this->successResponse(data: $data, message: $message);
     }
 }

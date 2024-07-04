@@ -4,13 +4,15 @@ namespace App\Services\Admin;
 
 use App\Repositories\Admin\UsecaseRepositories;
 use App\Traits\FileStorage;
+use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Exceptions\ErrorResponse;
 
 class UsecaseServices {
 
     use FileStorage;
+    use ApiResponse;
     protected $usecaseRepositories;
 
     public function __construct(UsecaseRepositories $usecaseRepositories)
@@ -21,6 +23,10 @@ class UsecaseServices {
     public function getListUsecase($search, $perPage){
         $rows = $this->usecaseRepositories->getListUsecase($search, $perPage);
 
+        if ($rows->isEmpty()) {
+            throw new ErrorResponse(type: 'Not found', message: 'Kata kunci tidak ditemukan', statusCode: 404);
+        }
+
         $pagination = [
             "current_page" => $rows->currentPage(),
             "per_page" => $rows->perPage(),
@@ -28,65 +34,65 @@ class UsecaseServices {
             "total_row" => $rows->total(),
         ];
 
-        return [
-            $rows->items(),
-            $pagination
-        ];
+        return [$rows->items(), $pagination];
     }
 
     public function getListNameUsecase(){
         $rows = $this->usecaseRepositories->getListNameUsecase();
 
+        if ($rows->isEmpty()) {
+          throw new ErrorResponse(type:"Not found", message:"Data tabel kosong",statusCode:404);
+        }
+
         return $rows;
     }
 
     public function addUsecaseGovernment($data){
-        try{
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-            $key_govern = ["kode_provinsi", "kode_kab_kota", "name_usecase"];
-            $key_usecase = ["name_usecase", "base_color1", "base_color2", "base_color3", "base_color4"];
+        $key_govern = ["kode_provinsi", "kode_kab_kota", "name_usecase"];
+        $key_usecase = ["name_usecase", "base_color1", "base_color2", "base_color3", "base_color4"];
 
-            $data_govern = array_intersect_key($data, array_flip($key_govern));
-            $data_usecase = array_intersect_key($data, array_flip($key_usecase));
+        $data_govern = array_intersect_key($data, array_flip($key_govern));
+        $data_usecase = array_intersect_key($data, array_flip($key_usecase));
 
-            $data_usecase["type_dashboard"] = 'Government';
-            $result_usecase = $this->usecaseRepositories->addUsecase($data_usecase);
+        $data_usecase["type_dashboard"] = 'Government';
+        $result_usecase = $this->usecaseRepositories->addUsecase($data_usecase);
 
-            $data_govern["id_usecase"] = $result_usecase;
-            $this->usecaseRepositories->addUsecaseGovernment($data_govern);
+        $data_govern["id_usecase"] = $result_usecase;
+        $result = $this->usecaseRepositories->addUsecaseGovernment($data_govern);
 
+        if ($result) {
             DB::commit();
-
-            return $data_govern;
-        } catch (\Exception $e) {
+            $message = "Usecase Government Berhasil ditambahkan";
+            return [$data_govern, $message];
+        } else {
             DB::rollback();
-            throw new Exception($e->getMessage());
         }
     }
 
     public function addUsecaseCustom($data){
-        try{
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-            $key_custom = ["name_usecase", "deskripsi"];
-            $key_usecase = ["name_usecase", "base_color1", "base_color2", "base_color3", "base_color4"];
+        $key_custom = ["name_usecase", "deskripsi"];
+        $key_usecase = ["name_usecase", "base_color1", "base_color2", "base_color3", "base_color4"];
 
-            $data_custom = array_intersect_key($data, array_flip($key_custom));
-            $data_usecase = array_intersect_key($data, array_flip($key_usecase));
+        $data_custom = array_intersect_key($data, array_flip($key_custom));
+        $data_usecase = array_intersect_key($data, array_flip($key_usecase));
 
-            $data_usecase["type_dashboard"] = 'Custom';
-            $result_usecase = $this->usecaseRepositories->addUsecase($data_usecase);
+        $data_usecase["type_dashboard"] = 'Custom';
+        $result_usecase = $this->usecaseRepositories->addUsecase($data_usecase);
 
-            $data_custom["id_usecase"] = $result_usecase;
-            $this->usecaseRepositories->addUsecaseCustom($data_custom);
+        $data_custom["id_usecase"] = $result_usecase;
+        $result = $this->usecaseRepositories->addUsecaseCustom($data_custom);
 
+        if ($result != null) {
             DB::commit();
 
-            return $data_custom;
-        } catch (\Exception $e) {
+            $message = "Usecase Custom Berhasil ditambahkan";
+            return [$data_custom, $message];
+        } else {
             DB::rollback();
-            throw new Exception($e->getMessage());
         }
     }
 
@@ -100,11 +106,8 @@ class UsecaseServices {
         $result_govern = $this->usecaseRepositories->updateUsecaseGovern($data_govern, $id_usecase);
         $result_usecase = $this->usecaseRepositories->updateUsecase($data_usecase, $id_usecase);
 
-        if($result_govern || $result_usecase){
-            return [$result_govern, $result_usecase];
-        } else {
-            throw new Exception('Gagal Update Usecase Government');
-        }
+        $message = "Usecase Government Berhasil diperbarui";
+        return [$result_govern, $result_usecase, $message];
     }
 
     public function updateLogoUsecase($data, $id_usecase){
@@ -127,12 +130,11 @@ class UsecaseServices {
         $result_custom = $this->usecaseRepositories->updateUsecaseCustom($data_custom, $id_usecase);
         $result_usecase = $this->usecaseRepositories->updateUsecase($data_usecase, $id_usecase);
 
-        if($result_custom || $result_usecase){
-            return [$result_custom, $result_usecase];
-        } else {
-            dd($result_custom);
-            throw new Exception('Gagal Update Usecase Custom');
+        if (!$result_custom) {
+            throw new ErrorResponse(type: 'Not found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
+        $message = "Usecase Custom Berhasil diperbarui";
+        return [$result_custom, $result_usecase, $message];
     }
 
     public function getUsecaseById($id_usecase){
@@ -141,7 +143,7 @@ class UsecaseServices {
         if($result){
             return $result;
         } else {
-            throw new Exception('ID Usecase Tidak Ditemukan');
+            throw new ErrorResponse(type: 'Not found', message: 'Usecase tidak ditemukan', statusCode: 404);
         }
     }
 
@@ -152,9 +154,9 @@ class UsecaseServices {
         $result_govern = $this->usecaseRepositories->deleteUsecaseGovern($id_usecase);
 
         if($result_usecase || $result_govern){
-            return [$result_usecase, $result_govern];
+            return 'Data Berhasil dihapus';
         } else {
-            throw new Exception('Gagal Delete Usecase Government');
+            throw new ErrorResponse(type: 'Not found', message: 'Usecase tidak ditemukan', statusCode: 404);
         }
     }
 
@@ -165,15 +167,18 @@ class UsecaseServices {
         $result_custom = $this->usecaseRepositories->deleteUsecaseCustom($id_usecase);
 
         if($result_usecase || $result_custom){
-            return [$result_usecase, $result_custom];
+            return 'Data Berhasil dihapus';
         } else {
-            throw new Exception('Gagal Delete Usecase Custom');
+            throw new ErrorResponse(type: 'Not found', message: 'Usecase tidak ditemukan', statusCode: 404);
         }
     }
 
     public function setLogo($idUsecase, $file){
         $data = $this->getUsecaseById($idUsecase);
 
+        if (!$data){
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
+        }
         $name_usecase = str_replace(' ', '', strtolower($data->name_usecase));
 
         $params = [
@@ -183,14 +188,13 @@ class UsecaseServices {
         ];
 
         $path = $this->uploadFile($idUsecase, $file, $params);
-
         $result = $this->updateLogoUsecase($path, $idUsecase);
 
         // Delete file lama dengan extension yang berbeda
         $key = "{$params['dir']}/{$params['type']}_{$params['name_usecase']}_{$idUsecase}";
         $oldImg = $data->pic_logo;
         if (($oldImg != $path) && ($oldImg && strpos($oldImg, $key) === 0)) {
-            $deleteOldImg = $this->deleteFile($oldImg);
+            $this->deleteFile($oldImg);
         }
 
         if($result[0] == 1){
@@ -202,7 +206,7 @@ class UsecaseServices {
         } else if($result[0] == 0){
             $message = 'Berhasil memperbarui Logo '.$data->name_usecase;
         } else {
-            throw new Exception('Gagal menambahkan Logo');
+            throw new ErrorResponse(type: 'Failed', message:'Gagal menambahkan Logo', statusCode:500);
         }
 
         $data = [
@@ -216,8 +220,11 @@ class UsecaseServices {
     public function getLogo($idUsecase){
         $data = $this->getUsecaseById($idUsecase);
 
-        $path = $data->pic_logo;
+        if (!$data) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
+        }
 
+        $path = $data->pic_logo;
         $url = $this->getFile($path);
 
         $response = [
@@ -229,18 +236,17 @@ class UsecaseServices {
     }
 
     public function deleteLogo($idUsecase) {
-        // Retrieve the use case data by ID
         $data = $this->getUsecaseById($idUsecase);
+        if (!$data) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
+        }
     
-        // Get the current logo path
         $path = $data->pic_logo;
     
-        // Prepare new data to update the use case with the logo removed
         $newData = [
             "pic_logo" => null,
         ];
     
-        // Check if the logo is already null
         if ($path == null) {
             $message = "Logo " . $data->name_usecase . " sudah null";
             $returnData = [
@@ -249,28 +255,27 @@ class UsecaseServices {
             return [$returnData, $message];
         }
     
-        // Attempt to delete the logo file
         $delete = $this->deleteFile($path);
     
         if ($delete) {
-            // Update the use case with the new data
             $result = $this->usecaseRepositories->updateUsecase($newData, $idUsecase);
             $message = "Logo " . $data->name_usecase . " berhasil dihapus";
             $returnData = [
                 'path' => null,
             ];
         } else {
-            // Throw an exception if the file deletion fails
-            throw new Exception('Gagal menghapus logo');
+            throw new ErrorResponse(type: 'Failed', message:'Gagal Menghapus Logo.', statusCode:500);
         }
     
-        // Return the data and message
         return [$returnData, $message];
     }
     
 
     public function setProfile($idUsecase, $files) {
         $data = $this->getUsecaseById($idUsecase);
+        if (!$data) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
+        }
         $name_usecase = str_replace(' ', '', strtolower($data->name_usecase));
         $uploadedFiles = [];
         $picFiles = [];
@@ -353,121 +358,86 @@ class UsecaseServices {
 
 
     public function updateContact($idUsecase, $data) {
-        try {
-            $data['address'] = null;
-            $data['phone'] = null;
-            $data['link_map'] = null;
-            $result = $this->usecaseRepositories->updateUsecaseGovern($data, $idUsecase);
+        $dataUsecase = $this->getUsecaseById($idUsecase);
+        if (!$dataUsecase) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
+        }
 
-            $successItems = [];
-            $addressKeys = ['address', 'phone', 'link_map'];
-    
-            foreach ($addressKeys as $key) {
-                if (isset($data[$key])) {
-                    switch ($key) {
-                        case 'address':
-                            $successItems[] = "alamat";
-                            break;
-                        case 'phone':
-                            $successItems[] = "nomor telepon";
-                            break;
-                        case 'link_map':
-                            $successItems[] = "link maps";
-                            break;
-                    }
+        $data['address'] = null;
+        $data['phone'] = null;
+        $data['link_map'] = null;
+        $this->usecaseRepositories->updateUsecaseGovern($data, $idUsecase);
+
+        $successItems = [];
+        $addressKeys = ['address', 'phone', 'link_map'];
+
+        foreach ($addressKeys as $key) {
+            if (isset($data[$key])) {
+                switch ($key) {
+                    case 'address':
+                        $successItems[] = "alamat";
+                        break;
+                    case 'phone':
+                        $successItems[] = "nomor telepon";
+                        break;
+                    case 'link_map':
+                        $successItems[] = "link maps";
+                        break;
                 }
             }
-            $message = !empty($successItems) ? 'Berhasil update: ' . implode(', ', $successItems) : 'Gagal update data';
-    
-            return [$data, $message];
-        } catch (Exception $e) {
-            throw new Exception('Gagal update data kontak');
-        } 
-    }
-
-    public function addPeriode($idUsecase, $data) {
-        try {
-            DB::beginTransaction();
-            $dataPeriode = [
-                'start_year' => $data['start_year'],
-                'end_year' => $data['end_year'],
-                'id_usecase' => $idUsecase,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-
-            $this->usecaseRepositories->addPeriode($dataPeriode);
-            DB::commit();
-            $message = "Periode berhasil ditambahkan";
-            return [$dataPeriode, $message];
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new Exception($e->getMessage());
         }
+        $message = !empty($successItems) ? 'Berhasil update: ' . implode(', ', $successItems) : 'Gagal update data';
+        return [$data, $message];
     }
 
     public function addVisi($idUsecase, $data) {
-        try {
-            DB::beginTransaction();
-
-            $dataVisi = [
-                'id_usecase' => $idUsecase,
-                'short_desc' => $data['short_desc'],
-                'description' => isset($data['description']) ? $data['description'] : "",
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-
-            $result = $this->usecaseRepositories->addVisi($dataVisi);
-
-            DB::commit();
-            $message = "Visi berhasil ditambahkan";
-            return [$result, $message];
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new Exception($e->getMessage());
+        $dataUsecase = $this->getUsecaseById($idUsecase);
+        if (!$dataUsecase) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
         }
+        $dataVisi = [
+            'id_usecase' => $idUsecase,
+            'short_desc' => $data['short_desc'],
+            'description' => isset($data['description']) ? $data['description'] : "",
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+        $result = $this->usecaseRepositories->addVisi($dataVisi);
+
+        $message = "Visi berhasil ditambahkan";
+        return [$result, $message];
     }
 
     public function updateVisi($idUsecase, $data) {
-        try {
-            DB::beginTransaction();
-
-            $dataVisi = [
-                'short_desc' => $data['short_desc'],
-                'updated_at' => now(),
-            ];
-            if (isset($data['description'])) {
-                $dataVisi['description'] = $data['description'];
-            }
-
-            $id = $data['id_visi'];
-            $result = $this->usecaseRepositories->updateVisi($dataVisi, $id);
-
-            DB::commit();
-            $message = "Visi berhasil diperbarui";
-            return [$result, $message];
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new Exception($e->getMessage());
+        $dataUsecase = $this->getUsecaseById($idUsecase);
+        if (!$dataUsecase) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
         }
+        $dataVisi = [
+            'short_desc' => $data['short_desc'],
+            'updated_at' => now(),
+        ];
+        if (isset($data['description'])) {
+            $dataVisi['description'] = $data['description'];
+        }
+
+        $id = $data['id_visi'];
+        $result = $this->usecaseRepositories->updateVisi($dataVisi, $id);
+        $message = "Visi berhasil diperbarui";
+        return [$result, $message];
     }
 
-    public function deleteVisi($idUsecase, $data) {
-        try {
-            DB::beginTransaction();
+    public function deleteVisi($idUsecase, $data)
+    {
+        $id = $data["id_visi"];
 
-            $id = $data["id_visi"];
-
-            $this->usecaseRepositories->deleteVisi($id);
-
-            DB::commit();
-            $message = "Visi berhasil dihapus";
-            return $message;
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new Exception($e->getMessage());
+        $visi = $this->usecaseRepositories->getVisiById($id);
+        if (!$visi) {
+            throw new ErrorResponse(message: 'id tidak ditemukan', statusCode: 404);
         }
+
+        $this->usecaseRepositories->deleteVisi($id);
+        return 'Visi berhasil dihapus';
     }
 
     public function getListVisi($idUsecase, $data) {
@@ -490,345 +460,262 @@ class UsecaseServices {
     }
 
     public function addMisi($idUsecase, $data) {
-        try {
-            DB::beginTransaction();
-
-            $dataMisi = [
-                'id_usecase' => $idUsecase,
-                'urutan' => $data['urutan'],
-                'short_desc' => $data['short_desc'],
-                'description' => isset($data['description']) ? $data['description'] : "",
-                'order_by' => 'urutan',
-                'order_dir' => 'asc',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-
-            $result = $this->usecaseRepositories->addMisi($dataMisi);
-
-            DB::commit();
-            $message = "Misi berhasil ditambahkan";
-            return [$result, $message];
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new Exception($e->getMessage());
+        $dataUsecase = $this->getUsecaseById($idUsecase);
+        if (!$dataUsecase) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
         }
+        $dataMisi = [
+            'id_usecase' => $idUsecase,
+            'urutan' => $data['urutan'],
+            'short_desc' => $data['short_desc'],
+            'description' => isset($data['description']) ? $data['description'] : "",
+            'order_by' => 'urutan',
+            'order_dir' => 'asc',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+
+        $result = $this->usecaseRepositories->addMisi($dataMisi);
+
+        $message = "Misi berhasil ditambahkan";
+        return [$result, $message];
     }
 
     public function updateMisi($idUsecase, $data) {
-        try {
-            DB::beginTransaction();
-
-            $oldMisi = $this->usecaseRepositories->getMisiById($data['id_misi']);
-
-            $dataMisi = [
-                'short_desc' => $data['short_desc'],
-                'description' => isset($data['description']) ? $data['description'] : "",
-                'urutan' => isset($data['urutan']) ? $data['urutan'] : $oldMisi['urutan'],
-                'updated_at' => now(),
-            ];
-            $id = $data['id_misi'];
-            $result = $this->usecaseRepositories->updateMisi($id, $dataMisi);
-
-            DB::commit();
-            $message = "Misi berhasil diperbarui";
-            return [$result, $message];
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new Exception($e->getMessage());
+        $oldMisi = $this->usecaseRepositories->getMisiById($data['id_misi']);
+        if (!$oldMisi) {
+            throw new ErrorResponse(type:'Not found', message:'Misi tidak ditemukan.', statusCode:404);
         }
+
+        $dataMisi = [
+            'short_desc' => $data['short_desc'],
+            'description' => isset($data['description']) ? $data['description'] : "",
+            'urutan' => isset($data['urutan']) ? $data['urutan'] : $oldMisi['urutan'],
+            'updated_at' => now(),
+        ];
+        $id = $data['id_misi'];
+        $result = $this->usecaseRepositories->updateMisi($id, $dataMisi);
+
+        $message = "Misi berhasil diperbarui";
+        return [$result, $message];
     }
 
     public function deleteMisi($idUsecase, $data) {
-        try {
-            DB::beginTransaction();
-
-            $id = $data["id_misi"];
-            $this->usecaseRepositories->deleteMisi($id);
-
-            DB::commit();
-            $message = "Misi berhasil dihapus";
-            return $message;
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new Exception($e->getMessage());
+        $id = $data["id_misi"];
+        $oldMisi = $this->usecaseRepositories->getMisiById($id);
+        if (!$oldMisi) {
+            throw new ErrorResponse(type:'Not found', message:'Misi tidak ditemukan.', statusCode:404);
         }
+        $this->usecaseRepositories->deleteMisi($id);
+
+        $message = "Misi berhasil dihapus";
+        return $message;
     }
 
     public function getListMisi($idUsecase, $data) {
-        try {
-            $perPage = $data['perPage'];
-
-            $rows = $this->usecaseRepositories->getListMisi($idUsecase, $perPage);
-
-            $pagination = [
-                "current_page" => $rows->currentPage(),
-                "per_page" => $rows->perPage(),
-                "total_page" => ceil($rows->total() / $rows->perPage()),
-                "total_row" => $rows->total(),
-            ];
-
-            return [$rows->items(), $pagination];
-        } catch (\Exception $e) {
-            throw new Exception($e->getMessage());
+        $dataUsecase = $this->getUsecaseById($idUsecase);
+        if (!$dataUsecase) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
         }
-    }
 
-    public function addSektor($idUsecase, $data) {
-        try {
-            DB::beginTransaction();
+        $perPage = $data['perPage'];
+        $rows = $this->usecaseRepositories->getListMisi($idUsecase, $perPage);
 
-            $dataSektor = [
-                'nama_sektor' => $data['nama_sektor'],
-                'id_usecase' => $data['id_usecase'],
-                'state_iku' => $data['state_iku'],
-                'kode_sektor' => $data['kode_sektor'],
-                'id_menu' => $data['id_menu'],
-                'link_iku' => isset($data['link_iku']) ? $data['link_iku'] : null,
-                'nama_alamat' => $data['nama_alamat'],
-                'deskripsi' => $data['deskripsi'],
-                'short_desc' => $data['short_desc'],
-                'deskripsi_detail' => $data['deskripsi_detail'],
-                'alamat' => $data['alamat'],
-                'telepon' => $data['telepon'],
-                'link_map' => $data['link_map'],
-                'state_non_iku' => $data['state_non_iku'],
-            ];
+        $pagination = [
+            "current_page" => $rows->currentPage(),
+            "per_page" => $rows->perPage(),
+            "total_page" => ceil($rows->total() / $rows->perPage()),
+            "total_row" => $rows->total(),
+        ];
 
-            $result = $this->usecaseRepositories->addSektor($dataSektor);
-
-            DB::commit();
-            $message = "Sektor berhasil ditambahkan";
-            return [$result, $message];
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new Exception($e->getMessage());
-        }
+        return [$rows->items(), $pagination];
     }
 
     public function getListSektor($idUsecase) {
-        try {
-            $data = $this->usecaseRepositories->getListSektor($idUsecase);
-
-            $formatData = [];
-            foreach ($data as $row) {
-                $formatData[] = [
-                    'label' => $row->sector,
-                    'value' => $row->sector,
-                ];
-            }
-
-            return $formatData;
-        } catch (\Exception $e) {
-            throw new exception ($e->getMessage());
+        $dataUsecase = $this->getUsecaseById($idUsecase);
+        if (!$dataUsecase) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
         }
+
+        $data = $this->usecaseRepositories->getListSektor($idUsecase);
+
+        $formatData = [];
+        foreach ($data as $row) {
+            $formatData[] = [
+                'label' => $row->sector,
+                'value' => $row->sector,
+            ];
+        }
+
+        return $formatData;
     }
 
     public function getListDataSektor($idUsecase, $data) {
-        try {
-            $sektor = $data['sektor'];
-            $data = $this->usecaseRepositories->getListDataSektor($idUsecase, $sektor);
-            
-            return $data;
-        } catch (\Exception$e) {
-            throw new Exception($e->getMessage());
+        $dataUsecase = $this->getUsecaseById($idUsecase);
+        if (!$dataUsecase) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
         }
+        $sektor = $data['sektor'];
+        $data = $this->usecaseRepositories->getListDataSektor($idUsecase, $sektor);
+        
+        return $data;
     }
 
     public function getListIndikator($idUsecase, $data) {
-        try {
-            $sektor = $data['sektor'];
-            $data = $this->usecaseRepositories->getListIndikator($idUsecase, $sektor);
-            
-            return $data;
-        } catch (\Exception$e) {
-            throw new Exception($e->getMessage());
+        $dataUsecase = $this->getUsecaseById($idUsecase);
+        if (!$dataUsecase) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
         }
+        $sektor = $data['sektor'];
+        $data = $this->usecaseRepositories->getListIndikator($idUsecase, $sektor);
+        
+        return $data;
     }
 
     public function getListSatuan() {
-        try {
-            $data = $this->usecaseRepositories->getListSatuan();
+        $data = $this->usecaseRepositories->getListSatuan();
 
-            $formatData = [];
-            foreach ($data as $row) {
-                $formatData[] = [
-                    'label' => $row->satuan,
-                    'value' => $row->satuan,
-                ];
-            }
-            return $formatData;
-        } catch (\Exception $e) {
-            throw new Exception($e->getMessage());
+        $formatData = [];
+        foreach ($data as $row) {
+            $formatData[] = [
+                'label' => $row->satuan,
+                'value' => $row->satuan,
+            ];
         }
+        return $formatData;
     }
 
     public function getListOpd($idUsecase, $data) {
-        try {
-            $sektor = $data['sektor'];
-            $data = $this->usecaseRepositories->getListOpd($idUsecase, $sektor);
-
-            $formatData = [];
-            foreach ($data as $row) {
-                $formatData[] = [
-                    'label' => $row->opd,
-                    'value' => $row->opd,
-                ];
-            }
-            
-            return $formatData;
-        } catch (\Exception$e) {
-            throw new Exception($e->getMessage());
+        $dataUsecase = $this->getUsecaseById($idUsecase);
+        if (!$dataUsecase) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
         }
+        $sektor = $data['sektor'];
+        $data = $this->usecaseRepositories->getListOpd($idUsecase, $sektor);
+
+        $formatData = [];
+        foreach ($data as $row) {
+            $formatData[] = [
+                'label' => $row->opd,
+                'value' => $row->opd,
+            ];
+        }
+        
+        return $formatData;
     }
 
     public function addSektorIku($idUsecase, $data) {
-        try {
-            DB::beginTransaction();
+        $dataUsecase = $this->getUsecaseById($idUsecase);
+        if (!$dataUsecase) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
+        }
+        $provinsi_kota = $this->usecaseRepositories->getProvinsiKotaByIdUsecase($idUsecase);
+        $dataSektorIku = [
+            'id_usecase' => $idUsecase,
+            'provinsi' => $provinsi_kota->nama_provinsi,
+            'kategori' => $provinsi_kota->kategori,
+            'kabkot' => $provinsi_kota->nama_kab_kota,
+            'indikator' => $data['indikator'],
+            'satuan' => $data['satuan'],
+            'tahun' => $data['tahun'],
+            'nilai' => $data['nilai'],
+            'flag_public' => $data['public'],
+            'opd' => $data['opd'],
+        ];
+        $decodeSektor = ucwords(urldecode($data['sektor']));
+        $dataSektorIku['urusan'] = $decodeSektor;
 
-            $provinsi_kota = $this->usecaseRepositories->getProvinsiKotaByIdUsecase($idUsecase);
 
-            $decodeSektor = ucwords(urldecode($data['sektor']));
+        $result = $this->usecaseRepositories->addSektorIku($dataSektorIku);
 
-            $dataSektorIku = [
+        $message = "Sektor IKU berhasil ditambahkan";
+        return [$result, $message];
+    }
+
+    public function updateSektorIku($id_usecase, $data) {
+        $idSektor = $data['id_sektor'];
+        $oldSektorIku = $this->usecaseRepositories->getSektorIkuById($idSektor);
+        if (!$oldSektorIku) {
+            throw new ErrorResponse(type:'Not found', message:'Sektor IKU tidak ditemukan.', statusCode:404);
+        }
+        $dataSektorIku = [
+            'indikator' => $data['indikator'],
+            'satuan' => $data['satuan'],
+            'tahun' => $data['tahun'],
+            'nilai' => $data['nilai'],
+            'flag_public' => $data['public'],
+            'opd' => $data['opd'],
+        ];
+        $result = $this->usecaseRepositories->updateSektorIku($dataSektorIku, $idSektor);
+
+        $message = "Sektor IKU berhasil diperbarui";
+        return [$result, $message];
+    }
+
+    public function deleteSektorIku($id_usecase, $data) {
+        $idSektor = $data['id_sektor'];
+        $oldSektorIku = $this->usecaseRepositories->getSektorIkuById($idSektor);
+        if (!$oldSektorIku) {
+            throw new ErrorResponse(type:'Not found', message:'Sektor IKU tidak ditemukan.', statusCode:404);
+        }
+        $result = $this->usecaseRepositories->deleteSektorIku($idSektor);
+        $message = "Sektor IKU berhasil dihapus";
+        return [$message];
+    }
+
+    public function addIndikator($data) {
+        $sektor = $data['sektor'];
+        $maxIkk = $this->usecaseRepositories->getMaxIkk($sektor);
+
+        $decodeIndikator = ucwords($data['indikator']);
+        $dataIndikator = [
+            'indikatorkinerja' => $decodeIndikator,
+            'ikk' => $maxIkk->no_urut + 1,
+            'sektor' => $sektor,
+            'no_urut' => $maxIkk->no_urut + 1,
+        ];
+        $result = $this->usecaseRepositories->addIndikator($dataIndikator);
+
+        $message = "Indikator berhasil ditambahkan";
+        return [$result, $message];
+    }
+
+    public function importSektorIku($idUsecase, $sektor, $data) {
+        $dataUsecase = $this->getUsecaseById($idUsecase);
+        if (!$dataUsecase) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
+        }
+        if (count($data) < 2) {
+            throw new ErrorResponse(type:'Unsupported Media Type', message:'Format file tidak sesuai.', statusCode:415);
+        }
+        $provinsi_kota = $this->usecaseRepositories->getProvinsiKotaByIdUsecase($idUsecase);
+
+        foreach ($data as $i => $val) {
+            if ($i == 0) continue;
+            if ($val[4] == "") continue;
+
+            $flag_public = $val[5] == "Public" ? 2 : 1;
+
+            $tahun = intval($val[2]);
+            $nilai = floatval($val[3]);
+
+            $dataIku = [
                 'id_usecase' => $idUsecase,
                 'provinsi' => $provinsi_kota->nama_provinsi,
                 'kategori' => $provinsi_kota->kategori,
                 'kabkot' => $provinsi_kota->nama_kab_kota,
-                'indikator' => $data['indikator'],
-                'satuan' => $data['satuan'],
-                'tahun' => $data['tahun'],
-                'nilai' => $data['nilai'],
-                'flag_public' => $data['public'],
-                'opd' => $data['opd'],
+                'urusan' => ucwords(urldecode($sektor)),
+                'indikator' => $val[0],
+                'satuan' => $val[1],
+                'tahun' => $tahun,
+                'nilai' => $nilai,
+                'opd' => $val[4],
+                'flag_cms' => 2,
+                'flag_public' => $flag_public,
             ];
-            $dataSektorIku['urusan'] = $decodeSektor;
-    
-
-            $result = $this->usecaseRepositories->addSektorIku($dataSektorIku);
-
-            DB::commit();
-            $message = "Sektor IKU berhasil ditambahkan";
-            return [$result, $message];
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new Exception($e->getMessage());
+            $result[] = $this->usecaseRepositories->addSektorIku($dataIku);
         }
-    }
-
-    public function updateSektorIku($id_usecase, $data) {
-        try {    
-            DB::beginTransaction();
-
-            $dataSektorIku = [
-                'indikator' => $data['indikator'],
-                'satuan' => $data['satuan'],
-                'tahun' => $data['tahun'],
-                'nilai' => $data['nilai'],
-                'flag_public' => $data['public'],
-                'opd' => $data['opd'],
-            ];
-
-            $idSektor = $data['id_sektor'];
-
-            $result = $this->usecaseRepositories->updateSektorIku($dataSektorIku, $idSektor);
-
-            DB::commit();
-            $message = "Sektor IKU berhasil diperbarui";
-            return [$result, $message];
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new Exception($e->getMessage());
-        }
-    }
-
-    public function deleteSektorIku($id_usecase, $data) {
-        try {    
-            DB::beginTransaction();
-
-            $idSektor = $data['id_sektor'];
-
-            $result = $this->usecaseRepositories->deleteSektorIku($idSektor);
-
-            DB::commit();
-            $message = "Sektor IKU berhasil dihapus";
-            return [$message];
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new Exception($e->getMessage());
-        }
-    }
-
-    public function addIndikator($data) {
-        try {
-            DB::beginTransaction();
-            $sektor = $data['sektor'];
-            $maxIkk = $this->usecaseRepositories->getMaxIkk($sektor);
-
-            $decodeIndikator = ucwords($data['indikator']);
-            $dataIndikator = [
-                'indikatorkinerja' => $decodeIndikator,
-                'ikk' => $maxIkk->no_urut + 1,
-                'sektor' => $sektor,
-                'no_urut' => $maxIkk->no_urut + 1,
-            ];
-    
-
-            $result = $this->usecaseRepositories->addIndikator($dataIndikator);
-
-            DB::commit();
-            $message = "Indikator berhasil ditambahkan";
-            return [$result, $message];
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new Exception($e->getMessage());
-        }
-    }
-
-    public function importSektorIku($idUsecase, $sektor, $data) {
-        try {
-            DB::beginTransaction();
-
-            if (count($data) < 2) {
-                throw new exception("data csv kosong/tidak sesuai format");
-            }
-
-            $provinsi_kota = $this->usecaseRepositories->getProvinsiKotaByIdUsecase($idUsecase);
-
-            // Loop data csv
-            foreach ($data as $i => $val) {
-                if ($i == 0) continue;
-                if ($val[4] == "") continue;
-
-                $flag_public = $val[5] == "Public" ? 2 : 1;
-
-                $tahun = intval($val[2]);
-                $nilai = floatval($val[3]);
-
-                $dataIku = [
-                    'id_usecase' => $idUsecase,
-                    'provinsi' => $provinsi_kota->nama_provinsi,
-                    'kategori' => $provinsi_kota->kategori,
-                    'kabkot' => $provinsi_kota->nama_kab_kota,
-                    'urusan' => ucwords(urldecode($sektor)),
-                    'indikator' => $val[0],
-                    'satuan' => $val[1],
-                    'tahun' => $tahun,
-                    'nilai' => $nilai,
-                    'opd' => $val[4],
-                    'flag_cms' => 2,
-                    'flag_public' => $flag_public,
-                ];
-                $result[] = $this->usecaseRepositories->addSektorIku($dataIku);
-            }
-
-            $message = 'Success import data IKU';
-
-            DB::commit();
-            return [$result, $message];
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new Exception($e->getMessage());
-        }
+        $message = 'Success import data IKU';
+        return [$result, $message];
     }
 }
