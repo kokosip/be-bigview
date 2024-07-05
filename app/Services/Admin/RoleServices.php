@@ -3,6 +3,7 @@
 namespace App\Services\Admin;
 
 use App\Repositories\Admin\RoleRepositories;
+use App\Exceptions\ErrorResponse;
 use Exception;
 
 class RoleServices {
@@ -15,7 +16,6 @@ class RoleServices {
 
     public function insertRole($data) {
         $this->roleRepositories->insertRole($data);
-
         return $data;
     }
 
@@ -37,41 +37,32 @@ class RoleServices {
 
     public function getListNameRole(){
         $rows = $this->roleRepositories->getListNameRole();
-
         return $rows;
     }
 
     public function getRoleById($id_role){
         $result = $this->roleRepositories->getRoleById($id_role);
-
-        if($result){
-            return $result;
-        } else {
-            throw new Exception('ID Tidak Ditemukan');
+        if(!$result){
+            throw new ErrorResponse(type: 'Not Found', message: 'Role tidak ditemukan', statusCode: 404);
         }
+        return $result;
     }
 
     public function deleteRole($id_role){
-        $this->getRoleById($id_role);
-
-        $result = $this->roleRepositories->deleteRole($id_role);
-
-        if($result){
-            return $result;
-        } else {
-            throw new Exception('Gagal Update Role');
+        $oldRole = $this->getRoleById($id_role);
+        if(!$oldRole){
+            throw new ErrorResponse(type: 'Not Found', message: 'Role tidak ditemukan', statusCode: 404);
         }
+        $result = $this->roleRepositories->deleteRole($id_role);
+        return $result;
     }
 
     public function updateRole($data, $id_role){
-        $this->getRoleById($id_role);
-
-        $result = $this->roleRepositories->updateRole($data, $id_role);
-
-        if($result){
-            return $result;
-        } else {
-            throw new Exception('Gagal Update Role');
+        $oldRole = $this->getRoleById($id_role);
+        if(!$oldRole){
+            throw new ErrorResponse(type: 'Not Found', message: 'Role tidak ditemukan', statusCode: 404);
         }
+        $result = $this->roleRepositories->updateRole($data, $id_role);
+        return $result;
     }
 }

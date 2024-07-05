@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Services\Admin\MenuServices;
 use App\Services\Admin\RoleServices;
 use App\Traits\ApiResponse;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,57 +30,31 @@ class RoleController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->roleService->insertRole($validator->validate());
-
-            return $this->successResponse($data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->roleService->insertRole($validator->validate());
+        return $this->successResponse($data);
     }
 
     public function listRole(Request $request){
         $search = $request->input("search");
         $perPage = is_null($request->input('per_page')) ? 10 : $request->input('per_page');
 
-        try{
-            [$data, $metadata] = $this->roleService->getListRole($search, $perPage);
-
-            return $this->successResponse(data: $data, metadata: $metadata);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
-    }
+        [$data, $metadata] = $this->roleService->getListRole($search, $perPage);
+        return $this->successResponse(data: $data, metadata: $metadata);
+}
 
     public function listNamesRole(){
-        try{
-            $data = $this->roleService->getListNameRole();
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->roleService->getListNameRole();
+        return $this->successResponse(data: $data);
     }
 
     public function getRoleById($id_role){
-        try{
-            $data = $this->roleService->getRoleById($id_role);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->roleService->getRoleById($id_role);
+        return $this->successResponse(data: $data);
     }
 
     public function deleteRole($id_role){
-        try{
-            $this->roleService->deleteRole($id_role);
-
-            return $this->successResponse(message: "Data Berhasil dihapus");
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $this->roleService->deleteRole($id_role);
+        return $this->successResponse(message: "Data Berhasil dihapus");
     }
 
     public function updateRole(Request $request, $id_role){
@@ -89,18 +62,11 @@ class RoleController extends Controller
             'nama_role' => 'required|string',
             'level' => 'required',
         ]);
-
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $this->roleService->updateRole($validator->validate(), $id_role);
-
-            return $this->successResponse(message: "Data Berhasil di Update");
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $this->roleService->updateRole($validator->validate(), $id_role);
+        return $this->successResponse(message: "Data Berhasil di Update");
     }
 
     public function listRoleMenu(Request $request){
@@ -112,14 +78,8 @@ class RoleController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->menuService->listRoleMenu($validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->menuService->listRoleMenu($validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function addRoleMenu(Request $request){
@@ -131,14 +91,8 @@ class RoleController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $this->menuService->addRoleMenu($validator->validate());
-
-            return $this->successResponse(message: "Role Menu Berhasil ditambahkan");
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $this->menuService->addRoleMenu($validator->validate());
+        return $this->successResponse(message: "Role Menu Berhasil ditambahkan");
     }
 
     public function deleteRoleMenu(Request $request){
@@ -150,13 +104,7 @@ class RoleController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $this->menuService->deleteRoleMenu($validator->validate());
-
-            return $this->successResponse(message: "Role Menu Berhasil dihapus");
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $this->menuService->deleteRoleMenu($validator->validate());
+        return $this->successResponse(message: "Role Menu Berhasil dihapus");
     }
 }

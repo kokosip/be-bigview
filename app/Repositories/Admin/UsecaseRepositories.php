@@ -20,7 +20,7 @@ class UsecaseRepositories {
             $result = $db->paginate($perPage, $perPage);
             return $result;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list usecase.');
         }
     }
 
@@ -32,36 +32,34 @@ class UsecaseRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list nama usecase.');
         }
     }
 
     public function addUsecaseGovernment($data){
-        $result = DB::table('usecase_government')->insert($data);
-
-        if($result){
+        try {
+            $result = DB::table('usecase_government')->insert($data);
             return $result;
-        } else {
-            throw new Exception('Gagal Menambahkan Usecase Pemerintah Baru.');
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan usecase government.');
         }
     }
 
     public function addUsecaseCustom($data){
-        $result = DB::table('usecase_custom')->insert($data);
-
-        if($result){
+        try {
+            $result = DB::table('usecase_custom')->insert($data);
             return $result;
-        } else {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal Menambahkan Usecase Custom Baru.');
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan usecase custom.');
         }
     }
 
     public function addUsecase($data){
-        $result = DB::table('usecase')->insertGetId($data);
-        if($result){
+        try {
+            $result = DB::table('usecase')->insertGetId($data);
             return $result;
-        } else {
-            throw new Exception('Gagal Menambahkan Usecase Baru.');
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan usecase.');
         }
     }
 
@@ -452,7 +450,6 @@ class UsecaseRepositories {
     public function addSektorIku($data) {
         try {
             $getId = DB::table('iku_indikator_bigbox')->insertGetId($data);
-    
             $getRow = DB::table('iku_indikator_bigbox')
                     ->where('id', $getId)
                     ->first();
@@ -481,16 +478,9 @@ class UsecaseRepositories {
 
     public function deleteSektorIku($id_sektor) {
         try {
-            $sektorToDelete = $this->getSektorIkuById($id_sektor);
-
-            if (!$sektorToDelete) {
-                throw new Exception('Sektor IKU tidak ditemukan.');
-            }
-
             $result = DB::table('iku_indikator_bigbox')
                     ->where('id', $id_sektor)
                     ->delete();
-
             return $result;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);

@@ -3,10 +3,8 @@
 namespace App\Services\Admin;
 
 use App\Repositories\Admin\UserRepositories;
-use Exception;
-use Illuminate\Support\Facades\DB;
+use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
 class UserServices {
     protected $userRepositories;
@@ -34,9 +32,7 @@ class UserServices {
 
     public function insertUser($data) {
         $data["password"] = Hash::make('user123');
-
         $result = $this->userRepositories->insertUser($data);
-
         unset($result["password"]);
 
         return $result;
@@ -45,42 +41,36 @@ class UserServices {
     public function getUserById($id_user){
         $result = $this->userRepositories->getUserById($id_user);
 
-        if($result){
-            return $result;
-        } else {
-            throw new Exception('ID Tidak Ditemukan');
+        if(!$result){
+            throw new ErrorResponse(type: 'Not Found', message: 'User tidak ditemukan.', statusCode: 404);
         }
+        return $result;
     }
 
     public function deleteUser($id_user){
-        $this->getUserById($id_user);
-
+        $oldUser = $this->getUserById($id_user);
+        if(!$oldUser){
+            throw new ErrorResponse(type: 'Not Found', message: 'User tidak ditemukan.', statusCode: 404);
+        }
         $result = $this->userRepositories->deleteUser($id_user);
-
         return $result;
     }
 
     public function updateUser($data, $id_user){
-        $this->getUserById($id_user);
-
-        $result = $this->userRepositories->updateMenu($data, $id_user);
-
-        if($result){
-            return $result;
-        } else {
-            throw new Exception('Gagal Update Menu');
+        $oldUser = $this->getUserById($id_user);
+        if(!$oldUser){
+            throw new ErrorResponse(type: 'Not Found', message: 'User tidak ditemukan.', statusCode: 404);
         }
+        $result = $this->userRepositories->updateMenu($data, $id_user);
+        return $result;
     }
 
     public function updateIsActived($data, $id_user){
-        $this->getUserById($id_user);
-
-        $result = $this->userRepositories->updateMenu($data, $id_user);
-
-        if($result){
-            return $result;
-        } else {
-            throw new Exception('Gagal Update Menu');
+        $oldUser = $this->getUserById($id_user);
+        if(!$oldUser){
+            throw new ErrorResponse(type: 'Not Found', message: 'User tidak ditemukan.', statusCode: 404);
         }
+        $result = $this->userRepositories->updateMenu($data, $id_user);
+        return $result;
     }
 }

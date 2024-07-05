@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\Admin\MenuServices;
 use App\Traits\ApiResponse;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,58 +30,33 @@ class MenuController extends Controller
             return $this->validationResponse($validator);
         }
 
-        try{
-            $data = $this->menuService->insertMenu($validator->validate());
-
-            return $this->successResponse($data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->menuService->insertMenu($validator->validate());
+        return $this->successResponse($data);
     }
 
     public function menuUtama(Request $request){
         $isSubmenu = $request->boolean('submenu') ? true : null;
 
-        try{
-            $data = $this->menuService->getMenuUtama($isSubmenu);
-
-            return $this->successResponse($data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->menuService->getMenuUtama($isSubmenu);
+        return $this->successResponse(data: $data);
     }
 
     public function listMenu(Request $request){
         $search = $request->input("search");
         $perPage = is_null($request->input('per_page')) ? 10 : $request->input('per_page');
 
-        try{
-            [$data, $metadata] = $this->menuService->getListMenu($search, $perPage);
-
-            return $this->successResponse(data: $data, metadata: $metadata);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        [$data, $metadata] = $this->menuService->getListMenu($search, $perPage);
+        return $this->successResponse(data: $data, metadata: $metadata);
     }
 
     public function getMenuById($id_menu){
-        try{
-            $data = $this->menuService->getMenuById($id_menu);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->menuService->getMenuById($id_menu);
+        return $this->successResponse(data: $data);
     }
 
     public function deleteMenu($id_menu){
-        try{
-            $this->menuService->deleteMenu($id_menu);
-
-            return $this->successResponse(message: "Data Berhasil dihapus");
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $this->menuService->deleteMenu($id_menu);
+        return $this->successResponse(message: "Data Berhasil dihapus");
     }
 
     public function updateMenu(Request $request, $id_menu){
@@ -97,13 +71,7 @@ class MenuController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $this->menuService->updateMenu($validator->validate(), $id_menu);
-
-            return $this->successResponse(message: "Data Berhasil di Update");
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $this->menuService->updateMenu($validator->validate(), $id_menu);
+        return $this->successResponse(message: "Data Berhasil di Update");
     }
 }
