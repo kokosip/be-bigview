@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exceptions\ErrorResponse;
 use App\Http\Controllers\Controller;
 use App\Services\Admin\UsecaseServices;
 use App\Traits\ApiResponse;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -153,13 +151,8 @@ class UsecaseController extends Controller
     }
 
     public function deleteLogo($id_usecase){
-        try {
-            [$data, $message] = $this->usecaseService->deleteLogo($id_usecase);
-
-            return $this->successResponse(data: $data, message: $message);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message: $e->getMessage(), statusCode:400);
-        }
+        [$data, $message] = $this->usecaseService->deleteLogo($id_usecase);
+        return $this->successResponse(data: $data, message: $message);
     }
 
     public function uploadProfilePimpinan(Request $request, $id_usecase) {
@@ -178,13 +171,8 @@ class UsecaseController extends Controller
     
         $validatedData = $validator->validated();
     
-        try {
-            [$data, $message] = $this->usecaseService->setProfile($id_usecase, $validatedData);
-    
-            return $this->successResponse(data: $data, message: $message);
-        } catch(Exception $e) {
-            return $this->errorResponse(type: "Failed", message: $e->getMessage(), statusCode: 400);
-        }
+        [$data, $message] = $this->usecaseService->setProfile($id_usecase, $validatedData);
+        return $this->successResponse(data: $data, message: $message);
     }
 
     public function updateContact(Request $request, $id_usecase) {
@@ -232,13 +220,8 @@ class UsecaseController extends Controller
         }
 
         $validatedData = $validator->validated();
-
-        try {
-            [$data, $message] = $this->usecaseService->updateVisi($id_usecase, $validatedData);
-            return $this->successResponse(data: $data, message: $message);
-        } catch (Exception $e) {
-            return $this->errorResponse(type:'Failed', message: $e->getMessage(), statusCode:400);
-        }
+        [$data, $message] = $this->usecaseService->updateVisi($id_usecase, $validatedData);
+        return $this->successResponse(data: $data, message: $message);
     }
 
     public function deleteVisi(Request $request, $id_usecase) {

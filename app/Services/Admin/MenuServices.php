@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin;
 
+use App\Exceptions\ErrorResponse;
 use App\Repositories\Admin\MenuRepositories;
 use Exception;
 
@@ -26,7 +27,6 @@ class MenuServices {
 
     public function getMenuUtama($isSubmenu){
         $rows = $this->menuRepositories->getMenuUtama($isSubmenu);
-
         return $rows;
     }
 
@@ -48,42 +48,40 @@ class MenuServices {
 
     public function getMenuById($id_menu){
         $result = $this->menuRepositories->getMenuById($id_menu);
-
-        if($result){
-            return $result;
-        } else {
-            throw new Exception('ID Tidak Ditemukan');
+        if (!$result) {
+            throw new ErrorResponse(type: 'Not Found', message: 'Menu tidak ditemukan.', statusCode: 404);
         }
+        return $result;
     }
 
     public function deleteMenu($id_menu){
-        $this->getMenuById($id_menu);
-
-        $result = $this->menuRepositories->deleteMenu($id_menu);
-
-        if($result){
-            return $result;
-        } else {
-            throw new Exception('Gagal Delete Menu');
+        $oldMenu = $this->getMenuById($id_menu);
+        if (!$oldMenu) {
+            throw new ErrorResponse(type: 'Not Found', message: 'Menu tidak ditemukan.', statusCode: 404);
         }
+        $result = $this->menuRepositories->deleteMenu($id_menu);
+        return $result;
     }
 
     public function updateMenu($data, $id_menu){
-        $this->getMenuById($id_menu);
-
-        $result = $this->menuRepositories->updateMenu($data, $id_menu);
-
-        if($result){
-            return $result;
-        } else {
-            throw new Exception('Gagal Update Menu');
+        $oldMenu = $this->getMenuById($id_menu);
+        if (!$oldMenu) {
+            throw new ErrorResponse(type: 'Not Found', message: 'Menu tidak ditemukan.', statusCode: 404);
         }
+        $result = $this->menuRepositories->updateMenu($data, $id_menu);
+        return $result;
     }
 
     public function listRoleMenu($data){
         $list_usermenu = $this->menuRepositories->getMenuByRole($data);
+        if (!$list_usermenu) {
+            throw new ErrorResponse(type: 'Not Found', message: 'Menu tidak ditemukan.', statusCode: 404);
+        }
 
         $list_menu = $this->menuRepositories->listRoleMenu($data);
+        if (!$list_menu) {
+            throw new ErrorResponse(type: 'Not Found', message: 'Role menu tidak ditemukan.', statusCode: 404);
+        }
 
         foreach($list_menu as $list){
             if(in_array($list->id_menu, $list_usermenu)){
@@ -92,27 +90,22 @@ class MenuServices {
                 $list->is_check = False;
             }
         }
-
         return $list_menu;
     }
 
     public function addRoleMenu($data){
         if($this->menuRepositories->checkRoleMenuExist($data)){
-            throw new Exception('Role Menu Sudah Ada.');
+            throw new ErrorResponse(type: 'Conflict', message: 'Role menu sudah ada.', statusCode: 409);
         }
-
         $list_menu = $this->menuRepositories->addRoleMenu($data);
-
         return $list_menu;
     }
 
     public function deleteRoleMenu($data){
         if(!$this->menuRepositories->checkRoleMenuExist($data)){
-            throw new Exception('Role Menu Tidak Ada.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Role menu tidak ditemukan.', statusCode: 404);
         }
-
         $list_menu = $this->menuRepositories->deleteRoleMenu($data);
-
         return $list_menu;
     }
 }

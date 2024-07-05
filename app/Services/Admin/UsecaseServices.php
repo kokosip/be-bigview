@@ -5,7 +5,6 @@ namespace App\Services\Admin;
 use App\Repositories\Admin\UsecaseRepositories;
 use App\Traits\FileStorage;
 use App\Traits\ApiResponse;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\ErrorResponse;
 
@@ -441,22 +440,21 @@ class UsecaseServices {
     }
 
     public function getListVisi($idUsecase, $data) {
-        try {
-            $perPage = $data['perPage'];
-
-            $rows = $this->usecaseRepositories->getListVisi($idUsecase, $perPage);
-
-            $pagination = [
-                "current_page" => $rows->currentPage(),
-                "per_page" => $rows->perPage(),
-                "total_page" => ceil($rows->total() / $rows->perPage()),
-                "total_row" => $rows->total(),
-            ];
-
-            return [$rows->items(), $pagination];
-        } catch (\Exception $e) {
-            throw new Exception($e->getMessage());
+        $dataUsecase = $this->getUsecaseById($idUsecase);
+        if (!$dataUsecase) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
         }
+        $perPage = $data['perPage'];
+        $rows = $this->usecaseRepositories->getListVisi($idUsecase, $perPage);
+
+        $pagination = [
+            "current_page" => $rows->currentPage(),
+            "per_page" => $rows->perPage(),
+            "total_page" => ceil($rows->total() / $rows->perPage()),
+            "total_row" => $rows->total(),
+        ];
+
+        return [$rows->items(), $pagination];
     }
 
     public function addMisi($idUsecase, $data) {

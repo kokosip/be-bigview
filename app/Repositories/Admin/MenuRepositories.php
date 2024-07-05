@@ -3,18 +3,18 @@
 namespace App\Repositories\Admin;
 
 use Exception;
+use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\DB;
 
 class MenuRepositories {
 
     public function insertMenu($data){
-        $result = DB::table('menu')->insert($data);
-
-        if($result){
+        try {
+            DB::table('menu')->insert($data);
             return $data;
-        } else {
-            throw new Exception('Gagal Menambahkan Menu Baru.');
-        }
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan menu.');
+        } 
     }
 
     public function getLatestSort($data){
@@ -26,106 +26,136 @@ class MenuRepositories {
     }
 
     public function getMenuUtama($isSubmenu = null){
-        $db = DB::table('menu as a')
-            ->leftJoin('menu as b', 'b.id_parent', '=', 'a.id_menu')
-            ->selectRaw('DISTINCT a.id_menu, a.name_menu')
-            ->where('a.id_parent', 0);
+        try {
+            $db = DB::table('menu as a')
+                ->leftJoin('menu as b', 'b.id_parent', '=', 'a.id_menu')
+                ->selectRaw('DISTINCT a.id_menu, a.name_menu')
+                ->where('a.id_parent', 0);
 
-        if(!is_null($isSubmenu)) $db = $db->whereRaw('b.id_menu is not null');
-        $db = $db->get();
+            if(!is_null($isSubmenu)) $db = $db->whereRaw('b.id_menu is not null');
+            $db = $db->get();
 
-        return $db;
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan menu utama.');
+        } 
     }
 
     public function getListMenu($search, $perPage){
-        $db = DB::table('menu as a')
-            ->selectRaw("a.id_menu, a.name_menu, a.id_parent, IFNULL(b.name_menu, '') as parent, a.sort")
-            ->leftJoin('menu as b','a.id_parent','=','b.id_menu');
+        try {
+            $db = DB::table('menu as a')
+                ->selectRaw("a.id_menu, a.name_menu, a.id_parent, IFNULL(b.name_menu, '') as parent, a.sort")
+                ->leftJoin('menu as b','a.id_parent','=','b.id_menu');
 
-        if($search){
-            $db = $db->whereRaw("a.name_menu like ? OR b.name_menu like ?", ["%{$search}%", "%{$search}%"]);
-        }
-        $result = $db->paginate($perPage, $perPage);
-        return $result;
+            if($search){
+                $db = $db->whereRaw("a.name_menu like ? OR b.name_menu like ?", ["%{$search}%", "%{$search}%"]);
+            }
+            $result = $db->paginate($perPage, $perPage);
+            return $result;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan list menu.');
+        } 
     }
 
     public function getMenuById($id_menu){
-        $db = DB::table('menu')
-            ->select('id_menu', 'name_menu', 'icon', 'link', 'id_parent', 'sort')
-            ->where('id_menu', $id_menu)
-            ->first();
+        try {
+            $db = DB::table('menu')
+                ->select('id_menu', 'name_menu', 'icon', 'link', 'id_parent', 'sort')
+                ->where('id_menu', $id_menu)
+                ->first();
 
-        return $db;
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan menu.');
+        } 
     }
 
     public function deleteMenu($id_menu){
-        $db = DB::table('menu')
-            ->where('id_menu', $id_menu)
-            ->delete();
+        try {
+            $db = DB::table('menu')
+                ->where('id_menu', $id_menu)
+                ->delete();
 
-        return $db;
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus menu.');
+        } 
     }
 
     public function updateMenu($data, $id_menu){
-        $db = DB::table('menu')
-            ->where('id_menu', $id_menu)
-            ->update($data);
+        try {
+            $db = DB::table('menu')
+                ->where('id_menu', $id_menu)
+                ->update($data);
 
-        return $db;
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui menu.');
+        } 
     }
 
     public function listRoleMenu($data){
-        $id_parent = 0;
-        if(isset($data['id_parent'])){
-            $id_parent = $data['id_parent'];
-        }
+        try {
+            $id_parent = 0;
+            if(isset($data['id_parent'])){
+                $id_parent = $data['id_parent'];
+            }
 
-        $db = DB::table('menu')
-            ->select('id_menu', 'name_menu')
-            ->where('id_parent', $id_parent)
-            ->get();
+            $db = DB::table('menu')
+                ->select('id_menu', 'name_menu')
+                ->where('id_parent', $id_parent)
+                ->get();
 
-        return $db;
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list role menu.');
+        } 
     }
 
     public function getMenuByRole($data){
-        $db = DB::table('user_menu')
-            ->where('id_role', $data['id_role'])
-            ->pluck('id_menu')->toArray();
+        try {
+            $db = DB::table('user_menu')
+                ->where('id_role', $data['id_role'])
+                ->pluck('id_menu')->toArray();
 
-        return $db;
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil menu.');
+        } 
     }
 
     public function addRoleMenu($data){
-        $result = DB::table('user_menu')->insert($data);
-
-        if($result){
+        try {
+            $result = DB::table('user_menu')->insert($data);
             return $result;
-        } else {
-            throw new Exception('Gagal Menambahkan Role Menu Baru.');
-        }
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan role menu.');
+        } 
     }
 
     public function deleteRoleMenu($data){
-        $result = DB::table('user_menu')
-            ->where('id_menu', $data['id_menu'])
-            ->where('id_role', $data['id_role'])
-            ->delete();
-
-        if($result){
+        try {
+            $result = DB::table('user_menu')
+                ->where('id_menu', $data['id_menu'])
+                ->where('id_role', $data['id_role'])
+                ->delete();
             return $result;
-        } else {
-            throw new Exception('Gagal Menghapus Role Menu Baru.');
-        }
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus role menu.');
+        }  
     }
 
     public function checkRoleMenuExist($data){
-        $result = DB::table('user_menu')
-            ->select('id_role', 'id_menu')
-            ->where('id_role', $data['id_role'])
-            ->where('id_menu', $data['id_menu'])
-            ->first();
+        try {
+            $result = DB::table('user_menu')
+                ->select('id_role', 'id_menu')
+                ->where('id_role', $data['id_role'])
+                ->where('id_menu', $data['id_menu'])
+                ->first();
 
-        return $result ? True : False;
+            return $result ? True : False;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil data role menu.');
+        } 
     }
 }

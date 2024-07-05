@@ -3,56 +3,72 @@
 namespace App\Repositories\Admin;
 
 use Exception;
+use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\DB;
 
 class UserRepositories {
 
     public function getListUser($search, $perPage){
-        $db = DB::table('user as u')
-            ->leftJoin('role as r', 'u.id_role', '=', 'r.id_role')
-            ->select('u.id_usecase', 'name', 'username', 'r.nama_role');
+        try {
+            $db = DB::table('user as u')
+                ->leftJoin('role as r', 'u.id_role', '=', 'r.id_role')
+                ->select('u.id_usecase', 'name', 'username', 'r.nama_role');
 
-        if($search){
-            $db = $db->whereRaw("name LIKE ? or username LIKE ? 
-                or name LIKE ? ", ["%{$search}%", "%{$search}%", "%{$search}%"]);
-        }
+            if($search){
+                $db = $db->whereRaw("name LIKE ? or username LIKE ? 
+                    or name LIKE ? ", ["%{$search}%", "%{$search}%", "%{$search}%"]);
+            }
 
-        $result = $db->paginate($perPage, $perPage);
-        return $result;
+            $result = $db->paginate($perPage, $perPage);
+            return $result;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list user.');
+        } 
     }
 
     public function getUserById($id_user){
-        $db = DB::table('user')
-            ->select('id_user', 'id_usecase', 'id_role', 'name', 'username')
-            ->where('id_user', $id_user)
-            ->first();
+        try {
+            $db = DB::table('user')
+                ->select('id_user', 'id_usecase', 'id_role', 'name', 'username')
+                ->where('id_user', $id_user)
+                ->first();
 
-        return $db;
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil user.');
+        } 
     }
 
     public function insertUser($data) {
-        $result = DB::table('user')->insert($data);
-
-        if($result){
+        try {
+            DB::table('user')->insert($data);
             return $data;
-        } else {
-            throw new Exception('Gagal Menambahkan Role Baru.');
-        }
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan user.');
+        } 
     }
 
     public function deleteUser($id_user) {
-        $db = DB::table('user')
-            ->where('id_user', $id_user)
-            ->delete();
+        try {
+            $db = DB::table('user')
+                ->where('id_user', $id_user)
+                ->delete();
 
-        return $db;
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus user.');
+        } 
     }
 
     public function updateMenu($data, $id_user) {
-        $db = DB::table('user')
-            ->where('id_user', $id_user)
-            ->update($data);
+        try {
+            $db = DB::table('user')
+                ->where('id_user', $id_user)
+                ->update($data);
 
-        return $db;
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui user.');
+        } 
     }
 }
