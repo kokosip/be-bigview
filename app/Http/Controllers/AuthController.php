@@ -40,17 +40,27 @@ class AuthController extends Controller
 
             $responseBody = json_decode($response->body());
 
-            $credentials = $validator->validate();
-            if (!Auth::attempt($credentials)) {
-                throw new Exception('Username atau password tidak sesuai.');
+            if (!$responseBody->success) {
+                throw new ErrorResponse(type: 'Unauthorized', message:"reCaptcha gagal.", statusCode: 400);
             }
 
-            // Authentication successful
+            $credentials = $validator->validate();
+            if (!$token = Auth::attempt([
+                'username' => $credentials['username'],
+                'password'=> $credentials['password'],
+            ])) {
+                throw new ErrorResponse(type: 'Unauthorized', message:"username atau password tidak sesuai", statusCode: 400);
+            }
+
+            Auth::factory()->getTTL() * 60 * 8;
             $user = Auth::user();
-            $token = $user->createToken('auth-token')->plainTextToken;
 
-            return response()->json(['user' => $user, 'token' => $token], 200);
+            $response = [
+                'user' => $user,
+                'token' => $token,
+            ];
 
+            return $this->successResponse($response);
         } catch (Exception $e) {
             throw new ErrorResponse(message: $e->getMessage());
         }
