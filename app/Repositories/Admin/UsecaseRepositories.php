@@ -110,7 +110,7 @@ class UsecaseRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil usecase');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil usecase.');
         }
     }
 
@@ -122,7 +122,7 @@ class UsecaseRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus usecase.');
         }
     }
 
@@ -134,7 +134,7 @@ class UsecaseRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapuse usecase government.');
         }
     }
 
@@ -146,7 +146,7 @@ class UsecaseRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal menghapus usecase custom.');
         }
     }
 
@@ -169,7 +169,7 @@ class UsecaseRepositories {
                     ->first();
             return $getRow;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal menambahkan visi.');
         }
     }
 
@@ -181,7 +181,7 @@ class UsecaseRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message: $e->getMessage(), statusCode: 500);
+            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal mendapatkan visi.');
         }        
     }
 
@@ -195,7 +195,7 @@ class UsecaseRepositories {
                         ->first();
             return $updatedRow;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message: $e->getMessage(), statusCode: 500);
+            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal memperbarui visi');
         }
     }
 
@@ -207,7 +207,7 @@ class UsecaseRepositories {
 
             return $db;
         }catch(Exception $e){
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus visi.');
         }
     }
 
@@ -221,7 +221,7 @@ class UsecaseRepositories {
         
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan list visi.');
         }
     }
 
@@ -250,7 +250,7 @@ class UsecaseRepositories {
 
             return $getRow;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan list visi.');
         }
     }
 
@@ -287,7 +287,7 @@ class UsecaseRepositories {
 
             return $updatedRow;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui visi.');
         }
     }
     
@@ -306,7 +306,7 @@ class UsecaseRepositories {
 
             return $result;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus visi.');
         }
     }
 
@@ -315,7 +315,7 @@ class UsecaseRepositories {
             $misi = DB::table('misi')->where('id', $id_misi)->first();
             return $misi;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan misi.');
         }
     }
 
@@ -328,7 +328,7 @@ class UsecaseRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan list misi.');
         }
     }
 
@@ -341,7 +341,7 @@ class UsecaseRepositories {
         
             return $getRow;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan sektor.');
         }
     }
     
@@ -354,7 +354,7 @@ class UsecaseRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list sektor.');
         }
     }
 
@@ -370,7 +370,7 @@ class UsecaseRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list data sektor.');
         }
     }
 
@@ -386,7 +386,7 @@ class UsecaseRepositories {
             
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list indikator');
         }
     }
 
@@ -398,7 +398,7 @@ class UsecaseRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list satuan.');
         }
     }
 
@@ -413,7 +413,7 @@ class UsecaseRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list OPD');
         }
     }
 
@@ -443,7 +443,7 @@ class UsecaseRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan provinsi.');
         }
     }
 
@@ -456,7 +456,7 @@ class UsecaseRepositories {
         
             return $getRow;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan sektor IKU.');
         }
     }
 
@@ -472,7 +472,7 @@ class UsecaseRepositories {
                     
             return $getRow;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui sektor IKU.');
         }
     }
 
@@ -483,7 +483,7 @@ class UsecaseRepositories {
                     ->delete();
             return $result;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus sektor IKU.');
         }
     }
 
@@ -495,7 +495,7 @@ class UsecaseRepositories {
 
             return $result;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan sektor IKU.');
         }
     }
 
@@ -508,7 +508,7 @@ class UsecaseRepositories {
 
             return $result;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan max IKK.');
         }
     } 
 
@@ -522,7 +522,7 @@ class UsecaseRepositories {
         
             return $getRow;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage(), statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan indikator.');
         }
     }
 }
