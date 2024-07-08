@@ -19,40 +19,25 @@ class EkonomiPerdaganganController extends Controller
     public function __construct(EkonomiPerdaganganServices $ekonomiService)
     {
         $this->ekonomiService = $ekonomiService;
-        $this->idUsecase = Auth::user()->id_usecase;
+        $this->idUsecase = Auth::user()->id_usecase ?? null;
     }
 
     // Start Ekonomi PAD
     public function areaPad(){
-        try{
-            $data = $this->ekonomiService->getAreaPad($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getAreaPad($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function detailPad(){
-        try{
-            $data = $this->ekonomiService->getDetailPad($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getDetailPad($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
     // End Ekonomi PAD
 
     // Start Trend Perdagangan
     public function periodeTrendPerdagangan(){
-        try{
-            $data = $this->ekonomiService->getPeriodeTrendPerdagangan($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getPeriodeTrendPerdagangan($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function areaTrendPerdagangan(Request $request){
@@ -63,14 +48,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getAreaTrendPerdagangan($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getAreaTrendPerdagangan($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function detailTrendPerdagangan(Request $request){
@@ -81,26 +60,15 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getDetailTrendPerdagangan($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getDetailTrendPerdagangan($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
     // End Perdagangan
 
     // Start Top Komoditas
     public function tahunKomoditas(){
-        try{
-            $data = $this->ekonomiService->getTahunKomoditas($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getTahunKomoditas($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function barKomoditas(Request $request){
@@ -111,14 +79,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getBarKomoditas($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getBarKomoditas($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function detailKomoditas(Request $request){
@@ -129,26 +91,15 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getDetailKomoditas($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getDetailKomoditas($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
     // End Top Komoditas
 
     // Start Top Pad KabKota
     public function tahunPadKabKota(){
-        try{
-            $data = $this->ekonomiService->getTahunPadKabKota($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getTahunPadKabKota($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function barPadKabKota(Request $request){
@@ -159,14 +110,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getBarPadKabKota($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getBarPadKabKota($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function detailPadKabKota(Request $request){
@@ -177,46 +122,25 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getDetailPadKabKota($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getDetailPadKabKota($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
     // End Top Komoditas
 
     // Start Inflasi dan IHK
     public function monthPeriodeInflasi(){
-        try{
-            $data = $this->ekonomiService->getMonthPeriodeInflasi($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getMonthPeriodeInflasi($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function namaDaerahInflasi(){
-        try{
-            $data = $this->ekonomiService->getNamaDaerahInflasi($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getNamaDaerahInflasi($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function tahunInflasi(){
-        try{
-            $data = $this->ekonomiService->getTahunInflasi($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getTahunInflasi($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function bulanInflasi(Request $request){
@@ -227,14 +151,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getBulanInflasi($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getBulanInflasi($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function mapInflasi(Request $request){
@@ -246,14 +164,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
             $data = $this->ekonomiService->getMapInflasi($this->idUsecase, $validator->validate());
-
             return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
     }
 
     public function dualChartInflasi(Request $request){
@@ -265,14 +177,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getDualChartInflasi($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getDualChartInflasi($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function detailInflasi(Request $request){
@@ -283,46 +189,25 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
             $data = $this->ekonomiService->getDetailInflasi($this->idUsecase, $validator->validate());
-
             return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
     }
     // End Infalsi dan IHK
 
     // Start PDRB
     public function tahunPDRB(){
-        try{
-            $data = $this->ekonomiService->getTahunPDRB($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getTahunPDRB($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function kategoriPDRB(){
-        try{
-            $data = $this->ekonomiService->getKategoriPDRB($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getKategoriPDRB($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function sektorPDRB(){
-        try{
-            $data = $this->ekonomiService->getSektorPDRB($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getSektorPDRB($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function cardPDRB(Request $request){
@@ -335,14 +220,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getCardPDRB($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getCardPDRB($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function barPDRB(Request $request){
@@ -355,14 +234,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getBarPDRB($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getBarPDRB($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function areaPDRB(Request $request){
@@ -376,14 +249,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getAreaPDRB($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getAreaPDRB($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function detailPDRB(Request $request){
@@ -396,56 +263,30 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getDetailPDRB($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getDetailPDRB($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
     // End PDRB
 
     // Start Pariwisata
     public function indikatorPariwisata(){
-        try{
-            $data = $this->ekonomiService->getIndikatorPariwisata($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getIndikatorPariwisata($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function namaDaerahPariwisataDTW(){
-        try{
-            $data = $this->ekonomiService->getNamaDaerahPariwisataDTW($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getNamaDaerahPariwisataDTW($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function periodePariwisataDTW(){
-        try{
-            $data = $this->ekonomiService->getPeriodePariwisataDTW($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getPeriodePariwisataDTW($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function tahunPariwisataDTW(){
-        try{
-            $data = $this->ekonomiService->getTahunPariwisataDTW($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getTahunPariwisataDTW($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function mapPariwisataDTW(Request $request){
@@ -456,14 +297,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getMapPariwisataDTW($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getMapPariwisataDTW($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function linePariwisataDTW(Request $request){
@@ -475,14 +310,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getLinePariwisataDTW($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getLinePariwisataDTW($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function detailPariwisataDTW(Request $request){
@@ -493,34 +322,18 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getDetailPariwisataDTW($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getDetailPariwisataDTW($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function periodePariwisataHotel(){
-        try{
-            $data = $this->ekonomiService->getPeriodePariwisataHotel($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getPeriodePariwisataHotel($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function tahunPariwisataHotel(){
-        try{
-            $data = $this->ekonomiService->getTahunPariwisataHotel($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getTahunPariwisataHotel($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function mapPariwisataHotel(Request $request){
@@ -531,14 +344,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getMapPariwisataHotel($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getMapPariwisataHotel($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function barPariwisataHotel(Request $request){
@@ -549,14 +356,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getBarPariwisataHotel($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getBarPariwisataHotel($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function linePariwisataHotel(Request $request){
@@ -567,14 +368,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getLinePariwisataHotel($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getLinePariwisataHotel($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function detailPariwisataHotel(Request $request){
@@ -585,24 +380,13 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getDetailPariwisataHotel($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getDetailPariwisataHotel($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function periodePariwisataWisatawan(){
-        try{
-            $data = $this->ekonomiService->getPeriodePariwisataWisatawan($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getPeriodePariwisataWisatawan($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function cardPariwisataWisatawan(Request $request){
@@ -613,14 +397,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getCardPariwisataWisatawan($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getCardPariwisataWisatawan($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function linePariwisataWisatawan(Request $request){
@@ -631,14 +409,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getLinePariwisataWisatawan($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getLinePariwisataWisatawan($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function detailPariwisataWisatawan(Request $request){
@@ -649,24 +421,13 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getDetailPariwisataWisatawan($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getDetailPariwisataWisatawan($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function tahunPariwisataTPK(){
-        try{
-            $data = $this->ekonomiService->getTahunPariwisataTPK($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getTahunPariwisataTPK($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function bulanPariwisataTPK(Request $request){
@@ -677,14 +438,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getBulanPariwisataTPK($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getBulanPariwisataTPK($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function cardPariwisataTPK(Request $request){
@@ -696,14 +451,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getCardPariwisataTPK($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getCardPariwisataTPK($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function linePariwisataTPK(Request $request){
@@ -714,14 +463,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getLinePariwisataTPK($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getLinePariwisataTPK($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function detailPariwisataTPK(Request $request){
@@ -732,44 +475,23 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getDetailPariwisataTPK($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getDetailPariwisataTPK($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function periodePariwisataResto(){
-        try{
-            $data = $this->ekonomiService->getPeriodePariwisataResto($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getPeriodePariwisataResto($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function tahunPariwisataResto(){
-        try{
-            $data = $this->ekonomiService->getTahunPariwisataResto($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getTahunPariwisataResto($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function namaDaerahPariwisataResto(){
-        try{
-            $data = $this->ekonomiService->getNamaDaerahPariwisataResto($this->idUsecase);
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getNamaDaerahPariwisataResto($this->idUsecase);
+        return $this->successResponse(data: $data);
     }
 
     public function mapPariwisataResto(Request $request){
@@ -780,14 +502,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getMapPariwisataResto($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getMapPariwisataResto($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function linePariwisataResto(Request $request){
@@ -799,14 +515,8 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getLinePariwisataResto($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getLinePariwisataResto($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 
     public function detailPariwisataResto(Request $request){
@@ -817,13 +527,7 @@ class EkonomiPerdaganganController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-
-        try{
-            $data = $this->ekonomiService->getDetailPariwisataResto($this->idUsecase, $validator->validate());
-
-            return $this->successResponse(data: $data);
-        } catch(Exception $e){
-            return $this->errorResponse(type:"Failed", message:$e->getMessage(), statusCode:400);
-        }
+        $data = $this->ekonomiService->getDetailPariwisataResto($this->idUsecase, $validator->validate());
+        return $this->successResponse(data: $data);
     }
 }

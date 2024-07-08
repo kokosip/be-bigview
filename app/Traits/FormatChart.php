@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use Exception;
+use App\Exceptions\ErrorResponse;
 
 trait FormatChart
 {
@@ -21,7 +21,7 @@ trait FormatChart
 
     public function filterTahun($data, $is_month = false) {
         if(empty($data)){
-            throw new Exception('Filter Tahun Tidak tersedia.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Filter Tahun Tidak tersedia.', statusCode: 404);
         }
 
         if($is_month){
@@ -41,7 +41,7 @@ trait FormatChart
 
     public function filterPeriode($data) {
         if(empty($data)){
-            throw new Exception('Filter Periode Tidak tersedia.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Filter Periode Tidak tersedia.', statusCode: 404);
         }
 
         $maxYear = (int)$data->maxYear;
@@ -65,7 +65,7 @@ trait FormatChart
 
     public function filterMonthPeriode($data){
         if(empty($data)){
-            throw new Exception('Filter Periode Tidak tersedia.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Filter Periode Tidak tersedia.', statusCode: 404);
         }
 
         $idx = 2;
@@ -94,7 +94,7 @@ trait FormatChart
 
     public function listNamaDaerah($data) {
         if(empty($data)){
-            throw new Exception('Daftar Nama Daerah Tidak tersedia.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Daftar Nama Daerah Tidak tersedia.', statusCode: 404);
         }
 
         $response = [
@@ -106,7 +106,7 @@ trait FormatChart
 
     public function listIndikator($data) {
         if(empty($data)){
-            throw new Exception('Daftar Indikator Tidak tersedia.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Daftar Indikator Tidak tersedia.', statusCode: 404);
         }
 
         $response = [
@@ -118,7 +118,7 @@ trait FormatChart
 
     public function getCard($data) {
         if(empty($data)){
-            throw new Exception('Daftar Indikator Tidak tersedia.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Daftar Indikator Tidak tersedia.', statusCode: 404);
         }
 
         $response = [
@@ -130,7 +130,7 @@ trait FormatChart
 
     public function mapLeaflet($data) {
         if(empty($data)){
-            throw new Exception('Detail Data tidak tersedia.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Detail Data tidak tersedia.', statusCode: 404);
         }
 
         $response = [
@@ -144,7 +144,7 @@ trait FormatChart
 
     public function pieChart($data, $tahun) {
         if(empty($data)){
-            throw new Exception('Detail Data tidak tersedia.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Detail Data tidak tersedia.', statusCode: 404);
         }
 
         $response = [
@@ -170,7 +170,7 @@ trait FormatChart
 
     public function barChart($data, $kode_kab_kota = "", $chart_params) {
         if(empty($data)){
-            throw new Exception('Detail Data bar chart tidak tersedia.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Detail Data bar chart tidak tersedia.', statusCode: 404);
         }
 
         foreach ($data as $key) {
@@ -198,7 +198,7 @@ trait FormatChart
 
     public function barColumnChart($data, $chart_type, $params = null) {
         if(empty($data)){
-            throw new Exception('Detail Data Column Bar chart tidak tersedia.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Detail Data Column Bar chart tidak tersedia.', statusCode: 404);
         }
 
         foreach ($data as $key) {
@@ -239,7 +239,7 @@ trait FormatChart
 
     public function stackedBarChart($tahun, $data) {
         if(empty($data)){
-            throw new Exception('Detail Data tidak tersedia.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Detail Data tidak tersedia.', statusCode: 404);
         }
 
         $widget_type = "chart-with-negatif-bar";
@@ -293,7 +293,7 @@ trait FormatChart
 
     public function areaLineChart($data, $params, $axis_title, $type_chart){
         if(empty($data) && empty($params)){
-            throw new Exception("Data $type_chart tidak tersedia.");
+            throw new ErrorResponse(type: 'Not Found', message: "Data $type_chart tidak tersedia.", statusCode: 404);
         }
 
         foreach ($data as $key) {
@@ -331,7 +331,7 @@ trait FormatChart
 
     public function multiLineChart($data, $axis_title){
         if(empty($data)){
-            throw new Exception('Detail Data Multi Line chart tidak tersedia.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Detail Data Multi Line chart tidak tersedia.', statusCode: 404);
         }
 
         foreach ($data as $key) {
@@ -355,7 +355,7 @@ trait FormatChart
 
     public function detailTable($data, $kode_kab_kota, $title, $alt_title = "") {
         if(empty($data)){
-            throw new Exception('Detail Data tidak tersedia.');
+            throw new ErrorResponse(type: 'Not Found', message: 'Detail Data tidak tersedia.', statusCode: 404);
         }
 
         if($kode_kab_kota != ""){
