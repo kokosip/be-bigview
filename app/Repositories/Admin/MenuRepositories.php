@@ -129,7 +129,7 @@ class MenuRepositories {
             $result = DB::table('user_menu')->insert($data);
             return $result;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan role menu.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
         } 
     }
 

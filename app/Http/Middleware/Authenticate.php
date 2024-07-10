@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
+use App\Exceptions\ErrorResponse;
 
 class Authenticate extends Middleware
 {
@@ -12,6 +13,8 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        return $request->expectsJson() ? null : route('login');
+        if (!$request->expectsJson()) {
+            throw new ErrorResponse(type: 'Unauthorized', message: 'Anda tidak memiliki akses untuk fitur ini.', statusCode: 403);
+        }
     }
 }

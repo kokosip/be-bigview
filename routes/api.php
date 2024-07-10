@@ -32,7 +32,6 @@ Route::post('/login', [AuthController::class, 'login']);
 // });
 
 Route::prefix('admin')->group(function () {
-    // Apply admin middleware to the whole group
     Route::middleware(['auth', 'admin'])->group(function () {
         // Master
         Route::get('/prov', [MasterController::class, 'listProvinsi']);
@@ -83,9 +82,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/users/{id}', [UserController::class, 'getUserById']);
         Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
         Route::put('/users/{id}', [UserController::class, 'updateUser']);
+        Route::post('/users/subadmin', [UserController::class,'addSubAdmin']);
     });
 
-    // Apply sub-admin middleware to the CMS group only
     Route::middleware(['auth', 'subadmin'])->group(function () {
         Route::prefix('cms')->group(function() {
             Route::get('sektor/{id}', [UsecaseController::class,'listSektor']);
