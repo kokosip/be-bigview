@@ -158,4 +158,85 @@ class MenuRepositories {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil data role menu.');
         } 
     }
+
+    public function sortMenu($data, $id_role, $subadmin)
+    {
+        try {
+            $existingMenus = DB::table('user_menu')
+                            ->where('id_role', $id_role)
+                            ->get();
+
+            DB::table('user_menu')
+                ->where('id_role', $id_role)
+                ->whereNotIn('id_menu', $data)
+                ->delete();
+
+            $adminRows = [];
+            foreach ($data as $order => $id_menu) {
+                $existingMenu = $existingMenus->firstWhere('id_menu', $id_menu);
+
+                if ($existingMenu) {
+                    DB::table('user_menu')
+                        ->where('id', $existingMenu->id)
+                        ->update(['order' => $order]);
+
+                    $adminRows[] = [
+                        'id' => $existingMenu->id,
+                        'id_role' => $id_role,
+                        'id_menu' => $id_menu,
+                        'order' => $order,
+                        'action' => 'updated'
+                    ];
+                } else {
+                    $newId = DB::table('user_menu')->insertGetId([
+                            'id_role' => $id_role,
+                            'id_menu' => $id_menu,
+                            'order' => $order
+                    ]);
+
+                    $adminRows[] = [
+                        'id' => $newId,
+                        'id_role' => $id_role,
+                        'id_menu' => $id_menu,
+                        'order' => $order,
+                        'action' => 'inserted'
+                    ];
+                }
+            }
+
+            foreach ($subadmin as $id_sub) {
+                $subAccess = DB::table('user_menu')
+                            ->where('id_role', $id_sub)
+                            ->get();
+
+                DB::table('user_menu')
+                    ->where('id_role', $id_sub)
+                    ->whereNotIn('id_menu', $data)
+                    ->delete();
+
+                $subAdminRows = [];
+
+                foreach ($data as $id_menu) {
+                    $order = 0;
+                    $existingMenu = $existingMenus->firstWhere('id_menu', $id_menu);
+                    if ($existingMenu) {
+                        DB::table('user_menu')
+                            ->where('id_role', $id_sub)
+                            ->where('id_menu', $id_sub)
+                            ->update(['order' => $order]);
+                    } else {
+                        DB::table('user_menu')->insert([
+                            'id_role' => $id_sub,
+                            'id_menu' => $id_menu,
+                            'order' => $order
+                        ]);
+                    }
+                    $order++;
+                }
+            }
+            return $adminRows;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil data sort menu.');
+        }
+    }
 }

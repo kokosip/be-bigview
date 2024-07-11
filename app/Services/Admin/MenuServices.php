@@ -4,14 +4,17 @@ namespace App\Services\Admin;
 
 use App\Exceptions\ErrorResponse;
 use App\Repositories\Admin\MenuRepositories;
+use App\Repositories\Admin\UserRepositories;
 use Exception;
 
 class MenuServices {
     protected $menuRepositories;
+    protected $userRepositories;
 
-    public function __construct(MenuRepositories $menuRepositories)
+    public function __construct(MenuRepositories $menuRepositories, UserRepositories $userRepositories)
     {
         $this->menuRepositories = $menuRepositories;
+        $this->userRepositories = $userRepositories;
     }
 
     public function insertMenu($data) {
@@ -107,5 +110,12 @@ class MenuServices {
         }
         $list_menu = $this->menuRepositories->deleteRoleMenu($data);
         return $list_menu;
+    }
+
+    public function sortMenu($data, $admin) {
+        $subadmin = $this->userRepositories->getSubadmin($admin['id_usecase']);
+
+        $rows = $this->menuRepositories->getMenuUtama($data, $admin['id_role'], $subadmin);
+        return $rows;
     }
 }
