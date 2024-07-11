@@ -214,11 +214,9 @@ class MenuRepositories {
                     ->whereNotIn('id_menu', $data)
                     ->delete();
 
-                $subAdminRows = [];
-
                 foreach ($data as $id_menu) {
                     $order = 0;
-                    $existingMenu = $existingMenus->firstWhere('id_menu', $id_menu);
+                    $existingMenu = $subAccess->firstWhere('id_menu', $id_menu);
                     if ($existingMenu) {
                         DB::table('user_menu')
                             ->where('id_role', $id_sub)
