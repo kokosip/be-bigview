@@ -77,12 +77,12 @@ class UserRepositories {
             $db = DB::table('user')
                 ->where('id_usecase', $id_usecase)
                 ->where('level', 2)
-                ->pluck('id')
+                ->pluck('id_user')
                 ->toArray();
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil subadmin.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage() . 'idUsecase: ' . $id_usecase);
         } 
     }
 }

@@ -19,8 +19,8 @@ class MenuController extends Controller
     public function __construct(MenuServices $menuService)
     {
         $this->menuService = $menuService;
-        $this->admin_role = Auth::user()->level ?? null;
-        $this->admin_usecase = Auth::user()->level ?? null;
+        $this->admin_role = Auth::user()->id_role ?? null;
+        $this->admin_usecase = Auth::user()->id_usecase ?? null;
     }
 
     public function addMenu(Request $request) {
@@ -80,7 +80,22 @@ class MenuController extends Controller
         return $this->successResponse(message: "Data Berhasil di Update");
     }
 
-    public function sortMenu(Request $request, $id_role) {
+    public function editSubadminMenu(Request $request){
+        $validator = Validator::make($request->all(), [
+            'id_subadmin' => 'required',
+            'menu' => 'required|array',
+            'menu.*' => 'integer'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $data = $this->menuService->editSubadminMenu($validator->validated(), $this->admin_role);
+        return $this->successResponse(data: $data, message: "Data Berhasil di Update");
+    }
+
+    public function sortMenu(Request $request) {
         $validator = Validator::make($request->all(), [
             'menu_order' => 'required|array',
             'menu_order.*' => 'integer'
@@ -93,7 +108,7 @@ class MenuController extends Controller
         $admin_info['id_role'] = $this->admin_role;
         $admin_info['id_usecase'] = $this->admin_usecase;
 
-        $this->menuService->sortMenu($validator->validated()['menu_order'], $admin_info);
-        return $this->successResponse(message: "Data Berhasil di Update");
+        $data = $this->menuService->sortMenu($validator->validated()['menu_order'], $admin_info);
+        return $this->successResponse(data: $data, message: "Data Berhasil di Update");
     }
 }

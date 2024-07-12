@@ -44,6 +44,7 @@ Route::prefix('admin')->group(function () {
         Route::put('/menus/{id}', [MenuController::class, 'updateMenu']);
         Route::delete('/menus/{id}', [MenuController::class, 'deleteMenu']);
         Route::get('/menus/{id}', [MenuController::class, 'getMenuById']);
+        Route::put('/menus', [MenuController::class, 'sortMenu']);
 
         // Role
         Route::post('/roles', [RoleController::class, 'addRole']);
@@ -58,6 +59,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [RoleController::class, 'listRoleMenu']);
             Route::post('/', [RoleController::class, 'addRoleMenu']);
             Route::delete('/', [RoleController::class, 'deleteRoleMenu']);
+            Route::put('/sub', [MenuController::class, 'editSubadminMenu']);
         });
 
         // Usecase

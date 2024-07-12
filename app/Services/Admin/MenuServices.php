@@ -112,10 +112,20 @@ class MenuServices {
         return $list_menu;
     }
 
+    public function editSubadminMenu($data, $admin_role) {
+        $rows = $this->menuRepositories->editSubadminMenu($data['menu'], $data['id_subadmin'], $admin_role);
+        return $rows;
+    }
+
     public function sortMenu($data, $admin) {
         $subadmin = $this->userRepositories->getSubadmin($admin['id_usecase']);
+        $subadminRole = [];
+        foreach ($subadmin as $subrole) {
+            $user_sub = $this->userRepositories->getUserById($subrole);
+            $subadminRole[] = $user_sub->id_role;
+        }
 
-        $rows = $this->menuRepositories->getMenuUtama($data, $admin['id_role'], $subadmin);
+        $rows = $this->menuRepositories->sortMenu($data, $admin['id_role'], $subadminRole);
         return $rows;
     }
 }
