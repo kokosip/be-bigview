@@ -7,15 +7,20 @@ use App\Services\Admin\MenuServices;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class MenuController extends Controller
 {
     use ApiResponse;
     protected $menuService;
+    protected $admin_role;
+    protected $admin_usecase;
 
     public function __construct(MenuServices $menuService)
     {
         $this->menuService = $menuService;
+        $this->admin_role = Auth::user()->id_role ?? null;
+        $this->admin_usecase = Auth::user()->id_usecase ?? null;
     }
 
     public function addMenu(Request $request) {
@@ -73,5 +78,37 @@ class MenuController extends Controller
         }
         $this->menuService->updateMenu($validator->validate(), $id_menu);
         return $this->successResponse(message: "Data Berhasil di Update");
+    }
+
+    public function editSubadminMenu(Request $request){
+        $validator = Validator::make($request->all(), [
+            'id_subadmin' => 'required',
+            'menu' => 'required|array',
+            'menu.*' => 'integer'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $data = $this->menuService->editSubadminMenu($validator->validated(), $this->admin_role);
+        return $this->successResponse(data: $data, message: "Data Berhasil di Update");
+    }
+
+    public function sortMenu(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'menu_order' => 'required|array',
+            'menu_order.*' => 'integer'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $admin_info['id_role'] = $this->admin_role;
+        $admin_info['id_usecase'] = $this->admin_usecase;
+
+        $data = $this->menuService->sortMenu($validator->validated()['menu_order'], $admin_info);
+        return $this->successResponse(data: $data, message: "Data Berhasil di Update");
     }
 }

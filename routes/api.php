@@ -32,47 +32,74 @@ Route::post('/login', [AuthController::class, 'login']);
 // });
 
 Route::prefix('admin')->group(function () {
-    // Master
-    Route::get('/prov', [MasterController::class, 'listProvinsi']);
-    Route::get('/kabkota', [MasterController::class, 'listKabkota']);
+    Route::middleware(['auth', 'admin'])->group(function () {
+        // Master
+        Route::get('/prov', [MasterController::class, 'listProvinsi']);
+        Route::get('/kabkota', [MasterController::class, 'listKabkota']);
 
-    // Menu Management
-    Route::post('/menus', [MenuController::class, 'addMenu']);
-    Route::get('/menus', [MenuController::class, 'listMenu']);
-    Route::get('/menus/parent', [MenuController::class, 'menuUtama']);
-    Route::put('/menus/{id}', [MenuController::class, 'updateMenu']);
-    Route::delete('/menus/{id}', [MenuController::class, 'deleteMenu']);
-    Route::get('/menus/{id}', [MenuController::class, 'getMenuById']);
+        // Menu Management
+        Route::post('/menus', [MenuController::class, 'addMenu']);
+        Route::get('/menus', [MenuController::class, 'listMenu']);
+        Route::get('/menus/parent', [MenuController::class, 'menuUtama']);
+        Route::put('/menus/{id}', [MenuController::class, 'updateMenu']);
+        Route::delete('/menus/{id}', [MenuController::class, 'deleteMenu']);
+        Route::get('/menus/{id}', [MenuController::class, 'getMenuById']);
+        Route::put('/menus', [MenuController::class, 'sortMenu']);
 
-    // Role
-    Route::post('/roles', [RoleController::class, 'addRole']);
-    Route::get('/roles', [RoleController::class, 'listRole']);
-    Route::get('/roles/names', [RoleController::class, 'listNamesRole']);
+        // Role
+        Route::post('/roles', [RoleController::class, 'addRole']);
+        Route::get('/roles', [RoleController::class, 'listRole']);
+        Route::get('/roles/names', [RoleController::class, 'listNamesRole']);
+        Route::put('/roles/{id}', [RoleController::class, 'updateRole']);
+        Route::delete('/roles/{id}', [RoleController::class, 'deleteRole']);
+        Route::get('/roles/{id}', [RoleController::class, 'getRoleById']);
 
-    Route::put('/roles/{id}', [RoleController::class, 'updateRole']);
-    Route::delete('/roles/{id}', [RoleController::class, 'deleteRole']);
-    Route::get('/roles/{id}', [RoleController::class, 'getRoleById']);
+        // Role - Menu
+        Route::prefix('role-menu')->group(function() {
+            Route::get('/', [RoleController::class, 'listRoleMenu']);
+            Route::post('/', [RoleController::class, 'addRoleMenu']);
+            Route::delete('/', [RoleController::class, 'deleteRoleMenu']);
+            Route::put('/sub', [MenuController::class, 'editSubadminMenu']);
+        });
 
-    // Role - Menu
-    Route::prefix('role-menu')->group(function() {
-        Route::get('/', [RoleController::class, 'listRoleMenu']);
-        Route::post('/', [RoleController::class, 'addRoleMenu']);
-        Route::delete('/', [RoleController::class, 'deleteRoleMenu']);
+        // Usecase
+        Route::prefix('usecase')->group(function() {
+            Route::get('/', [UsecaseController::class, 'listUsecase']);
+            Route::get('/names', [UsecaseController::class, 'listNameUsecase']);
+            Route::post('/gov', [UsecaseController::class, 'addUsecaseGovernment']);
+            Route::post('/custom', [UsecaseController::class, 'addUsecaseCustom']);
+            Route::post('/upload', [UsecaseController::class, 'uploadLogo']);
+            Route::get('/logo/{id}', [UsecaseController::class, 'getLogo']);
+            Route::get('/{id}', [UsecaseController::class, 'getUsecaseById']);
+            Route::put('/gov/{id}', [UsecaseController::class, 'updateUsecaseGovern']);
+            Route::put('/custom/{id}', [UsecaseController::class, 'updateUsecaseCustom']);
+            Route::delete('/gov/{id}', [UsecaseController::class, 'deleteUsecaseGovernment']);
+            Route::delete('/custom/{id}', [UsecaseController::class, 'deleteUsecaseCustom']);
+        });
+
+        // User
+        Route::get('/users', [UserController::class, 'listUser']);
+        Route::post('/users', [UserController::class, 'addUser']);
+        Route::put('/users/active/{id}', [UserController::class, 'updateIsActived']);
+        Route::get('/users/{id}', [UserController::class, 'getUserById']);
+        Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
+        Route::put('/users/{id}', [UserController::class, 'updateUser']);
+        Route::post('/users/subadmin', [UserController::class,'addSubAdmin']);
     });
 
-    // Usecase
-    Route::prefix('usecase')->group(function() {
-        Route::get('/', [UsecaseController::class, 'listUsecase']);
-        Route::get('/names', [UsecaseController::class, 'listNameUsecase']);
-        Route::post('/gov', [UsecaseController::class, 'addUsecaseGovernment']);
-        Route::post('/custom', [UsecaseController::class, 'addUsecaseCustom']);
-        Route::post('/upload', [UsecaseController::class, 'uploadLogo']);
-        Route::get('/logo/{id}', [UsecaseController::class, 'getLogo']);
-        Route::get('/{id}', [UsecaseController::class, 'getUsecaseById']);
-        Route::put('/gov/{id}', [UsecaseController::class, 'updateUsecaseGovern']);
-        Route::put('/custom/{id}', [UsecaseController::class, 'updateUsecaseCustom']);
-        Route::delete('/gov/{id}', [UsecaseController::class, 'deleteUsecaseGovernment']);
-        Route::delete('/custom/{id}', [UsecaseController::class, 'deleteUsecaseCustom']);
+    Route::middleware(['auth', 'subadmin'])->group(function () {
+        Route::prefix('cms')->group(function() {
+            Route::get('sektor/{id}', [UsecaseController::class,'listSektor']);
+            Route::get('data/{id}', [UsecaseController::class,'listDataSektor']);
+            Route::get('indikator/{id}', [UsecaseController::class,'listIndikator']);
+            Route::get('satuan', [UsecaseController::class,'listSatuan']);
+            Route::get('opd/{id}', [UsecaseController::class,'listOpd']);
+            Route::post('sektor/{id}', [UsecaseController::class,'addSektorIku']);
+            Route::put('sektor/{id}', [UsecaseController::class,'updateSektorIku']);
+            Route::delete('sektor/{id}', [UsecaseController::class,'deleteSektorIku']);
+            Route::post('indikator/{id}', [UsecaseController::class,'addIndikator']);
+            Route::post('sektor/import/{id}', [UsecaseController::class,'importSektorIKU']);
+        });
     });
 
     // Content
@@ -108,28 +135,6 @@ Route::prefix('admin')->group(function () {
             Route::post('{id}', [UsecaseController::class,'addSektor']);
         });
     });
-
-    Route::prefix('cms')->group(function() {
-        Route::get('sektor/{id}', [UsecaseController::class,'listSektor']);
-        Route::get('data/{id}', [UsecaseController::class,'listDataSektor']);
-        Route::get('indikator/{id}', [UsecaseController::class,'listIndikator']);
-        Route::get('satuan', [UsecaseController::class,'listSatuan']);
-        Route::get('opd/{id}', [UsecaseController::class,'listOpd']);
-        Route::post('sektor/{id}', [UsecaseController::class,'addSektorIku']);
-        Route::put('sektor/{id}', [UsecaseController::class,'updateSektorIku']);
-        Route::delete('sektor/{id}', [UsecaseController::class,'deleteSektorIku']);
-        Route::post('indikator/{id}', [UsecaseController::class,'addIndikator']);
-        Route::post('sektor/import/{id}', [UsecaseController::class,'importSektorIKU']);
-    });
-
-    // User
-    Route::get('/users', [UserController::class, 'listUser']);
-    Route::post('/users', [UserController::class, 'addUser']);
-    Route::put('/users/active/{id}', [UserController::class, 'updateIsActived']);
-    Route::get('/users/{id}', [UserController::class, 'getUserById']);
-    Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
-    Route::put('/users/{id}', [UserController::class, 'updateUser']);
-
 });
 
 // Poda

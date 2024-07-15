@@ -2,16 +2,22 @@
 
 namespace App\Services\Admin;
 
+use App\Repositories\Admin\MenuRepositories;
+use App\Repositories\Admin\RoleRepositories;
 use App\Repositories\Admin\UserRepositories;
 use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\Hash;
 
 class UserServices {
     protected $userRepositories;
+    protected $roleRepositories;
+    protected $menuRepositories;
 
-    public function __construct(UserRepositories $userRepositories)
+    public function __construct(UserRepositories $userRepositories, RoleRepositories $roleRepositories, MenuRepositories $menuRepositories)
     {
         $this->userRepositories = $userRepositories;
+        $this->roleRepositories = $roleRepositories;
+        $this->menuRepositories = $menuRepositories;
     }
 
     public function getListUser($search, $perPage){
@@ -71,6 +77,31 @@ class UserServices {
             throw new ErrorResponse(type: 'Not Found', message: 'User tidak ditemukan.', statusCode: 404);
         }
         $result = $this->userRepositories->updateMenu($data, $id_user);
+        return $result;
+    }
+
+    public function addSubAdmin($data) {
+        $data["password"] = Hash::make('user123');
+
+        $dataUser = array_diff_key($data, array_flip(['menu_access']));
+        $dataMenu = $data['menu_access'];
+
+        $dataRole = [];
+        $dataRole['nama_role'] = $data['nama_role'];
+        $dataRole['level'] = 2;
+        $id_role = $this->roleRepositories->insertGetRoleId($dataRole);
+
+        unset($dataUser['nama_role']);
+        $dataUser['id_role'] = $id_role;
+        $result = $this->userRepositories->insertUser($dataUser);
+
+        foreach ($dataMenu as $id) {
+            $accessMenu = [];
+            $accessMenu['id_role'] = $id_role;
+            $accessMenu['id_menu'] = $id;
+            $this->menuRepositories->addRoleMenu($accessMenu); 
+        }
+
         return $result;
     }
 }

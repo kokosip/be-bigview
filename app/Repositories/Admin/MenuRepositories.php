@@ -158,4 +158,139 @@ class MenuRepositories {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil data role menu.');
         } 
     }
+
+    public function editSubadminMenu($data, $id_sub, $id_role_admin) {
+        try {
+            DB::table('user_menu')
+                ->where('id_role', $id_sub)
+                ->whereNotIn('id_menu', $data)
+                ->delete();
+        
+            $adminAccess = DB::table('user_menu')
+                            ->where('id_role', $id_role_admin)
+                            ->orderBy('order', 'asc')
+                            ->get();
+        
+            $sortedData = [];
+            foreach ($adminAccess as $adminRow) {
+                if (in_array($adminRow->id_menu, $data)) {
+                    $sortedData[] = $adminRow->id_menu;
+                }
+            }
+        
+            $accessRows = [];
+            $order = 1;
+            foreach ($sortedData as $id_menu) {
+                $checkAccess = DB::table('user_menu')
+                                ->where('id_role', $id_sub)
+                                ->where('id_menu', $id_menu)
+                                ->first();
+        
+                if ($checkAccess) {
+                    DB::table('user_menu')
+                        ->where('id', $checkAccess->id)
+                        ->update(['order' => $order]);
+        
+                    $accessRows[] = [
+                        'id' => $checkAccess->id,
+                        'id_role' => $id_sub,
+                        'id_menu' => $id_menu,
+                        'order' => $order,
+                        'action' => 'updated'
+                    ];
+                } else {
+                    $newId = DB::table('user_menu')->insertGetId([
+                        'id_role' => $id_sub,
+                        'id_menu' => $id_menu,
+                        'order' => $order
+                    ]);
+        
+                    $accessRows[] = [
+                        'id' => $newId,
+                        'id_role' => $id_sub,
+                        'id_menu' => $id_menu,
+                        'order' => $order,
+                        'action' => 'inserted'
+                    ];
+                }
+                $order++;
+            }
+            return $accessRows;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+        }
+    }
+
+    public function sortMenu($data, $id_role, array $subadmin) {
+        try {
+
+            DB::table('user_menu')
+                ->where('id_role', $id_role)
+                ->whereNotIn('id_menu', $data)
+                ->delete();
+
+            $existingMenus = DB::table('user_menu')
+                            ->where('id_role', $id_role)
+                            ->get();
+
+            $adminRows = [];
+            foreach ($data as $order => $id_menu) {
+                $existingMenu = $existingMenus->firstWhere('id_menu', $id_menu);
+
+                if ($existingMenu) {
+                    DB::table('user_menu')
+                        ->where('id', $existingMenu->id)
+                        ->update(['order' => $order]);
+
+                    $adminRows[] = [
+                        'id' => $existingMenu->id,
+                        'id_role' => $id_role,
+                        'id_menu' => $id_menu,
+                        'order' => $order+1,
+                        'action' => 'updated'
+                    ];
+                } else {
+                    $newId = DB::table('user_menu')->insertGetId([
+                            'id_role' => $id_role,
+                            'id_menu' => $id_menu,
+                            'order' => $order
+                    ]);
+
+                    $adminRows[] = [
+                        'id' => $newId,
+                        'id_role' => $id_role,
+                        'id_menu' => $id_menu,
+                        'order' => $order,
+                        'action' => 'inserted'
+                    ];
+                }
+            }
+
+            foreach ($subadmin as $id_sub) {
+                DB::table('user_menu')
+                    ->where('id_role', $id_sub)
+                    ->whereNotIn('id_menu', $data)
+                    ->delete();
+
+                $subAccess = DB::table('user_menu')
+                        ->where('id_role', $id_sub)
+                        ->get();
+
+                $order = 1;
+                foreach ($data as $id_menu) {
+                    $existingMenu = $subAccess->firstWhere('id_menu', $id_menu);
+                    if ($existingMenu) {
+                        DB::table('user_menu')
+                            ->where('id_role', $existingMenu->id_role)
+                            ->where('id_menu', $id_menu)
+                            ->update(['order' => $order]);
+                    } 
+                    $order++;
+                }
+            }
+            return $adminRows;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+        }
+    }
 }

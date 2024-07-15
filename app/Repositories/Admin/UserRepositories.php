@@ -71,4 +71,18 @@ class UserRepositories {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui user.');
         } 
     }
+
+    public function getSubadmin($id_usecase) {
+        try {
+            $db = DB::table('user')
+                ->where('id_usecase', $id_usecase)
+                ->where('level', 2)
+                ->pluck('id_user')
+                ->toArray();
+
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage() . 'idUsecase: ' . $id_usecase);
+        } 
+    }
 }

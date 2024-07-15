@@ -7,15 +7,20 @@ use App\Services\Admin\UserServices;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     use ApiResponse;
     protected $userService;
+    protected $user_level;
+    protected $user_id_usecase;
 
     public function __construct(UserServices $userService)
     {
         $this->userService = $userService;
+        $this->user_level = Auth::user()->level ?? null;
+        $this->user_id_usecase = Auth::user()->id_usecase ?? null;
     }
 
     public function listUser(Request $request){
@@ -78,5 +83,31 @@ class UserController extends Controller
         }
         $data = $this->userService->updateUser($validator->validate(), $id_user);
         return $this->successResponse(data: $data, message: "User Berhasil diperbaharui");
+    }
+
+    public function addSubAdmin(Request $request){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'username' => 'required',
+            'nama_role' => 'required',
+            'email' => 'required',
+            'menu_access' => 'required|array',
+            'menu_access.*' => 'integer'
+        ]);
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $data = $validator->validate();
+        if ($this->user_level == 0) {
+            $data['level'] = 1;
+        } else {
+            $data['level'] = 2;
+        }
+
+        $data['id_usecase'] = $this->user_id_usecase;
+
+        $data = $this->userService->addSubAdmin($data);
+        return $this->successResponse(data: $data, message:'User berhasil ditambahkan.');
     }
 }

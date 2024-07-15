@@ -13,9 +13,16 @@ class RoleRepositories {
             DB::table('role')->insert($data);
             return $data;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan menu.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan role.');
         } 
-        
+    }
+
+    public function insertGetRoleId($data){
+        try {
+            return DB::table('role')->insertGetId($data);
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan roles.');
+        } 
     }
 
     public function getListRole($search, $perPage){
