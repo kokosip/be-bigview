@@ -5,7 +5,7 @@ namespace App\Services\Poda;
 use App\Repositories\Admin\MasterRepositories;
 use App\Repositories\Poda\SumberDayaAlamRepositories;
 use App\Traits\FormatChart;
-use Exception;
+use App\Exceptions\ErrorResponse;
 
 class SumberDayaAlamServices {
 
@@ -28,6 +28,9 @@ class SumberDayaAlamServices {
     }
 
     public function getListIndikator($idUsecase, $subject){
+        if (empty($idUsecase)) {
+            throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
+        }
         $rows = $this->sdaRepositories->getListIndikator($idUsecase, $this->getSubjectName($subject));
 
         $response = $this->listIndikator($rows);
@@ -36,6 +39,9 @@ class SumberDayaAlamServices {
     }
 
     public function getListJenis($idUsecase, $subject, $indikator){
+        if (empty($idUsecase)) {
+            throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
+        }
         $rows = $this->sdaRepositories->getListJenis($idUsecase, $this->getSubjectName($subject), $indikator);
 
         $response = $this->listIndikator($rows);
@@ -44,6 +50,9 @@ class SumberDayaAlamServices {
     }
 
     public function getListTahun($idUsecase, $subject, $indikator){
+        if (empty($idUsecase)) {
+            throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
+        }
         $rows = $this->sdaRepositories->getListTahun($idUsecase, $this->getSubjectName($subject), $indikator);
 
         $response = $this->filterTahun($rows);
@@ -52,6 +61,9 @@ class SumberDayaAlamServices {
     }
 
     public function getPeriodeSda($idUsecase, $subject, $indikator){
+        if (empty($idUsecase)) {
+            throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
+        }
         $rows = $this->sdaRepositories->getPeriodeSda($idUsecase, $this->getSubjectName($subject), $indikator);
 
         $response = $this->filterPeriode($rows);
@@ -60,6 +72,9 @@ class SumberDayaAlamServices {
     }
 
     public function getMapSda($idUsecase, $subject, $params){
+        if (empty($idUsecase)) {
+            throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
+        }
         $rows = $this->sdaRepositories->getMapSda($idUsecase, $this->getSubjectName($subject), $params);
 
         $response = $this->mapLeaflet($rows);
@@ -68,6 +83,9 @@ class SumberDayaAlamServices {
     }
 
     public function getBarSda($idUsecase, $subject, $params){
+        if (empty($idUsecase)) {
+            throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
+        }
         $rows = $this->sdaRepositories->getBarSda($idUsecase, $this->getSubjectName($subject), $params);
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
@@ -82,6 +100,9 @@ class SumberDayaAlamServices {
     }
 
     public function getAreaSda($idUsecase, $subject, $params){
+        if (empty($idUsecase)) {
+            throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
+        }
         $rows = $this->sdaRepositories->getAreaSda($idUsecase, $this->getSubjectName($subject), $params);
 
         if($subject != 'perikanan'){
@@ -101,6 +122,9 @@ class SumberDayaAlamServices {
     }
 
     public function getDetailSda($idUsecase, $subject, $params){
+        if (empty($idUsecase)) {
+            throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
+        }
         $rows = $this->sdaRepositories->getDetailSda($idUsecase, $this->getSubjectName($subject), $params);
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
