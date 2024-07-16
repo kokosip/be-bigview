@@ -80,6 +80,7 @@ Route::prefix('admin')->group(function () {
         // User
         Route::get('/users', [UserController::class, 'listUser']);
         Route::post('/users', [UserController::class, 'addUser']);
+        Route::get('/userdetail', [UserController::class, 'userDetail']);
         Route::put('/users/active/{id}', [UserController::class, 'updateIsActived']);
         Route::get('/users/{id}', [UserController::class, 'getUserById']);
         Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
@@ -345,4 +346,3 @@ Route::prefix('poda')->group(function() {
         Route::get('/{subject}/details', [SumberDayaAlamController::class, 'detailSda']);
     });
 });
-

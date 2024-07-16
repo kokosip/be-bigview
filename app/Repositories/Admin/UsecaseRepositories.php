@@ -525,6 +525,211 @@ class UsecaseRepositories {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan indikator.');
         }
     }
+
+    public function findUseCase($id_usecase,$select=['*']){
+		$data = DB::table('usecase')
+                ->where('usecase.id_usecase', $id_usecase)
+                ->select($select)
+                ->leftJoin('usecase_government', 'usecase.id_usecase', '=', 'usecase_government.id_usecase')
+                ->select('usecase.*', 'usecase_government.address as alamat', 'usecase_government.phone as telepon', 'usecase_government.link_map')
+                ->first();
+
+		$nama_daerah='';
+
+		if($select[0]!='*' && in_array('kode_provinsi',$select) || $select[0]=='*'){
+			$prefix='Gubernur';
+            $data_government = DB::table('usecase_government')->where('id_usecase',$id_usecase)->first();
+			$daerah=DB::table('geo_provinsi_kota')->where('kode_kab_kota',$data_government->kode_kab_kota)->first();
+
+			// $nama_daerah='Provinsi '.$daerah->nama_provinsi;
+			$nama_daerah=$daerah->nama_provinsi ?? '';
+			$nama_daerah_title=$daerah->nama_provinsi ?? '';
+
+			$data->level_usecase=1;
+			$data->center_lat=$daerah->lat ?? 0;
+			$data->center_lon=$daerah->lon ?? 0;
+
+			if($data_government->kode_kab_kota!=$data_government->kode_provinsi.'00'){
+				$data->level_usecase=2;
+				$data->center_lat=(float)$daerah->lat;
+				$data->center_lon=(float)$daerah->lon;
+
+				$kako=DB::table('geo_provinsi_kota')->where('kode_kab_kota',$data_government->kode_kab_kota)->first();
+				$nama_daerah=$kako->nama_kab_kota ?? '';
+				$nama_kab_kota=explode(' ', $kako->nama_kab_kota);
+				$prefix='Bupati';
+				if($nama_kab_kota[0]=='Kota'){
+					$prefix='Walikota';
+				}
+				$nama_daerah_title='';
+				for ($i=1; $i < count($nama_kab_kota); $i++) { 
+					$nama_daerah_title.=' '.$nama_kab_kota[$i];
+				}
+				
+			}
+
+			$data->nama_daerah=$nama_daerah;
+			
+			$data->title_gubernur=$prefix.' '.$nama_daerah_title;
+			$data->title_wakil='Wakil '.$prefix.' '.$nama_daerah_title;
+		}
+		
+		if(($select[0]!='*' && in_array('pic_logo',$select)) || $select[0]=='*'){
+			$pic_logo=$data->pic_logo;
+			$data->pic_logo=url('/').'/storage/'.$pic_logo;
+
+			if(!is_file(storage_path($pic_logo))){
+				$data->pic_logo=url('/images/default/usecase.png');
+			}
+		}
+
+		if(($select[0]!='*' && in_array('pic_gubernur',$select)) || $select[0]=='*'){
+			$pic_gubernur=$data_government->pic_leader;
+			$data_government->pic_leader=url('/').'/storage/'.$pic_gubernur;
+			if(!is_file(storage_path($pic_gubernur))){
+				$data_government->pic_leader=url('/images/default/kd_profile.png');
+			}
+
+			$pic_wakil=$data_government->pic_vice;
+			$data_government->pic_vice=url('/').'/storage/'.$pic_wakil;
+			if(!is_file(storage_path($pic_wakil))){
+				$data_government->pic_vice=url('/images/default/kd_profile.png');
+			}
+		}
+
+		if($select[0]=='*' && $nama_daerah==''){
+			$left_logo=url('/images/centryc.jpeg');
+			$right_logo=url('/images/logo-g20.png');
+
+			$brands=[
+				[
+					'brand_url'=>url('/images/logo_bigview.svg'),
+					'brand_desc'=>'Logo BigView'
+				],
+				[
+					'brand_url'=>url('/images/logo_centryc.svg'),
+					'brand_desc'=>'Logo Centryc'
+				],
+				[
+					'brand_url'=>url('/images/logo_g20.svg'),
+					'brand_desc'=>'Logo G20'
+				]
+			];
+
+			$brands_sm=[
+				[
+					'brand_url'=>url('/images/logo_bigview_sm.svg'),
+					'brand_desc'=>'Logo BigView'
+				],
+				[
+					'brand_url'=>url('/images/logo_centryc_sm.svg'),
+					'brand_desc'=>'Logo Centryc'
+				],
+				[
+					'brand_url'=>url('/images/logo_g20.svg'),
+					'brand_desc'=>'Logo G20'
+				]
+			];
+
+            
+
+			$response=[
+				'id_usecase'=>45,
+				'level_usecase'=>0,
+				'base_color1'=>$data->base_color1,
+				'base_color2'=>$data->base_color2,
+				'base_color3'=>$data->base_color3,
+				'base_color4'=>$data->base_color4,
+				'brands'=>$brands,
+				'brands_small'=>$brands_sm,
+				'total_brands'=>count($brands),
+				'footer_logo'=>[
+					[
+						'footer_url'=>url('/images/logo_bigbox.svg'),
+						'footer_desc'=>'Logo BigBox'
+					]
+				],
+				'left_logo'=>$left_logo,
+				'right_logo'=>$right_logo,
+				'footer_year'=>date('Y'),
+				'footer_brand'=>'TravelAja Centryc | G20 Indonesia'
+			];
+
+			return $response;
+		}
+		
+		
+		if($id_usecase == 98){
+			
+			$brands=[
+				[
+					'brand_url'=>url('/images/logo_bigview.svg'),
+					'brand_desc'=>'Logo BigView'
+				],
+				[
+					'brand_url'=>url('/images/logo_centryc.svg'),
+					'brand_desc'=>'Logo Centryc'
+				],
+				[
+					'brand_url'=>url('/images/logo_admedika.svg'),
+					'brand_desc'=>'Logo Admedika'
+				]
+			];
+		}
+		else{
+			$brands=[
+				[
+					'brand_url'=>url('/images/logo_bigview.svg'),
+					'brand_desc'=>'Logo BigView'
+				],
+				[
+					'brand_url'=>url('/images/logo_centryc.svg'),
+					'brand_desc'=>'Logo Centryc'
+				],
+			];
+		}
+
+		if($id_usecase == 98){
+			$brands_sm=[
+				[
+					'brand_url'=>url('/images/logo_bigview_sm.svg'),
+					'brand_desc'=>'Logo BigView'
+				],
+				[
+					'brand_url'=>url('/images/logo_centryc_sm.svg'),
+					'brand_desc'=>'Logo Centryc'
+				],
+				[
+					'brand_url'=>url('/images/logo_admedika_sm.svg'),
+					'brand_desc'=>'Logo Admedika'
+				]
+			];
+		}
+		else{
+			$brands_sm=[
+				[
+					'brand_url'=>url('/images/logo_bigview_sm.svg'),
+					'brand_desc'=>'Logo BigView'
+				],
+				[
+					'brand_url'=>url('/images/logo_centryc_sm.svg'),
+					'brand_desc'=>'Logo Centryc'
+				],
+			];
+		}
+		
+		$data->brands=$brands;
+		$data->brands_small=$brands_sm;
+		$data->total_brands=count($brands);
+		$data->footer_logo=[];
+
+		$data->left_logo=url('/images/logo_bigview.png');
+		$data->right_logo='';
+		$data->footer_year=date('Y');
+		$data->footer_brand='BigView';
+
+		return $data;
+	}
 }
 
 

@@ -72,6 +72,19 @@ class UserRepositories {
         } 
     }
 
+    public function getUserRole($id_user) {
+        try {
+            $db = DB::table('user')
+                ->where('id_user', $id_user)
+                ->pluck('id_role')
+                ->toArray();
+
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil role user');
+        }
+    }
+
     public function getSubadmin($id_usecase) {
         try {
             $db = DB::table('user')
