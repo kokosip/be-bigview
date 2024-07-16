@@ -293,4 +293,37 @@ class MenuRepositories {
             throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
         }
     }
+    public function getSubMenu($id_menu) {
+        $menus = DB::table('menu')->where('id_parent', $id_menu)->get();
+
+        $subMenus = [];
+        if ($menus != null) {
+            foreach ($menus as $menu) {
+                $menu->sub_menus = $this->getSubMenu($menu->id_menu);
+                $subMenus[] = $menu;
+            }
+        }
+
+        return $subMenus;
+    }
+
+    public function getUserMenu($id_role) {
+        try {
+            $listMenu = DB::table('user_menu')
+                        ->where('id_role', $id_role)
+                        ->pluck('id_menu')->toArray();
+            $result = [];
+            foreach ($listMenu as $id_menu) {
+                $menu = DB::table('menu')->where('id_menu', $id_menu)->first();
+
+                if ($menu) {
+                    $menu->sub_menus = $this->getSubMenu($menu->id_menu);
+                    $result[] = $menu;
+                }
+            }
+                return $result;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type:'Internal Server Error', message: $e->getMessage());
+        }
+    }
 }

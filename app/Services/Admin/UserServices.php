@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Repositories\Admin\MenuRepositories;
 use App\Repositories\Admin\RoleRepositories;
+use App\Repositories\Admin\UsecaseRepositories;
 use App\Repositories\Admin\UserRepositories;
 use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\Hash;
@@ -12,12 +13,14 @@ class UserServices {
     protected $userRepositories;
     protected $roleRepositories;
     protected $menuRepositories;
+    protected $usecaseRepositories;
 
-    public function __construct(UserRepositories $userRepositories, RoleRepositories $roleRepositories, MenuRepositories $menuRepositories)
+    public function __construct(UserRepositories $userRepositories, RoleRepositories $roleRepositories, MenuRepositories $menuRepositories, UsecaseRepositories $usecaseRepositories)
     {
         $this->userRepositories = $userRepositories;
         $this->roleRepositories = $roleRepositories;
         $this->menuRepositories = $menuRepositories;
+        $this->usecaseRepositories = $usecaseRepositories;
     }
 
     public function getListUser($search, $perPage){
@@ -103,5 +106,19 @@ class UserServices {
         }
 
         return $result;
+    }
+
+    public function getUserDetail($id_user, $id_usecase) {
+        if ($id_user == null) {
+            throw new ErrorResponse(type: 'Forbidden', message:'User not logged in.', statusCode: 403);
+        }
+        $role_user = $this->userRepositories->getUserRole($id_user);
+
+        $data = [];
+        $data['profile'] = $this->userRepositories->getUserById($id_user);
+        $data['menu'] = $this->menuRepositories->getUserMenu($role_user);
+        $data['usecase'] = $this->usecaseRepositories->findUseCase($id_usecase);
+
+        return $data;
     }
 }

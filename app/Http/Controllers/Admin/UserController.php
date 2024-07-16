@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     use ApiResponse;
+    protected $user_id;
     protected $userService;
     protected $user_level;
     protected $user_id_usecase;
@@ -19,6 +20,7 @@ class UserController extends Controller
     public function __construct(UserServices $userService)
     {
         $this->userService = $userService;
+        $this->user_id = Auth::user()->id_user ?? null;
         $this->user_level = Auth::user()->level ?? null;
         $this->user_id_usecase = Auth::user()->id_usecase ?? null;
     }
@@ -109,5 +111,10 @@ class UserController extends Controller
 
         $data = $this->userService->addSubAdmin($data);
         return $this->successResponse(data: $data, message:'User berhasil ditambahkan.');
+    }
+
+    public function userDetail() {
+        $data = $this->userService->getUserDetail($this->user_id, $this->user_id_usecase);
+        return $this->successResponse(data: $data);
     }
 }
