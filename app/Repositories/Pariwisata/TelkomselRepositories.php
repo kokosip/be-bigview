@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories\Pariwisata;
 
 use App\Exceptions\ErrorResponse;
@@ -46,7 +47,7 @@ class TelkomselRepositories
             ->where('id_usecase', $id_usecase)
             ->first();
 
-        return $data;
+            return $data;
         } catch (Exception $e) {
             throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mendapatkan level usecase.');
         }
@@ -61,8 +62,8 @@ class TelkomselRepositories
             $level_usecase = $this->getLevelUsecase($id_usecase);
 
             $data = DB::table('mart_tsel_trip')
-                    ->selectRaw("CASE WHEN area is null then destination else area end as destination, period, lat, lon, sum(count_trip) as total")
-                    ->where('id_usecase', $id_usecase);
+                ->selectRaw("CASE WHEN area is null THEN destination ELSE area END as destination, period, lat, lon, SUM(count_trip) as total")
+                ->where('id_usecase', $id_usecase);
 
             if ($level_usecase->level != 'Prov-Kota') {
                 $data = $data->where('parent_destination', 'like', "%" . $prov_dest . "%");
@@ -80,7 +81,7 @@ class TelkomselRepositories
 
             return $data;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan trip map.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
         }
     }
 
@@ -104,7 +105,7 @@ class TelkomselRepositories
 
             return $data;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan top origin.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan Top Origin');
         }
     }
 
@@ -154,9 +155,9 @@ class TelkomselRepositories
         }
     }
 
-    public function getNumberOfTripsDestination($id_usecase, $data, $usecase, $kode_kab_kota) {
+    public function getNumberOfTripsDestination($id_usecase, $data, $name_usecase, $kode_kab_kota) {
         try {
-            $destination = str_replace("Kota ", "", str_replace("Kabupaten ", "", str_replace("Provinsi ", "", $usecase->name_usecase)));;
+            $destination = str_replace("Kota ", "", str_replace("Kabupaten ", "", str_replace("Provinsi ", "", $name_usecase)));;
             $prov = explode(",", $data["provinsi"]);
             $kabkota = explode(",", $data["kab_kota"]);
             $level_usecase = $this->getLevelUsecase($id_usecase);
@@ -182,7 +183,7 @@ class TelkomselRepositories
             $db = $db->groupBy('period', 'destination')->orderBy('period')->get();
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan number of trips destination.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
         }
     }
 
@@ -272,9 +273,9 @@ class TelkomselRepositories
         }
     }
 
-    public function getMatrixOrigin($id_usecase, $periode, $usecase, $kode_kab_kota) {
+    public function getMatrixOrigin($id_usecase, $periode, $name_usecase, $kode_kab_kota) {
         try {
-            $name_usecase = str_replace("Kota ", "", str_replace("Kabupaten ", "", str_replace("Provinsi ", "", $usecase->name_usecase)));
+            $name_usecase = str_replace("Kota ", "", str_replace("Kabupaten ", "", str_replace("Provinsi ", "", $name_usecase)));
             $level_usecase = $this->getLevelUsecase($id_usecase);
 
             // Hardcode for Usecase DEMO
@@ -297,7 +298,7 @@ class TelkomselRepositories
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mendapatkan matrix origin.');
+            throw new ErrorResponse(type:'Internal Server Error', message:$e->getMessage());
         }
     }
 
@@ -336,8 +337,9 @@ class TelkomselRepositories
 
     public function getFilterKabKota($id_usecase, $data) {
         try {
+            $origin = $data['origin'];
             $data = [];
-            $str_origin = explode(',', $data['origin']);
+            $str_origin = explode(',', $origin);
 
             $data = DB::table('mart_tsel_trip')
                 ->selectRaw("DISTINCT parent_origin, origin")
@@ -349,7 +351,7 @@ class TelkomselRepositories
             return $data;
 
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mendapatkan filter kab/kota.');
+            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal mendapatkan Filter Kab/Kota.');
         }
     }
 
@@ -408,7 +410,7 @@ class TelkomselRepositories
 
             return $data;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mendapatkan trip map.');
+            throw new ErrorResponse(type:'Internal Server Error', message: $e->getMessage());
         }
     }
 
@@ -435,7 +437,7 @@ class TelkomselRepositories
 
             return $data;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mendapatkan movement heat map.');
+            throw new ErrorResponse(type:'Internal Server Error', message: $e->getMessage());
         }
     }
 
@@ -453,7 +455,7 @@ class TelkomselRepositories
         try {
             $level_usecase = $this->getLevelUsecase($id_usecase);
 
-            $location = DB::table('usecase as u')
+            $location = DB::table('usecase_government as u')
                         ->select('nama_provinsi', 'nama_kab_kota')
                         ->leftJoin('geo_provinsi_kota as gpk', function ($join) {
                             $join->on('u.kode_provinsi', '=', 'gpk.kode_provinsi')
@@ -536,7 +538,7 @@ class TelkomselRepositories
         try {
             $level_usecase = $this->getLevelUsecase($id_usecase);
 
-            $location = DB::table('usecase as u')
+            $location = DB::table('usecase_government as u')
                         ->select('nama_provinsi', 'nama_kab_kota')
                         ->leftJoin('geo_provinsi_kota as gpk', function ($join) {
                             $join->on('u.kode_provinsi', '=', 'gpk.kode_provinsi')
@@ -606,7 +608,7 @@ class TelkomselRepositories
                 "chart_data" => (array)$data
             ];
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil trend jumlah perjalanan kota tujuan');
+            throw new ErrorResponse(type:'Internal Server Error', message: $e->getMessage());
         }
     }
 
@@ -614,7 +616,7 @@ class TelkomselRepositories
         try {
             $level_usecase = $this->getLevelUsecase($id_usecase);
 
-            $location = DB::table('usecase as u')
+            $location = DB::table('usecase_government as u')
                         ->select('nama_provinsi', 'nama_kab_kota')
                         ->leftJoin('geo_provinsi_kota as gpk', function ($join) {
                             $join->on('u.kode_provinsi', '=', 'gpk.kode_provinsi')
@@ -698,19 +700,22 @@ class TelkomselRepositories
             ];
 
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil trend jumlah perjalanan total');
+            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal mendapatkan jumlah perjalanan total');
         }
     }
 
     public function getFilterMonth($id_usecase, $data) {
         try {
-            $data = DB::table("mart_tsel_trip")->selectRaw("distinct period")
+            $data = DB::table("mart_tsel_trip")
+                    ->selectRaw("distinct period, tahun")
                     ->where('id_usecase', $id_usecase)
                     ->where('tahun', $data['tahun'])
-                    ->orderBy('tahun')->get();
+                    ->orderBy('tahun')
+                    ->get();
+        
             return $data;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil filter month.');
+            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal mendapatkan filter month.');
         }
     }
 
@@ -724,14 +729,14 @@ class TelkomselRepositories
                     ->get();
             return $data;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil tempat wisata');
+            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal mendapatkan tempat wisata.');
         }
     }
 
     public function getFilterDestination($id_usecase, $data, $kode_kab_kota) {
         try {
             $level = substr($kode_kab_kota, -2) == "00" ? "provinsi" : "kab_kota";
-            $location = DB::table('usecase as u')
+            $location = DB::table('usecase_government as u')
                         ->select('nama_provinsi', 'nama_kab_kota')
                         ->leftJoin('geo_provinsi_kota as gpk', function ($join) {
                             $join->on('u.kode_provinsi', '=', 'gpk.kode_provinsi')
@@ -767,7 +772,7 @@ class TelkomselRepositories
 
             return $data;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil filter destination');
+            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal mendapatkan filter destination');
         }
     }
 
@@ -775,7 +780,7 @@ class TelkomselRepositories
         try {
             $level_usecase = $this->getLevelUsecase($id_usecase);
 
-            $location = DB::table('usecase as u')
+            $location = DB::table('usecase_government as u')
                         ->select('nama_provinsi', 'nama_kab_kota')
                         ->leftJoin('geo_provinsi_kota as gpk', function ($join) {
                             $join->on('u.kode_provinsi', '=', 'gpk.kode_provinsi')
@@ -856,7 +861,7 @@ class TelkomselRepositories
         try{
             $level_usecase = $this->getLevelUsecase($id_usecase);
 
-            $location = DB::table('usecase as u')
+            $location = DB::table('usecase_government as u')
                         ->select('nama_provinsi', 'nama_kab_kota')
                         ->leftJoin('geo_provinsi_kota as gpk', function ($join) {
                             $join->on('u.kode_provinsi', '=', 'gpk.kode_provinsi')
@@ -915,7 +920,7 @@ class TelkomselRepositories
         try {
             $level_usecase = $this->getLevelUsecase($id_usecase);
 
-            $location = DB::table('usecase as u')
+            $location = DB::table('usecase_government as u')
                         ->select('nama_provinsi', 'nama_kab_kota')
                         ->leftJoin('geo_provinsi_kota as gpk', function ($join) {
                             $join->on('u.kode_provinsi', '=', 'gpk.kode_provinsi')
@@ -968,6 +973,8 @@ class TelkomselRepositories
                 "chart_data" => $data
             ]);
     
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil kelompok usia wisatawan.');
         }
     }
 }

@@ -2,9 +2,8 @@
 
 namespace App\Services\Pariwisata;
 
-use app\Repositories\Pariwisata\TelkomselRepositories;
-use app\Repositories\Admin\UsecaseRepositories;
-use Illuminate\Support\Facades\Auth;
+use App\Repositories\Pariwisata\TelkomselRepositories;
+use App\Repositories\Admin\UsecaseRepositories;
 use App\Exceptions\ErrorResponse;
 
 class TelkomselService
@@ -42,6 +41,8 @@ class TelkomselService
 
     public function getTopOrigin($data, $id_usecase) {
         $data = $this->telkomselRepositories->getTopOrigin($data, $id_usecase);
+        $chart_category = [];
+        $chart_data = [];
         foreach ($data as $key => $value) {
             $chart_category[] = $data[$key]->origin;
             $chart_data[] = intval($data[$key]->total);
@@ -137,7 +138,7 @@ class TelkomselService
     public function getNumberOfTripsDestination($data, $id_usecase) {
         $usecase = $this->usecaseRepositories->getUsecaseById($id_usecase);
         $kode_kab_kota = $usecase->kode_kab_kota;
-        $name_usecase = $usecase->nama_usecase;
+        $name_usecase = $usecase->name_usecase;
 
         $rows = $this->telkomselRepositories->getNumberOfTripsDestination($id_usecase, $data, $name_usecase, $kode_kab_kota);
         $categories = $rows->pluck('period')->unique()->values();
@@ -169,6 +170,9 @@ class TelkomselService
     }
 
     public function getMovementOfTrips($data, $id_usecase) {
+        if (!isset($data['origin'])) {
+            $data['origin'] = null;
+        }
         $rows = $this->telkomselRepositories->getMovementOfTrips($id_usecase, $data);
         $category1 = 0;
         $category2 = 0;
@@ -290,7 +294,7 @@ class TelkomselService
     public function getMatrixOrigin($data, $id_usecase) {
         $usecase = $this->usecaseRepositories->getUsecaseById($id_usecase);
         $kode_kab_kota = $usecase->kode_kab_kota;
-        $name_usecase = $usecase->nama_usecase;
+        $name_usecase = $usecase->name_usecase;
 
         $rows = $this->telkomselRepositories->getMatrixOrigin($id_usecase, $data['periode'], $name_usecase, $kode_kab_kota);
 
@@ -403,6 +407,9 @@ class TelkomselService
     }
 
     public function getMovementTripMap($data, $id_usecase) {
+        if (!isset($data['origin'])) {
+            $data['origin'] = null; 
+        }
         $data = $this->telkomselRepositories->getMovementTripMap($id_usecase, $data);
 
         foreach ($data as &$item) {
@@ -417,6 +424,9 @@ class TelkomselService
     }
 
     public function getMovementHeatMap($data, $id_usecase) {
+        if (!isset($data['origin'])) {
+            $data['origin'] = null; 
+        }
         $usecase = $this->usecaseRepositories->getUsecaseById($id_usecase);
 
         $data = $this->telkomselRepositories->getMovementHeatMap($id_usecase, $usecase, $data);
@@ -444,6 +454,15 @@ class TelkomselService
     }
 
     public function getTrendJumlahPerjalanan($data, $id_usecase) {
+        if (!isset($data['parent_origin'])) {
+            $data['parent_origin'] = null;
+        }
+        if (!isset($data['origin'])) {
+            $data['origin'] = null;
+        }
+        if (!isset($data['breakdown'])) {
+            $data['breakdown'] = null;
+        }
         $params = [
             'tahun' => $data['tahun'],
             'parent_origin' => $data['parent_origin'],
@@ -516,16 +535,25 @@ class TelkomselService
     }
 
     public function getTrendWisataByLamaTinggal($data, $id_usecase) {
+        if (!isset($data['destination'])) {
+            $data['destination'] = null;
+        }
         $data = $this->telkomselRepositories->getTrendWisataByLamaTinggal($id_usecase, $data);
         return $data;
     }
 
     public function getJumlahWisatawan($data, $id_usecase) {
+        if (!isset($data['destination'])) {
+            $data['destination'] = null;
+        }
         $data = $this->telkomselRepositories->getJumlahWisatawan($id_usecase, $data);
         return $data;
     }
 
     public function getKelompokUsiaWisatawan($data, $id_usecase) {
+        if (!isset($data['destination'])) {
+            $data['destination'] = null;
+        }
         $data = $this->telkomselRepositories->getKelompokUsiaWisatawan($id_usecase, $data);
         return $data;
     }
