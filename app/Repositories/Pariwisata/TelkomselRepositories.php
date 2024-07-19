@@ -61,27 +61,28 @@ class TelkomselRepositories
             $period = $data['period'];
             $level_usecase = $this->getLevelUsecase($id_usecase);
 
-            $data = DB::table('mart_tsel_trip')
-                ->selectRaw("CASE WHEN area is null THEN destination ELSE area END as destination, period, lat, lon, SUM(count_trip) as total")
+            $query = DB::table('mart_tsel_trip')
+                ->selectRaw("CASE WHEN area IS NULL THEN destination ELSE area END AS destination, period, lat, lon, SUM(count_trip) AS total")
                 ->where('id_usecase', $id_usecase);
 
             if ($level_usecase->level != 'Prov-Kota') {
-                $data = $data->where('parent_destination', 'like', "%" . $prov_dest . "%");
+                $query = $query->where('parent_destination', 'like', "%" . $prov_dest . "%");
             } else {
-                $data = $data->where('destination', 'like', "%" . $prov_dest . "%");
-            }
-            
-            if (strtolower($prov_origin) != 'all' && $prov_origin != '') {
-                $data = $data->where('parent_origin', 'like', "%" . $prov_origin . "%");
+                $query = $query->where('destination', 'like', "%" . $prov_dest . "%");
             }
 
-            $data = $data->where('period', $period)
-                    ->groupBy('destination', 'period')
-                    ->orderByDesc('total')->get();
+            if (strtolower($prov_origin) != 'all' && $prov_origin != '') {
+                $query = $query->where('parent_origin', 'like', "%" . $prov_origin . "%");
+            }
+
+            $data = $query->where('period', $period)
+                ->groupBy(DB::raw("CASE WHEN area IS NULL THEN destination ELSE area END"), 'period', 'lat', 'lon')
+                ->orderByDesc('total')
+                ->get();
 
             return $data;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan trip map.');
         }
     }
 
@@ -183,7 +184,7 @@ class TelkomselRepositories
             $db = $db->groupBy('period', 'destination')->orderBy('period')->get();
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan number of trips destination');
         }
     }
 
@@ -279,7 +280,7 @@ class TelkomselRepositories
             $level_usecase = $this->getLevelUsecase($id_usecase);
 
             // Hardcode for Usecase DEMO
-            if($id_usecase == 142){
+            if ($id_usecase == 142) {
                 $name_usecase = 'Gorontalo';
             }
 
@@ -292,13 +293,13 @@ class TelkomselRepositories
                 $db = $db->where('destination', 'like', "%" . $name_usecase . "%");
             }
 
-            $db = $db->groupBy('destination', 'parent_origin')
+            $db = $db->groupBy(DB::raw("CASE WHEN area is null then destination else area end"), 'parent_origin')
                 ->orderBy('destination')
                 ->get();
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:$e->getMessage());
+            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mendapatkan matrix origin.');
         }
     }
 
@@ -410,7 +411,7 @@ class TelkomselRepositories
 
             return $data;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal mendapatkan movement trip map.');
         }
     }
 
@@ -431,13 +432,13 @@ class TelkomselRepositories
             }
 
             $data = $data->where('period', $period)
-                ->groupBy('destination')
+                ->groupBy('destination', 'lat', 'lon')
                 ->orderBy('destination')
                 ->get();
 
             return $data;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal mendapatkan movement heat map.');
         }
     }
 
@@ -556,11 +557,10 @@ class TelkomselRepositories
             $parent_destination = $level_usecase->level == "Kabupaten" || $level_usecase->level == "Kota" ? $location['nama_kab_kota'] : $location['nama_provinsi'];
             $destination = $location['nama_kab_kota'] ?: $location['nama_provinsi'];
 
-            
             $query = DB::table('mart_tsel_trip')->selectRaw("period, CASE WHEN area is null then destination else area end as location, SUM(count_trip) as total_trip")
                 ->where('id_usecase', $id_usecase)
                 ->where('tahun', $params['tahun'])
-                ->groupBy('period', 'destination');
+                ->groupBy('period', DB::raw("CASE WHEN area is null then destination else area end"), 'destination');
 
             if ($level_usecase->level != "Prov-Kota") {
                 $query = $query->where('parent_destination', '=', $parent_destination);
@@ -608,7 +608,7 @@ class TelkomselRepositories
                 "chart_data" => (array)$data
             ];
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal mendapatkan trend jumlah perjalanan kota tujuan.');
         }
     }
 

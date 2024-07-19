@@ -17,6 +17,9 @@ class TelkomselService
     }
 
     public function getTripMap($data, $id_usecase) {
+        if (!isset($data['origin'])) {
+            $data['origin'] = null;
+        }
         $usecase = $this->usecaseRepositories->getUsecaseById($id_usecase);
         $kode_kab_kota = $usecase->kode_kab_kota;
 
@@ -40,6 +43,9 @@ class TelkomselService
     }
 
     public function getTopOrigin($data, $id_usecase) {
+        if (!isset($data['origin'])) {
+            $data['origin'] = null;
+        }
         $data = $this->telkomselRepositories->getTopOrigin($data, $id_usecase);
         $chart_category = [];
         $chart_data = [];
@@ -61,6 +67,9 @@ class TelkomselService
     }
 
     public function getTopDestination($data, $id_usecase) {
+        if (!isset($data['origin'])) {
+            $data['origin'] = null;
+        }
         $usecase = $this->usecaseRepositories->getUsecaseById($id_usecase);
         $kode_kab_kota = $usecase->kode_kab_kota;
 
@@ -84,6 +93,9 @@ class TelkomselService
     }
 
     public function getNumberOfTrips($data, $id_usecase) {
+        if (!isset($data['kab_kota'])) {
+            $data['kab_kota'] = null;
+        }
         $rows = $this->telkomselRepositories->getNumberOfTrips($data, $id_usecase);
 
         $categories = [];
@@ -105,6 +117,9 @@ class TelkomselService
     }
 
     public function getNumberOfTripsOrigin($data, $id_usecase) {
+        if (!isset($data['kab_kota'])) {
+            $data['kab_kota'] = null;
+        }
         $rows = $this->telkomselRepositories->getNumberOfTripsOrigin($data, $id_usecase);
 
         $categories = $rows->pluck('period')->unique()->values();
@@ -136,6 +151,9 @@ class TelkomselService
     }
 
     public function getNumberOfTripsDestination($data, $id_usecase) {
+        if (!isset($data['kab_kota'])) {
+            $data['kab_kota'] = null;
+        }
         $usecase = $this->usecaseRepositories->getUsecaseById($id_usecase);
         $kode_kab_kota = $usecase->kode_kab_kota;
         $name_usecase = $usecase->name_usecase;
@@ -197,6 +215,9 @@ class TelkomselService
     }
 
     public function getLengthOfStay($data, $id_usecase) {
+        if (!isset($data['origin'])) {
+            $data['origin'] = null;
+        }
         $rows = $this->telkomselRepositories->getLengthOfStay($id_usecase, $data);
 
         $category1 = 0;
@@ -273,6 +294,9 @@ class TelkomselService
     }
 
     public function getStatusSES($data, $id_usecase) {
+        if (!isset($data['origin'])) {
+            $data['origin'] = null;
+        }
         $rows = $this->telkomselRepositories->getStatusSES($id_usecase, $data);
 
         $categories = [];
