@@ -39,19 +39,43 @@ trait FileStorage
             ]);
             return $key;
         } catch (AwsException $e) {
-            Log::error('AWS Error', ['error' => $e->getMessage()]);
-            throw new ErrorResponse(type: 'AWS Server Error', message: 'Pengunggahan file tidak berhasil. Mohon coba lagi nanti', statusCode:500);
+            throw new ErrorResponse(type: 'AWS Server Error', message: 'Pengunggahan file tidak berhasil. Mohon coba lagi nanti');
         } catch (Exception $err) {
-            Log::error('Error', ['error' => $err->getMessage()]);
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Pengunggahan file tidak berhasil. Mohon coba lagi nanti', statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Pengunggahan file tidak berhasil. Mohon coba lagi nanti');
         }
     }
 
     public function getFile($path){
         if(empty($path)) $path = 'image_not_found.png';
 
-        $url = env('MINIO_ENDPOINT') . '/' . env('MINIO_BUCKET') . '/' . $path;
+        $s3Client = new S3Client([
+            'version' => env('MINIO_VERSION', 'latest'),
+            'region'  => env('MINIO_REGION', 'us-east-1'),
+            'endpoint' => env('MINIO_ENDPOINT'),
+            'use_path_style_endpoint' => true,
+            'credentials' => [
+                'key'    => env('MINIO_KEY'),
+                'secret' => env('MINIO_SECRET'),
+            ],
+        ]);
+        $bucket = env('MINIO_BUCKET');
 
+        try {
+            $s3Client->headObject([
+                'Bucket' => $bucket,
+                'Key'    => $path,
+            ]);
+    
+            $url = $s3Client->getObjectUrl($bucket, $path);
+        } catch (AwsException $e) {
+            if ($e->getStatusCode() == 404) {
+                $url = $s3Client->getObjectUrl($bucket, 'image_not_found.png');
+            } else {
+                throw new ErrorResponse(type: 'AWS Server Error', message: 'Pengambilan file tidak berhasil. Mohon coba lagi nanti');
+            }
+        } catch (Exception $err) {
+            throw new ErrorResponse(type:'Internal Server Error', message:'Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat');
+        }
         return $url;
     }
 
@@ -77,10 +101,8 @@ trait FileStorage
     
             return true;
         } catch (AwsException $e) {
-            Log::error('AWS Error', ['error' => $e->getMessage()]);
             throw new ErrorResponse(type: 'AWS Error', message: 'Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat', statusCode: 403);
         } catch (Exception $err) {
-            Log::error('Error', ['error' => $err->getMessage()]);
             throw new ErrorResponse(type:'Internal Server Error', message:'Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat', statusCode:500);
         }
     } 
