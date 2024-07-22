@@ -634,7 +634,7 @@ class UsecaseRepositories {
             
 
 			$response=[
-				'id_usecase'=>45,
+				'id_usecase'=>$id_usecase,
 				'level_usecase'=>0,
 				'base_color1'=>$data->base_color1,
 				'base_color2'=>$data->base_color2,

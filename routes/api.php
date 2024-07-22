@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MasterController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Content\LogoController;
+use App\Http\Controllers\Pariwisata\TelkomselController;
 use App\Http\Controllers\Poda\EkonomiPerdaganganController;
 use App\Http\Controllers\Poda\SosialKependudukanController;
 use App\Http\Controllers\Poda\SumberDayaAlamController;
@@ -76,6 +77,39 @@ Route::prefix('admin')->group(function () {
             Route::delete('/gov/{id}', [UsecaseController::class, 'deleteUsecaseGovernment']);
             Route::delete('/custom/{id}', [UsecaseController::class, 'deleteUsecaseCustom']);
         });
+
+        Route::prefix('pariwisata')->group(function() {
+            Route::prefix('telkomsel')->group(function() {
+                Route::get('tripmap', [TelkomselController::class, 'tripMap']);
+                Route::get('toporigin', [TelkomselController::class, 'topOrigin']);
+                Route::get('topdestination', [TelkomselController::class, 'topDestination']);
+                Route::get('numberoftrips', [TelkomselController::class, 'numberOfTrips']);
+                Route::get('numberoftripsorigin', [TelkomselController::class, 'numberOfTripsOrigin']);
+                Route::get('numberoftripsdestination', [TelkomselController::class, 'numberOfTripsDestination']);
+                Route::get('movementoftrips', [TelkomselController::class, 'movementOfTrips']);
+                Route::get('lengthofstay', [TelkomselController::class, 'lengthOfStay']);
+                Route::get('movementofgender', [TelkomselController::class, 'movementOfGender']);
+                Route::get('movementofage', [TelkomselController::class, 'movementOfAge']);
+                Route::get('statusses', [TelkomselController::class, 'statusSES']);
+                Route::get('matrixorigin', [TelkomselController::class, 'matrixOrigin']);
+                Route::get('jeniswisatawan', [TelkomselController::class, 'jenisWisatawan']);
+                Route::get('filterprovinsi', [TelkomselController::class, 'filterProvinsi']);
+                Route::get('filterkabkota', [TelkomselController::class, 'filterKabKota']);
+                Route::get('filtertahun', [TelkomselController::class, 'filterTahun']);
+                Route::get('filterperiode', [TelkomselController::class, 'filterPeriode']);
+                Route::get('movementtripmap', [TelkomselController::class, 'movementTripMap']);
+                Route::get('movementheatmap', [TelkomselController::class, 'movementHeatMap']);
+                Route::get('filtersingleyear', [TelkomselController::class, 'filterSingleYear']);
+                Route::get('trendjumlahperjalanan', [TelkomselController::class, 'trendJumlahPerjalanan']);
+                Route::get('filtermonth', [TelkomselController::class, 'filterMonth']);
+                Route::get('tempatwisata', [TelkomselController::class, 'tempatWisata']);
+                Route::get('filterdestination', [TelkomselController::class, 'filterDestination']);
+                Route::get('trendwisatawanbylamatinggal', [TelkomselController::class, 'trendWisatawanByLamaTinggal']);
+                Route::get('jumlahwisatawan', [TelkomselController::class, 'jumlahWisatawan']);
+                Route::get('kelompokusiawisatawan', [TelkomselController::class, 'kelompokUsiaWisatawan']);
+            });
+        });
+        
 
         // User
         Route::get('/users', [UserController::class, 'listUser']);
