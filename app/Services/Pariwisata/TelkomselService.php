@@ -4,10 +4,12 @@ namespace App\Services\Pariwisata;
 
 use App\Repositories\Pariwisata\TelkomselRepositories;
 use App\Repositories\Admin\UsecaseRepositories;
+use App\Traits\FileStorage;
 use App\Exceptions\ErrorResponse;
 
 class TelkomselService
 {
+    use FileStorage;
     protected $telkomselRepositories;
     protected $usecaseRepositories;
     public function __construct(TelkomselRepositories $telkomselRepositories, UsecaseRepositories $usecaseRepositories)
@@ -543,7 +545,7 @@ class TelkomselService
 
         foreach ($rows as &$row) {
             $row->tag = explode(",", $row->tag);
-            $row->image = url('/') . '/storage/' . $row->image;
+            $row->image = $this->getFile($row->image);
             $row->image_google = 'https://drive.google.com/thumbnail?id='. $row->image_google. '&sz=w1000';
         }
 
