@@ -167,7 +167,14 @@ Route::prefix('admin')->group(function () {
             });
         });
         Route::prefix('sektor')->group(function() {
-            Route::post('{id}', [UsecaseController::class,'addSektor']);
+            Route::prefix('exec')->group(function() {
+                Route::post('{id}', [UsecaseController::class,'addSektor']);
+                Route::delete('{id}', [UsecaseController::class,'deleteSektor']);
+                Route::put('{id}', [UsecaseController::class,'updateSektor']);
+                Route::get('{id}', [UsecaseController::class,'getSektorUsecase']);
+            });
+            Route::post('sort/{id}', [UsecaseController::class,'sortSektor']);
+            Route::post('sub/{id}', [UsecaseController::class,'editSubadminSektor']);
         });
     });
 });

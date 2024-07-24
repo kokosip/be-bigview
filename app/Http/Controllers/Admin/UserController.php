@@ -93,7 +93,7 @@ class UserController extends Controller
             'username' => 'required',
             'nama_role' => 'required',
             'email' => 'required',
-            'menu_access' => 'required|array',
+            'menu_access' => 'nullable|array',
             'menu_access.*' => 'integer'
         ]);
         if ($validator->fails()) {

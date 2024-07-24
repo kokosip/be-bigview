@@ -87,7 +87,6 @@ class UserServices {
         $data["password"] = Hash::make('user123');
 
         $dataUser = array_diff_key($data, array_flip(['menu_access']));
-        $dataMenu = $data['menu_access'];
 
         $dataRole = [];
         $dataRole['nama_role'] = $data['nama_role'];
@@ -98,13 +97,15 @@ class UserServices {
         $dataUser['id_role'] = $id_role;
         $result = $this->userRepositories->insertUser($dataUser);
 
-        foreach ($dataMenu as $id) {
-            $accessMenu = [];
-            $accessMenu['id_role'] = $id_role;
-            $accessMenu['id_menu'] = $id;
-            $this->menuRepositories->addRoleMenu($accessMenu); 
+        if (isset($data['menu_access'])) {
+            $dataMenu = $data['menu_access'];
+            foreach ($dataMenu as $id) {
+                $accessMenu = [];
+                $accessMenu['id_role'] = $id_role;
+                $accessMenu['id_menu'] = $id;
+                $this->menuRepositories->addRoleMenu($accessMenu); 
+            }
         }
-
         return $result;
     }
 

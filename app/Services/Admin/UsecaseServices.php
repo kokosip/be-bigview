@@ -716,4 +716,69 @@ class UsecaseServices {
         $message = 'Success import data IKU';
         return [$result, $message];
     }
+
+    public function addSektor($data, $idUsecase) {
+        $dataUsecase = $this->getUsecaseById($idUsecase);
+        if (!$dataUsecase) {
+            throw new ErrorResponse(type:'Not found', message:'Usecase tidak ditemukan.', statusCode:404);
+        }
+        if (!isset($data['link_iku'])) {
+            $data['link_iku'] = null;
+        }
+        if (!isset($data['state_non_iku'])) {
+            $data['state_non_iku'] = null;
+        }
+        $data['id_usecase'] = $idUsecase;
+
+        $result = $this->usecaseRepositories->addSektor($data);
+        $message = 'Berhasil menambahkan data sektor.';
+        return [$result, $message];
+    }
+
+    public function getSektorById($idSektor) {
+        $result = $this->usecaseRepositories->getSektorById($idSektor);
+
+        if ($result) {
+            return $result;
+        } else {
+            throw new ErrorResponse(type: 'Not found', message: 'Sektor tidak ditemukan', statusCode: 404);
+        }
+    }
+
+    public function deleteSektor($idSektor) {
+        $this->getSektorById($idSektor);
+
+        $this->usecaseRepositories->deleteSektor($idSektor);
+        return 'Sektor berhasil dihapus.';
+    }
+
+    public function updateSektor($data, $idSektor) {
+        $this->getSektorById($idSektor);
+
+        $data = $this->usecaseRepositories->updateSektor($data, $idSektor);
+        return [$data, 'Berhasil memperbarui data sektor.'];
+    }
+
+    public function getSektorUsecase($idUsecase) {
+        $this->getUsecaseById($idUsecase);
+
+        $data = $this->usecaseRepositories->getSektorUsecase($idUsecase);
+        return $data;
+    }
+
+    public function editSubadminSektor($data, $idUsecase) {
+        $this->getUsecaseById($idUsecase);
+        $access_sektor = $data['sektor_order'];
+        $id_subadmin = $data['id_subadmin'];
+
+        $data = $this->usecaseRepositories->editSubadminSektor($access_sektor, $id_subadmin, $idUsecase);
+
+        return $data;
+    }
+
+    public function sortSektor($data, $idUsecase) {
+        $sektorOrder = $data['sektor_order'];
+        $data = $this->usecaseRepositories->sortSektor($sektorOrder, $idUsecase);
+        return $data;
+    }
 }
