@@ -7,15 +7,18 @@ use App\Services\Admin\UsecaseServices;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class UsecaseController extends Controller
 {
     use ApiResponse;
     protected $usecaseService;
+    protected $user_id;
 
     public function __construct(UsecaseServices $usecaseService)
     {
         $this->usecaseService = $usecaseService;
+        $this->user_id = Auth::user()->id_user ?? null;
     }
 
     public function listUsecase(Request $request){
@@ -450,6 +453,125 @@ class UsecaseController extends Controller
         $sektor = $request->sektor;
 
         [$data, $message] = $this->usecaseService-> importSektorIku($id_usecase, $sektor, $data);
+        return $this->successResponse(data: $data, message: $message);
+    }
+
+    public function addSektor(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'nama_sektor' => 'required',
+            'state_iku' => 'required',
+            'kode_sektor' => 'required',
+            'id_menu' => 'required',
+            'link_iku' => 'nullable',
+            'nama_alamat' => 'required',
+            'deskripsi' => 'required',
+            'short_desc' => 'required',
+            'deskripsi_detail' => 'required',
+            'alamat' => 'required',
+            'telepon' => 'required',
+            'link_map' => 'required',
+            'state_non_iku' => 'nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        [$data, $message] = $this->usecaseService->addSektor($validator->validate(), $id_usecase);
+        return $this->successResponse(data: $data, message: $message);
+    }
+
+    public function deleteSektor($id_sektor) {
+        $message = $this->usecaseService->deleteSektor($id_sektor);
+        return $this->successResponse(message: $message);
+    }
+
+    public function updateSektor(Request $request, $id_sektor) {
+        $validator = Validator::make($request->all(), [
+            'nama_sektor' => 'required',
+            'state_iku' => 'required',
+            'kode_sektor' => 'required',
+            'id_menu' => 'required',
+            'link_iku' => 'nullable',
+            'nama_alamat' => 'required',
+            'deskripsi' => 'required',
+            'short_desc' => 'required',
+            'deskripsi_detail' => 'required',
+            'alamat' => 'required',
+            'telepon' => 'required',
+            'link_map' => 'required',
+            'state_non_iku' => 'nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        [$data, $message] = $this->usecaseService->updateSektor($validator->validate(), $id_sektor);
+        return $this->successResponse(data: $data, message: $message);
+    }
+
+    public function getSektorUsecase($id_usecase) {
+        $data= $this->usecaseService->getSektorUsecase($id_usecase);
+        return $data;
+    }
+
+    public function editSubadminSektor(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'id_subadmin' => 'required',
+            'sektor_order' => 'required|array',
+            'sektor_order.*' => 'integer'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $data = $this->usecaseService->editSubadminSektor($validator->validate(), $id_usecase);
+        return $this->successResponse(data: $data);
+    }
+
+    public function sortSektor(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'sektor_order' => 'required|array',
+            'sektor_order.*' => 'integer'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $data = $this->usecaseService->sortSektor($validator->validate(), $id_usecase);
+        return $this->successResponse(data: $data);
+    }
+
+    public function getAssignedSektor() {
+        $data = $this->usecaseService->getAssignedSektor($this->user_id);
+        return $data;
+    }
+
+    public function updateAssignedSektor(Request $request, $id_sektor) {
+        $validator = Validator::make($request->all(), [
+            'nama_sektor' => 'required',
+            'state_iku' => 'required',
+            'kode_sektor' => 'required',
+            'id_menu' => 'required',
+            'link_iku' => 'nullable',
+            'nama_alamat' => 'required',
+            'deskripsi' => 'required',
+            'short_desc' => 'required',
+            'deskripsi_detail' => 'required',
+            'alamat' => 'required',
+            'telepon' => 'required',
+            'link_map' => 'required',
+            'state_non_iku' => 'nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        [$data, $message] = $this->usecaseService->updateAssignedSektor($validator->validate(), $id_sektor, $this->user_id);
         return $this->successResponse(data: $data, message: $message);
     }
 }

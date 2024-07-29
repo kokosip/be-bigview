@@ -128,4 +128,18 @@ class MenuServices {
         $rows = $this->menuRepositories->sortMenu($data, $admin['id_role'], $subadminRole);
         return $rows;
     }
+
+    public function getAssignedMenu($id_role) {
+        $data = $this->menuRepositories->getuserMenu($id_role);
+        return $data;
+    }
+
+    public function updateAssignedMenu($data, $id_menu, $id_role) {
+        if (!$this->menuRepositories->checkUserAccess($id_menu, $id_role)) {
+            throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak memiliki akses untuk menu ini.', statusCode: 403);
+        }
+
+        $data = $this->updateMenu($data, $id_menu);
+        return $data;
+    }
 }

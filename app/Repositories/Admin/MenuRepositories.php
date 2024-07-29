@@ -234,36 +234,38 @@ class MenuRepositories {
                             ->get();
 
             $adminRows = [];
+            $orderAdmin = 1;
             foreach ($data as $order => $id_menu) {
                 $existingMenu = $existingMenus->firstWhere('id_menu', $id_menu);
 
                 if ($existingMenu) {
                     DB::table('user_menu')
                         ->where('id', $existingMenu->id)
-                        ->update(['order' => $order]);
+                        ->update(['order' => $orderAdmin]);
 
                     $adminRows[] = [
                         'id' => $existingMenu->id,
                         'id_role' => $id_role,
                         'id_menu' => $id_menu,
-                        'order' => $order+1,
+                        'order' => $orderAdmin,
                         'action' => 'updated'
                     ];
                 } else {
                     $newId = DB::table('user_menu')->insertGetId([
                             'id_role' => $id_role,
                             'id_menu' => $id_menu,
-                            'order' => $order
+                            'order' => $orderAdmin
                     ]);
 
                     $adminRows[] = [
                         'id' => $newId,
                         'id_role' => $id_role,
                         'id_menu' => $id_menu,
-                        'order' => $order,
+                        'order' => $orderAdmin,
                         'action' => 'inserted'
                     ];
                 }
+                $orderAdmin++;
             }
 
             foreach ($subadmin as $id_sub) {
@@ -321,9 +323,52 @@ class MenuRepositories {
                     $result[] = $menu;
                 }
             }
-                return $result;
+            return $result;
         } catch (Exception $e) {
             throw new ErrorResponse(type:'Internal Server Error', message: $e->getMessage());
+        }
+    }
+
+    public function checkSubMenu($id_menu, $check_menu) {
+        $menus = DB::table('menu')->where('id_parent', $id_menu)->get();
+    
+        if ($menus != null) {
+            foreach ($menus as $menu) {
+                if ($menu->id_menu == $check_menu) {
+                    return true;
+                }
+                if ($this->checkSubMenu($menu->id_menu, $check_menu)) {
+                    return true;
+                }
+            }
+        }
+    
+        return false;
+    }
+    
+    public function checkUserAccess($check_menu, $id_role) {
+        try {
+            $listMenu = DB::table('user_menu')
+                          ->where('id_role', $id_role)
+                          ->pluck('id_menu')->toArray();
+    
+            foreach ($listMenu as $id_menu) {
+                if ($check_menu == $id_menu) {
+                    return true;
+                }
+    
+                $menu = DB::table('menu')->where('id_menu', $id_menu)->first();
+    
+                if ($menu) {
+                    if ($this->checkSubMenu($menu->id_menu, $check_menu)) {
+                        return true;
+                    }
+                }
+            }
+    
+            return false;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil user access.');
         }
     }
 }

@@ -331,19 +331,6 @@ class UsecaseRepositories {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan list misi.');
         }
     }
-
-    public function addSektor($data) {
-        try {
-            $getId = DB::table('sektor')->insertGetId($data);
-            $getRow = DB::table('sektor')
-                        ->where('id', $getId)
-                        ->first();
-        
-            return $getRow;
-        } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan sektor.');
-        }
-    }
     
     public function getListSektor($id_sektor) {
         try {
@@ -730,6 +717,264 @@ class UsecaseRepositories {
 
 		return $data;
 	}
+    public function addSektor($data) {
+        try {
+            $getId = DB::table('sektor')->insertGetId($data);
+            $getRow = DB::table('sektor')
+                        ->where('id_sektor', $getId)
+                        ->first();
+            
+            $usecase = DB::table('user')->where('id_usecase', $data['id_usecase'])->where('level', 1)->first();
+
+            $data_user_sektor = [];
+            $data_user_sektor['id_role'] = $usecase->id_role;
+            $data_user_sektor['id_sektor'] = $getId;
+            $data_user_sektor['order'] = (DB::table('user_sektor')->where('id_role', $usecase->id_role)->max('order')) + 1;
+            DB::table('user_sektor')->insert($data_user_sektor);
+
+            return $getRow;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan sektor.');
+        }
+    }
+
+    public function getSektorById($id_sektor) {
+        try {
+            $data = DB::table('sektor')
+                    ->where('id_sektor', $id_sektor)
+                    ->first();
+
+            return $data;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil data sektor.');
+        }
+    }
+
+    public function deleteSektor($id_sektor) {
+        try {
+            $row = DB::table('user_sektor')
+                ->where('id_sektor', $id_sektor)
+                ->first();
+
+            DB::table('user_sektor')
+                ->where('id_sektor', $id_sektor)
+                ->delete();
+            
+            DB::table('sektor')
+                ->where('id_sektor', $id_sektor)
+                ->delete();
+            
+            $order_deleted = $row->order;
+        
+            $affected_rows = DB::table('user_sektor')
+                ->where('id_role', $row->id_role)
+                ->where('order', '>', $order_deleted)
+                ->get();
+
+            foreach ($affected_rows as $affected_row) {
+                DB::table('user_sektor')
+                    ->where('id', $affected_row->id)
+                    ->decrement('order');
+            }
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus sektor.');
+        }
+    }
+
+    public function updateSektor($data, $id_sektor) {
+        try {
+            DB::table('sektor')
+                ->where('id_sektor', $id_sektor)
+                ->update($data);
+
+            return DB::table('sektor')
+                    ->where('id_sektor', $id_sektor)
+                    ->first();
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui data sektor.');
+        }
+    }
+
+    public function getSektorUsecase($id_usecase) {
+        try {
+            $data = DB::table('sektor')
+                ->where('id_usecase', $id_usecase)
+                ->get();
+
+            return $data;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil data sektor usecase.');
+        }
+    }
+
+    public function editSubadminSektor($data, $id_subadmin, $id_usecase) {
+        try {
+            $id_role_admin = (DB::table('user')->select('id_role')->where('id_usecase', $id_usecase)->where('level', 1)->first())->id_role;
+            $id_role_sub = (DB::table('user')->select('id_role')->where('id_user', $id_subadmin)->first())->id_role;
+
+            DB::table('user_sektor')
+                ->where('id_role', $id_role_sub)
+                ->whereNotIn('id_sektor', $data)
+                ->delete();
+        
+            $adminAccess = DB::table('user_sektor')
+                            ->where('id_role', $id_role_admin)
+                            ->orderBy('order', 'asc')
+                            ->get();
+        
+            $sortedData = [];
+            foreach ($adminAccess as $adminRow) {
+                if (in_array($adminRow->id_sektor, $data)) {
+                    $sortedData[] = $adminRow->id_sektor;
+                }
+            }
+            
+            
+        
+            $accessRows = [];
+            $order = 1;
+            foreach ($sortedData as $id_sektor) {
+                $checkAccess = DB::table('user_sektor')
+                                ->where('id_role', $id_role_sub)
+                                ->where('id_sektor', $id_sektor)
+                                ->first();
+        
+                if ($checkAccess) {
+                    DB::table('user_sektor')
+                        ->where('id', $checkAccess->id)
+                        ->update(['order' => $order]);
+        
+                    $accessRows[] = [
+                        'id' => $checkAccess->id,
+                        'id_role' => $id_role_sub,
+                        'id_sektor' => $id_sektor,
+                        'order' => $order,
+                        'action' => 'updated'
+                    ];
+                } else {
+                    $newId = DB::table('user_sektor')->insertGetId([
+                        'id_role' => $id_role_sub,
+                        'id_sektor' => $id_sektor,
+                        'order' => $order
+                    ]);
+        
+                    $accessRows[] = [
+                        'id' => $newId,
+                        'id_role' => $id_role_sub,
+                        'id_sektor' => $id_sektor,
+                        'order' => $order,
+                        'action' => 'inserted'
+                    ];
+                }
+                $order++;
+            }
+            return $accessRows;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui sektor.');
+        }
+    }
+
+    public function sortSektor($data, $id_usecase) {
+        try {
+            $id_role = (DB::table('user')->where('id_usecase', $id_usecase)->where('level', 1)->first())->id_role;
+            $subadmin = DB::table('user')->where('id_usecase', $id_usecase)->where('level', 2)->pluck('id_role')->toArray();
+
+            DB::table('user_sektor')
+                ->where('id_role', $id_role)
+                ->whereNotIn('id_sektor', $data)
+                ->delete();
+
+            $existingMenus = DB::table('user_sektor')
+                            ->where('id_role', $id_role)
+                            ->get();
+
+            $adminRows = [];
+            $orderAdmin = 1;
+            foreach ($data as $order => $id_sektor) {
+                $existingMenu = $existingMenus->firstWhere('id_sektor', $id_sektor);
+
+                if ($existingMenu) {
+                    DB::table('user_sektor')
+                        ->where('id', $existingMenu->id)
+                        ->update(['order' => $orderAdmin]);
+
+                    $adminRows[] = [
+                        'id' => $existingMenu->id,
+                        'id_role' => $id_role,
+                        'id_sektor' => $id_sektor,
+                        'order' => $orderAdmin,
+                        'action' => 'updated'
+                    ];
+                } else {
+                    $newId = DB::table('user_sektor')->insertGetId([
+                            'id_role' => $id_role,
+                            'id_sektor' => $id_sektor,
+                            'order' => $orderAdmin
+                    ]);
+
+                    $adminRows[] = [
+                        'id' => $newId,
+                        'id_role' => $id_role,
+                        'id_sektor' => $id_sektor,
+                        'order' => $orderAdmin,
+                        'action' => 'inserted'
+                    ];
+                }
+                $orderAdmin++;
+            }
+
+            foreach ($subadmin as $id_sub) {
+                DB::table('user_sektor')
+                    ->where('id_role', $id_sub)
+                    ->whereNotIn('id_sektor', $data)
+                    ->delete();
+
+                $subAccess = DB::table('user_sektor')
+                        ->where('id_role', $id_sub)
+                        ->get();
+
+                $order = 1;
+                foreach ($data as $id_sektor) {
+                    $existingMenu = $subAccess->firstWhere('id_sektor', $id_sektor);
+                    if ($existingMenu) {
+                        DB::table('user_sektor')
+                            ->where('id_role', $existingMenu->id_role)
+                            ->where('id_sektor', $id_sektor)
+                            ->update(['order' => $order]);
+                    } 
+                    $order++;
+                }
+            }
+            return $adminRows;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal sorting sektor.');
+        }
+    }
+
+    public function getAssignedSektor($id_user) {
+        try {
+            $id_role = DB::table('user')->where('id_user', $id_user)->value('id_role');
+            $assignedSektor = DB::table('user_sektor')->where('id_role', $id_role)->pluck('id_sektor')->toArray();
+            $data = DB::table('sektor')->whereIn('id_sektor', $assignedSektor)->get();
+            return $data;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil assigned sektor.');
+        }
+    }
+
+    public function updateAssignedSektor($data, $id_sektor) {
+        try {
+            DB::table('sektor')
+                ->where('id_sektor', $id_sektor)
+                ->update($data);
+
+            return DB::table('sektor')
+                    ->where('id_sektor', $id_sektor)
+                    ->first();
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui data sektor.');
+        }
+    }
 }
 
 
