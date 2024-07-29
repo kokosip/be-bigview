@@ -950,6 +950,31 @@ class UsecaseRepositories {
             throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
         }
     }
+
+    public function getAssignedSektor($id_user) {
+        try {
+            $id_role = DB::table('user')->where('id_user', $id_user)->value('id_role');
+            $assignedSektor = DB::table('user_sektor')->where('id_role', $id_role)->pluck('id_sektor')->toArray();
+            $data = DB::table('sektor')->whereIn('id_sektor', $assignedSektor)->get();
+            return $data;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+        }
+    }
+
+    public function updateAssignedSektor($data, $id_sektor) {
+        try {
+            DB::table('sektor')
+                ->where('id_sektor', $id_sektor)
+                ->update($data);
+
+            return DB::table('sektor')
+                    ->where('id_sektor', $id_sektor)
+                    ->first();
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui data sektor.');
+        }
+    }
 }
 
 

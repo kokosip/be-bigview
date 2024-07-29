@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\Auth;
 
-class SubAdminMiddleware
+class SuperAdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class SubAdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && (Auth::user()->level <= 2)) {
+        if (Auth::check() && (Auth::user()->level == 0)) {
             return $next($request);
         }
 

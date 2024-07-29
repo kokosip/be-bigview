@@ -41,6 +41,13 @@ class UserServices {
 
     public function insertUser($data) {
         $data["password"] = Hash::make('user123');
+        
+        $dataRole = [];
+        $dataRole['nama_role'] = $data['name'];
+        $dataRole['level'] = 1;
+        $id_role = $this->roleRepositories->insertGetRoleId($dataRole);
+
+        $data['id_role'] = $id_role;
         $result = $this->userRepositories->insertUser($data);
         unset($result["password"]);
 

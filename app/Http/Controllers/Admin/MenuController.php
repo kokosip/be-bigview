@@ -111,4 +111,25 @@ class MenuController extends Controller
         $data = $this->menuService->sortMenu($validator->validated()['menu_order'], $admin_info);
         return $this->successResponse(data: $data, message: "Data Berhasil di Update");
     }
+
+    public function getAssignedMenu() {
+        $data = $this->menuService->getAssignedMenu($this->admin_role);
+        return $this->successResponse(data: $data);
+    }
+
+    public function updateAssignedMenu(Request $request, $id_menu) {
+        $validator = Validator::make($request->all(), [
+            'name_menu' => 'required|string',
+            'icon' => 'required',
+            'link' => 'required',
+            'id_parent' => 'required',
+            'sort' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+        $this->menuService->updateAssignedMenu($validator->validate(), $id_menu, $this->admin_role);
+        return $this->successResponse(message: "Data Berhasil di Update");
+    }
 }

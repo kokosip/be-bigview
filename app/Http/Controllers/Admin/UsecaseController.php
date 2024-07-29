@@ -7,15 +7,18 @@ use App\Services\Admin\UsecaseServices;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class UsecaseController extends Controller
 {
     use ApiResponse;
     protected $usecaseService;
+    protected $user_id;
 
     public function __construct(UsecaseServices $usecaseService)
     {
         $this->usecaseService = $usecaseService;
+        $this->user_id = Auth::user()->id_user ?? null;
     }
 
     public function listUsecase(Request $request){
@@ -540,5 +543,35 @@ class UsecaseController extends Controller
 
         $data = $this->usecaseService->sortSektor($validator->validate(), $id_usecase);
         return $this->successResponse(data: $data);
+    }
+
+    public function getAssignedSektor() {
+        $data = $this->usecaseService->getAssignedSektor($this->user_id);
+        return $data;
+    }
+
+    public function updateAssignedSektor(Request $request, $id_sektor) {
+        $validator = Validator::make($request->all(), [
+            'nama_sektor' => 'required',
+            'state_iku' => 'required',
+            'kode_sektor' => 'required',
+            'id_menu' => 'required',
+            'link_iku' => 'nullable',
+            'nama_alamat' => 'required',
+            'deskripsi' => 'required',
+            'short_desc' => 'required',
+            'deskripsi_detail' => 'required',
+            'alamat' => 'required',
+            'telepon' => 'required',
+            'link_map' => 'required',
+            'state_non_iku' => 'nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        [$data, $message] = $this->usecaseService->updateAssignedSektor($validator->validate(), $id_sektor, $this->user_id);
+        return $this->successResponse(data: $data, message: $message);
     }
 }

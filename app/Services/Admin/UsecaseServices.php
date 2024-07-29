@@ -781,4 +781,29 @@ class UsecaseServices {
         $data = $this->usecaseRepositories->sortSektor($sektorOrder, $idUsecase);
         return $data;
     }
+
+    public function getAssignedSektor($idUser) {
+        $data = $this->usecaseRepositories->getAssignedSektor($idUser);
+        return $data;
+    }
+
+    public function updateAssignedSektor($data, $idSektor, $idUser) {
+        $this->getSektorById($idSektor);
+
+        $currentAssignedSektor = $this->usecaseRepositories->getAssignedSektor($idUser);
+        $sectorFound = false;
+        foreach ($currentAssignedSektor as $assignedSektor) {
+            if ($assignedSektor->id_sektor == $idSektor) {
+                $sectorFound = true;
+                break;
+            }
+        }
+
+        if (!$sectorFound) {
+            throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak memiliki akses untuk sektor ini.', statusCode:403);
+        }
+
+        $data = $this->usecaseRepositories->updateAssignedSektor($data, $idSektor);
+        return [$data, 'Berhasil memperbarui data sektor.'];
+    }
 }
