@@ -734,7 +734,7 @@ class UsecaseRepositories {
 
             return $getRow;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan sektor.');
         }
     }
 
@@ -777,7 +777,7 @@ class UsecaseRepositories {
                     ->decrement('order');
             }
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus sektor.');
         }
     }
 
@@ -870,7 +870,7 @@ class UsecaseRepositories {
             }
             return $accessRows;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui sektor.');
         }
     }
 
@@ -947,7 +947,7 @@ class UsecaseRepositories {
             }
             return $adminRows;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal sorting sektor.');
         }
     }
 
@@ -958,7 +958,7 @@ class UsecaseRepositories {
             $data = DB::table('sektor')->whereIn('id_sektor', $assignedSektor)->get();
             return $data;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil assigned sektor.');
         }
     }
 

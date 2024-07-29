@@ -95,7 +95,7 @@ class UserRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage() . 'idUsecase: ' . $id_usecase);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil subadmin.');
         } 
     }
 }
