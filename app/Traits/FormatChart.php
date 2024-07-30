@@ -296,6 +296,9 @@ trait FormatChart
             throw new ErrorResponse(type: 'Not Found', message: "Data $type_chart tidak tersedia.", statusCode: 404);
         }
 
+        if ($data->isEmpty()) {
+            throw new ErrorResponse(type: 'Not Found', message: 'Area Line Tidak tersedia.', statusCode: 404);
+        }
         foreach ($data as $key) {
             $chart_category[] = $key->category;
             $chart_data[] = round($key->data, 2);
