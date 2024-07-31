@@ -299,7 +299,7 @@ class SosialKependudukanServices {
             'y_axis_title' => 'Rasio Jenis Kelamin'
         ];
 
-        $response = $this->barChart($rows, $kode_kabkota, $chart_params);
+        $response = $this->barChart($rows, $kode_kabkota->kode_kab_kota, $chart_params);
 
         return $response;
     }

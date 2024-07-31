@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Exceptions\ErrorResponse;
+use Carbon\Traits\ToStringFormat;
 
 trait FormatChart
 {
@@ -201,15 +202,19 @@ trait FormatChart
             throw new ErrorResponse(type: 'Not Found', message: 'Detail Data Column Bar chart tidak tersedia.', statusCode: 404);
         }
 
+
+
         foreach ($data as $key) {
             if($chart_type == 'dual-axes'){
                 if(in_array($params['name_column'], ['Indeks Harga Konsumen', 'Inflasi'])){
                     $chart_category[] = substr($key->bulan, 0, 3)." ".$key->tahun;
                 }
                 if($key->jenis == $params['name_column']){
+                    $chart_category[] = $key->tahun;
                     $chart_data[$key->jenis]["data_column"][] = $key->data;
                     $chart_data[$key->jenis]["yAxis_title"] = $params['column_title'];
                 } else {
+                    $chart_category[] = $key->tahun;
                     $chart_data[$key->jenis]["data_spline"][] = $key->data;
                     $chart_data[$key->jenis]["yAxis_title"] = $params['line_title'];
                 }
