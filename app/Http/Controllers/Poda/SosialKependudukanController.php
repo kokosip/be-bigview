@@ -1285,98 +1285,238 @@ class SosialKependudukanController extends Controller
     }
 
     public function mapPendidikan(Request $request){
-        $validator = Validator::make($request->all(), [
-            'tahun' => 'required',
-            'jenjang' => 'required',
-        ]);
+        if ($this->level >= 1) {
+            $validator = Validator::make($request->all(), [
+                'tahun' => 'required',
+                'jenjang' => 'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
+            $data = $this->sosialService->getMapPendidikan($this->idUsecase, $validator->validate());
+        } else {
+            $validator = Validator::make($request->all(), [
+                'tahun' => 'required',
+                'jenjang' => 'required',
+                'id_usecase' => 'required'
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
 
-        if ($validator->fails()) {
-            return $this->validationResponse($validator);
+            $validatedData = $validator->validated();
+            $idUsecase = $validatedData['id_usecase'];
+            unset($validatedData['id_usecase']);
+
+            $data = $this->sosialService->getMapPendidikan($idUsecase, $validatedData);
         }
-        $data = $this->sosialService->getMapPendidikan($this->idUsecase, $validator->validate());
 
         return $this->successResponse(data: $data);
     }
 
     public function detailPendidikan(Request $request){
-        $validator = Validator::make($request->all(), [
-            'tahun' => 'required',
-        ]);
+        if ($this->level >= 1) {
+            $validator = Validator::make($request->all(), [
+                'tahun' => 'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
+            $data = $this->sosialService->getDetailPendidikan($this->idUsecase, $validator->validate());
+        } else {
+            $validator = Validator::make($request->all(), [
+                'tahun' => 'required',
+                'id_usecase' => 'required'
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
 
-        if ($validator->fails()) {
-            return $this->validationResponse($validator);
+            $validatedData = $validator->validated();
+            $idUsecase = $validatedData['id_usecase'];
+            unset($validatedData['id_usecase']);
+
+            $data = $this->sosialService->getDetailPendidikan($idUsecase, $validatedData);
         }
-        $data = $this->sosialService->getDetailPendidikan($this->idUsecase, $validator->validate());
 
         return $this->successResponse(data: $data);
     }
     // End Pendidikan
 
     // Start Kesehatan
-    public function tahunKesehatan(){
-        $data = $this->sosialService->getTahunKesehatan($this->idUsecase);
+    public function tahunKesehatan(Request $request){
+        if ($this->level >= 1) {
+            $data = $this->sosialService->getTahunKesehatan($this->idUsecase);
+        } else {
+            $validator = Validator::make($request->all(), [
+                'id_usecase' => 'required'
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
+
+            $data = $this->sosialService->getTahunKesehatan($validator->validate()['id_usecase']);
+        }
         return $this->successResponse(data: $data);
     }
 
-    public function indikatorKesehatan(){
-        $data = $this->sosialService->getIndikatorKesehatan($this->idUsecase);
+    public function indikatorKesehatan(Request $request){
+        if ($this->level >= 1) {
+            $data = $this->sosialService->getIndikatorKesehatan($this->idUsecase);
+        } else {
+            $validator = Validator::make($request->all(), [
+                'id_usecase' => 'required'
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
+
+            $data = $this->sosialService->getIndikatorKesehatan($validator->validate()['id_usecase']);
+        }
         return $this->successResponse(data: $data);
     }
 
     public function periodeKesehatan(Request $request){
-        $data = $this->sosialService->getPeriodeKesehatan($this->idUsecase);
+        if ($this->level >= 1) {
+            $data = $this->sosialService->getPeriodeKesehatan($this->idUsecase);
+        } else {
+            $validator = Validator::make($request->all(), [
+                'id_usecase' => 'required'
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
+
+            $data = $this->sosialService->getPeriodeKesehatan($validator->validate()['id_usecase']);
+        }
         return $this->successResponse(data: $data);
     }
 
     public function barKesehatan(Request $request){
-        $validator = Validator::make($request->all(), [
-            'tahun' => 'required',
-            'filter' => 'required'
-        ]);
+        if ($this->level >= 1) {
+            $validator = Validator::make($request->all(), [
+                'tahun' => 'required',
+                'filter' => 'required'
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
+            $data = $this->sosialService->getBarKesehatan($this->idUsecase, $validator->validate());
+        } else {
+            $validator = Validator::make($request->all(), [
+                'tahun' => 'required',
+                'filter' => 'required',
+                'id_usecase' => 'required'
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
 
-        if ($validator->fails()) {
-            return $this->validationResponse($validator);
+            $validatedData = $validator->validated();
+            $idUsecase = $validatedData['id_usecase'];
+            unset($validatedData['id_usecase']);
+
+            $data = $this->sosialService->getBarKesehatan($idUsecase, $validatedData);
         }
-        $data = $this->sosialService->getBarKesehatan($this->idUsecase, $validator->validate());
 
         return $this->successResponse(data: $data);
     }
 
     public function barColumnKesehatan(Request $request){
-        $validator = Validator::make($request->all(), [
-            'periode' => 'required',
-        ]);
+        if ($this->level >= 1) {
+            $validator = Validator::make($request->all(), [
+                'periode' => 'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
+            $data = $this->sosialService->getBarColumnKesehatan($this->idUsecase, $validator->validate());
+        } else {
+            $validator = Validator::make($request->all(), [
+                'periode' => 'required',
+                'id_usecase' => 'required'
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
 
-        if ($validator->fails()) {
-            return $this->validationResponse($validator);
+            $validatedData = $validator->validated();
+            $idUsecase = $validatedData['id_usecase'];
+            unset($validatedData['id_usecase']);
+
+            $data = $this->sosialService->getBarColumnKesehatan($idUsecase, $validatedData);
         }
-        $data = $this->sosialService->getBarColumnKesehatan($this->idUsecase, $validator->validate());
 
         return $this->successResponse(data: $data);
     }
 
     public function mapKesehatan(Request $request){
-        $validator = Validator::make($request->all(), [
-            'tahun' => 'required',
-        ]);
+        if ($this->level >= 1) {
+            $validator = Validator::make($request->all(), [
+                'tahun' => 'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
+            $data = $this->sosialService->getMapKesehatan($this->idUsecase, $validator->validate());
+        } else {
+            $validator = Validator::make($request->all(), [
+                'tahun' => 'required',
+                'id_usecase' => 'required'
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
 
-        if ($validator->fails()) {
-            return $this->validationResponse($validator);
+            $validatedData = $validator->validated();
+            $idUsecase = $validatedData['id_usecase'];
+            unset($validatedData['id_usecase']);
+
+            $data = $this->sosialService->getMapKesehatan($idUsecase, $validatedData);
         }
-        $data = $this->sosialService->getMapKesehatan($this->idUsecase, $validator->validate());
 
         return $this->successResponse(data: $data);
     }
 
     public function detailKesehatan(Request $request){
-        $validator = Validator::make($request->all(), [
-            'tahun' => 'required',
-        ]);
+        if ($this->level >= 1) {
+            $validator = Validator::make($request->all(), [
+                'tahun' => 'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
+            $data = $this->sosialService->getDetailKesehatan($this->idUsecase, $validator->validate());
+        } else {
+            $validator = Validator::make($request->all(), [
+                'tahun' => 'required',
+                'id_usecase' => 'required'
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->validationResponse($validator);
+            }
 
-        if ($validator->fails()) {
-            return $this->validationResponse($validator);
+            $validatedData = $validator->validated();
+            $idUsecase = $validatedData['id_usecase'];
+            unset($validatedData['id_usecase']);
+
+            $data = $this->sosialService->getDetailKesehatan($idUsecase, $validatedData);
         }
-        $data = $this->sosialService->getDetailKesehatan($this->idUsecase, $validator->validate());
 
         return $this->successResponse(data: $data);
     }
