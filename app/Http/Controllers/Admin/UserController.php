@@ -108,7 +108,7 @@ class UserController extends Controller
 
         $data['id_usecase'] = $this->user_id_usecase;
 
-        $data = $this->userService->addSubAdmin($data);
+        $data = $this->userService->addSubAdmin($data, $this->user_id);
         return $this->successResponse(data: $data, message:'User berhasil ditambahkan.');
     }
 

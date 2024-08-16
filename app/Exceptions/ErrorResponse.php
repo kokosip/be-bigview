@@ -8,8 +8,6 @@ use Exception;
 
 class ErrorResponse extends Exception
 {
-    use ApiResponse;
-
     protected $type;
     protected $errors;
     protected $statusCode;
@@ -25,7 +23,18 @@ class ErrorResponse extends Exception
 
     public function render(): JsonResponse
     {
-        return $this->errorResponse($this->type, $this->errors, $this->message, $this->statusCode);
+        if ($this->errors == null) {
+            return response()->json([
+                'type' => $this->type,
+                'message' => $this->getMessage()
+            ], $this->statusCode);
+        } else {
+            return response()->json([
+                'type' => $this->type,
+                'message' => $this->getMessage()
+            ], $this->statusCode);
+        }
+        
     }
 
     public function getType()
