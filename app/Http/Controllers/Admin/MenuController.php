@@ -120,10 +120,10 @@ class MenuController extends Controller
     public function updateAssignedMenu(Request $request, $id_menu) {
         $validator = Validator::make($request->all(), [
             'name_menu' => 'required|string',
-            'icon' => 'required',
+            'icon' => 'sometimes',
             'link' => 'required',
             'id_parent' => 'required',
-            'sort' => 'required',
+            'sort' => 'sometimes',
         ]);
 
         if ($validator->fails()) {
