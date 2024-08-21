@@ -66,7 +66,7 @@ trait FormatChart
 
     public function filterMonthPeriode($data){
         if(empty($data)){
-            throw new ErrorResponse(type: 'Not Found', message: 'Filter Periode Tidak tersedia.', statusCode: 404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Filter Month Tidak tersedia.', statusCode: 404);
         }
 
         $idx = 2;
@@ -119,7 +119,7 @@ trait FormatChart
 
     public function getCard($data) {
         if(empty($data)){
-            throw new ErrorResponse(type: 'Not Found', message: 'Daftar Indikator Tidak tersedia.', statusCode: 404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Daftar Card Tidak tersedia.', statusCode: 404);
         }
 
         $response = [
@@ -131,7 +131,7 @@ trait FormatChart
 
     public function mapLeaflet($data) {
         if(empty($data)){
-            throw new ErrorResponse(type: 'Not Found', message: 'Detail Data tidak tersedia.', statusCode: 404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Map Leaflet tidak tersedia.', statusCode: 404);
         }
 
         $response = [
@@ -145,7 +145,7 @@ trait FormatChart
 
     public function pieChart($data, $tahun) {
         if(empty($data)){
-            throw new ErrorResponse(type: 'Not Found', message: 'Detail Data tidak tersedia.', statusCode: 404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Pie Chart tidak tersedia.', statusCode: 404);
         }
 
         $response = [

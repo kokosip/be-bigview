@@ -28,7 +28,7 @@ class RoleRepositories {
     public function getListRole($search, $perPage){
         try {
             $db = DB::table('role')
-                ->select('id_role', 'nama_role', 'level');
+                ->select('id', 'nama_role');
 
             if($search){
                 $db = $db->where('nama_role', 'like', "%{$search}%");
@@ -43,7 +43,7 @@ class RoleRepositories {
     public function getListNameRole(){
         try {
             $db = DB::table('role')
-                ->select('id_role', 'nama_role')
+                ->select('id', 'nama_role')
                 ->get();
 
             return $db;
@@ -55,20 +55,20 @@ class RoleRepositories {
     public function getRoleById($id_role){
         try {
             $db = DB::table('role')
-                ->select('id_role', 'nama_role', 'level')
-                ->where('id_role', $id_role)
+                ->select('id', 'nama_role')
+                ->where('id', $id_role)
                 ->first();
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil role.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil role');
         } 
     }
 
     public function deleteRole($id_role){
         try {
             $db = DB::table('role')
-                ->where('id_role', $id_role)
+                ->where('id', $id_role)
                 ->delete();
 
             return $db;
@@ -80,7 +80,7 @@ class RoleRepositories {
     public function updateRole($data, $id_role){
         try {
             $db = DB::table('role')
-                ->where('id_role', $id_role)
+                ->where('id', $id_role)
                 ->update($data);
 
             return $db;

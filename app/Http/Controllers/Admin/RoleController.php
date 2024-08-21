@@ -59,8 +59,7 @@ class RoleController extends Controller
 
     public function updateRole(Request $request, $id_role){
         $validator = Validator::make($request->all(), [
-            'nama_role' => 'required|string',
-            'level' => 'required',
+            'nama_role' => 'required|string'
         ]);
         if ($validator->fails()) {
             return $this->validationResponse($validator);

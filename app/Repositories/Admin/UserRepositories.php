@@ -11,7 +11,7 @@ class UserRepositories {
     public function getListUser($search, $perPage){
         try {
             $db = DB::table('user as u')
-                ->leftJoin('role as r', 'u.id_role', '=', 'r.id_role')
+                ->leftJoin('role as r', 'u.id_role', '=', 'r.id')
                 ->select('u.id_usecase', 'name', 'username', 'r.nama_role');
 
             if($search){
@@ -22,7 +22,7 @@ class UserRepositories {
             $result = $db->paginate($perPage, $perPage);
             return $result;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list user.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan list user.');
         } 
     }
 

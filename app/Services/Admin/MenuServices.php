@@ -18,7 +18,7 @@ class MenuServices {
     }
 
     public function insertMenu($data) {
-        if(!$data['id_parent']) $data['id_parent'] = 0;
+        if (!isset($data['id_parent'])) {$data['id_parent'] = 0;}
         $latestSort = $this->menuRepositories->getLatestSort($data);
 
         $data['id_parent'] = $latestSort;
