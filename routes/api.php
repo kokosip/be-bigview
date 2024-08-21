@@ -53,22 +53,22 @@ Route::prefix('admin')->group(function () {
                 });
             });
             Route::prefix('assigned')->group(function () {
-                Route::middleware(['subadmin'])->group(function () {
+                Route::middleware(['admin'])->group(function () {
                     Route::put('/', [MenuController::class, 'sortMenu']);
-                    Route::get('/', [MenuController::class, 'getAssignedMenu']);
-                    Route::put('/{id}', [MenuController::class, 'updateAssignedMenu']);
                 });
+                Route::get('/', [MenuController::class, 'getAssignedMenu']);
+                Route::put('/{id}', [MenuController::class, 'updateAssignedMenu'])->middleware('menuaccess');;
             });
         });
 
         // Role
         Route::prefix('roles')->group(function () {
             Route::middleware(['superadmin'])->group(function () {
-                Route::post('/', [RoleController::class, 'addRole']);
+                Route::post('/', [RoleController::class, 'addRole']); // ??
                 Route::get('/', [RoleController::class, 'listRole']);
                 Route::get('/names', [RoleController::class, 'listNamesRole']);
                 Route::put('/{id}', [RoleController::class, 'updateRole']);
-                Route::delete('/{id}', [RoleController::class, 'deleteRole']);
+                Route::delete('/{id}', [RoleController::class, 'deleteRole']); // ??
                 Route::get('/{id}', [RoleController::class, 'getRoleById']);
             });
         });
@@ -77,25 +77,36 @@ Route::prefix('admin')->group(function () {
         Route::prefix('role-menu')->group(function() {
             Route::middleware(['superadmin'])->group(function () {
                 Route::get('/', [RoleController::class, 'listRoleMenu']);
-                Route::post('/', [RoleController::class, 'addRoleMenu']);
-                Route::delete('/', [RoleController::class, 'deleteRoleMenu']);
-                Route::post('/sub', [MenuController::class, 'editSubadminMenu']);
+                Route::post('/', [RoleController::class, 'addRoleMenu']); // ??
+                Route::delete('/', [RoleController::class, 'deleteRoleMenu']); // ??
+                Route::post('/sub', [MenuController::class, 'editSubadminMenu']); // ??
             });
         });
 
         // Usecase
         Route::prefix('usecase')->group(function() {
             Route::middleware(['superadmin'])->group(function () {
-                Route::get('/', [UsecaseController::class, 'listUsecase']);
-                Route::get('/names', [UsecaseController::class, 'listNameUsecase']);
-                Route::post('/gov', [UsecaseController::class, 'addUsecaseGovernment']);
-                Route::post('/custom', [UsecaseController::class, 'addUsecaseCustom']);
-                Route::get('/logo/{id}', [UsecaseController::class, 'getLogo']);
-                Route::get('/{id}', [UsecaseController::class, 'getUsecaseById']);
-                Route::put('/gov/{id}', [UsecaseController::class, 'updateUsecaseGovern']);
-                Route::put('/custom/{id}', [UsecaseController::class, 'updateUsecaseCustom']);
-                Route::delete('/gov/{id}', [UsecaseController::class, 'deleteUsecaseGovernment']);
-                Route::delete('/custom/{id}', [UsecaseController::class, 'deleteUsecaseCustom']);
+                Route::get('', [UsecaseController::class, 'listUsecase']);
+                Route::get('names', [UsecaseController::class, 'listNameUsecase']);
+                Route::get('{id}', [UsecaseController::class, 'getUsecaseById']);
+                Route::post('', [UsecaseController::class, 'addUsecase']);
+                Route::post('profile/{id}', [UsecaseController::class, 'addUsecaseProfile']);
+                Route::put('{id}', [UsecaseController::class, 'updateUsecase']);
+                Route::put('profile/{id}', [UsecaseController::class, 'updateUsecaseProfile']);
+                Route::delete('{id}', [UsecaseController::class, 'deleteUsecase']);
+                Route::delete('profile/{id}', [UsecaseController::class, 'deleteUsecaseProfile']);
+                Route::put('polygon/{id}', [UsecaseController::class, 'updateUsecasePolygon']);
+            });
+        });
+
+        Route::prefix('usecase-polygon')->group(function() {
+            Route::get('', [UsecaseController::class, 'getUserPolygon']);
+            
+            Route::middleware(['superadmin'])->group(function () {
+                Route::get('all', [UsecaseController::class, 'getAllPolygon']);
+                Route::post('', [UsecaseController::class, 'uploadPolygon']);
+                Route::put('', [UsecaseController::class, 'updateUsecasePolygon']);
+                Route::get('{id}', [UsecaseController::class, 'getUsecasePolygon']);
             });
         });
 
@@ -152,12 +163,12 @@ Route::prefix('admin')->group(function () {
             Route::middleware(['superadmin'])->group(function () {
                 Route::get('/users', [UserController::class, 'listUser']);
                 Route::post('/users', [UserController::class, 'addUser']);
-                Route::get('/userdetail', [UserController::class, 'userDetail']);
                 Route::put('/users/active/{id}', [UserController::class, 'updateIsActived']);
                 Route::get('/users/{id}', [UserController::class, 'getUserById']);
                 Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
                 Route::put('/users/{id}', [UserController::class, 'updateUser']);
             });
+            Route::get('/userdetail', [UserController::class, 'userDetail']);
             Route::post('/users/subadmin', [UserController::class,'addSubAdmin']);
         });
     });
@@ -168,9 +179,9 @@ Route::prefix('admin')->group(function () {
     Route::prefix('content')->group(function() {
         Route::prefix('logo')->group(function() {
             Route::middleware(['superadmin'])->group(function () {
-                Route::post('upload/{id}', [UsecaseController::class,'uploadLogo']);
-                Route::get('get/{id}', [UsecaseController::class,'getLogo']);
-                Route::delete('delete/{id}', [UsecaseController::class,'deleteLogo']);
+                Route::post('/{id}', [UsecaseController::class,'uploadLogo']);
+                Route::get('/{id}', [UsecaseController::class,'getLogo']);
+                Route::delete('/{id}', [UsecaseController::class,'deleteLogo']);
             });
         });
         Route::prefix('beranda')->group(function() {

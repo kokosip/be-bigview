@@ -126,6 +126,12 @@ class MenuRepositories {
 
     public function addRoleMenu($data){
         try {
+            $highestOrder = DB::table('user_menu')
+                ->where('id_role', $data['id_role'])
+                ->max('order');
+
+            $data['order'] = $highestOrder+1;
+            
             $result = DB::table('user_menu')->insert($data);
             return $result;
         } catch (Exception $e) {
@@ -135,10 +141,20 @@ class MenuRepositories {
 
     public function deleteRoleMenu($data){
         try {
+            $deletedOrder = DB::table('user_menu')
+                ->where('id_menu', $data['id_menu'])
+                ->where('id_role', $data['id_role'])
+                ->value('order');
+
             $result = DB::table('user_menu')
                 ->where('id_menu', $data['id_menu'])
                 ->where('id_role', $data['id_role'])
                 ->delete();
+
+            DB::table('user_menu')
+                ->where('id_role', $data['id_role'])
+                ->where('order', '>', $deletedOrder)
+                ->decrement('order');
             return $result;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus role menu.');
@@ -217,7 +233,7 @@ class MenuRepositories {
             }
             return $accessRows;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui menu subadmin.');
         }
     }
 
@@ -231,6 +247,7 @@ class MenuRepositories {
 
             $existingMenus = DB::table('user_menu')
                             ->where('id_role', $id_role)
+                            ->orderBy('order', 'asc')
                             ->get();
 
             $adminRows = [];
@@ -292,7 +309,7 @@ class MenuRepositories {
             }
             return $adminRows;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengurutkan menu.');
         }
     }
     public function getSubMenu($id_menu) {
@@ -325,7 +342,7 @@ class MenuRepositories {
             }
             return $result;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message: $e->getMessage());
+            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal mendapatkan user menu.');
         }
     }
 

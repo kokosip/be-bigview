@@ -22,19 +22,17 @@ class MenuAccess
         $level = Auth::user()->level;
 
         if ($level >= 1) {
-            $access = DB::table('user_menu as um')
-                ->join('menu as m', 'um.id_menu', '=', 'm.id_menu')
-                ->select('um.id_role', 'um.id_menu', 'm.prefix')
-                ->where('um.id_role', $id_role)
-                ->where('m.prefix', $request->route()->getPrefix())
-                ->first();
+            $id_menu = $request->route('id');
+
+            $access = DB::table('user_menu')
+                    ->where('id_role', $id_role)
+                    ->where('id_menu', $id_menu)
+                    ->first();
 
             if (!$access) {
                 throw new ErrorResponse(type: 'Unauthorized', message: 'Anda tidak memiliki akses.', statusCode: 403);
             }
-            return $next($request);
-        } else {
-            return $next($request);
         }
+        return $next($request);
     }
 }

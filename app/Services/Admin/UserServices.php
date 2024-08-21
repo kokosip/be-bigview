@@ -44,10 +44,10 @@ class UserServices {
         
         $dataRole = [];
         $dataRole['nama_role'] = $data['name'];
-        $dataRole['level'] = 1;
         $id_role = $this->roleRepositories->insertGetRoleId($dataRole);
 
         $data['id_role'] = $id_role;
+        $data['level'] = 1;
         $result = $this->userRepositories->insertUser($data);
         unset($result["password"]);
 
@@ -90,28 +90,24 @@ class UserServices {
         return $result;
     }
 
-    public function addSubAdmin($data) {
+    public function addSubAdmin($data, $id_admin) {
         $data["password"] = Hash::make('user123');
 
         $dataUser = array_diff_key($data, array_flip(['menu_access']));
 
         $dataRole = [];
         $dataRole['nama_role'] = $data['nama_role'];
-        $dataRole['level'] = 2;
         $id_role = $this->roleRepositories->insertGetRoleId($dataRole);
 
         unset($dataUser['nama_role']);
         $dataUser['id_role'] = $id_role;
         $result = $this->userRepositories->insertUser($dataUser);
 
+        $admin_role = $this->userRepositories->getUserRole($id_admin);
+
         if (isset($data['menu_access'])) {
             $dataMenu = $data['menu_access'];
-            foreach ($dataMenu as $id) {
-                $accessMenu = [];
-                $accessMenu['id_role'] = $id_role;
-                $accessMenu['id_menu'] = $id;
-                $this->menuRepositories->addRoleMenu($accessMenu); 
-            }
+            $this->menuRepositories->editSubadminMenu($dataMenu, $id_role, $admin_role);
         }
         return $result;
     }

@@ -14,11 +14,13 @@ class UsecaseController extends Controller
     use ApiResponse;
     protected $usecaseService;
     protected $user_id;
+    protected $id_usecase;
 
     public function __construct(UsecaseServices $usecaseService)
     {
         $this->usecaseService = $usecaseService;
         $this->user_id = Auth::user()->id_user ?? null;
+        $this->id_usecase = Auth::user()->id_usecase ?? null;
     }
 
     public function listUsecase(Request $request){
@@ -49,29 +51,11 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function addUsecaseCustom(Request $request){
+    public function addUsecase(Request $request) {
         $validator = Validator::make($request->all(), [
             'name_usecase' => 'required',
-            'deskripsi' => 'required',
-            'base_color1' => 'required',
-            'base_color2' => 'required',
-            'base_color3' => 'required',
-            'base_color4' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->validationResponse($validator);
-        }
-        [$govern, $message] = $this->usecaseService->addUsecaseCustom($validator->validate());
-
-        return $this->successResponse(data: $govern, message: $message);
-    }
-
-    public function addUsecaseGovernment(Request $request){
-        $validator = Validator::make($request->all(), [
             'kode_provinsi' => 'required',
-            'kode_kab_kota' => 'nullable',
-            'name_usecase' => 'required',
+            'kode_kab_kota' =>  'required',
             'base_color1' => 'required',
             'base_color2' => 'required',
             'base_color3' => 'required',
@@ -81,16 +65,35 @@ class UsecaseController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-        [$govern, $message] = $this->usecaseService->addUsecaseGovernment($validator->validate());
+        [$usecase, $message] = $this->usecaseService->addUsecase($validator->validate());
 
-        return $this->successResponse(data: $govern, message: $message);
+        return $this->successResponse(data: $usecase, message: $message);
     }
 
-    public function updateUsecaseGovern(Request $request, $id_usecase){
+    public function addUsecaseProfile(Request $request, $id_usecase) {
         $validator = Validator::make($request->all(), [
+            'nama_pimpinan' => 'required',
+            'jabatan_pimpinan' => 'required',
+            'nama_wakil' => 'required',
+            'jabatan_wakil' => 'required',
+            'alamat' => 'sometimes',
+            'telepon' => 'sometimes',
+            'link_map' => 'sometimes'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+        [$profile, $message] = $this->usecaseService->addUsecaseProfile($validator->validate(), $id_usecase);
+
+        return $this->successResponse(data: $profile, message: $message);
+    }
+
+    public function updateUsecase(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'name_usecase' => 'required',
             'kode_provinsi' => 'required',
-            'kode_kab_kota' => 'nullable',
-            'name_usecase' => 'required',
+            'kode_kab_kota' =>  'required',
             'base_color1' => 'required',
             'base_color2' => 'required',
             'base_color3' => 'required',
@@ -100,39 +103,80 @@ class UsecaseController extends Controller
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
+        [$profile, $message] = $this->usecaseService->updateUsecase($validator->validate(), $id_usecase);
 
-        [$govern, $usecase, $message] = $this->usecaseService->updateUsecaseGovern($validator->validate(), $id_usecase);
-
-        return $this->successResponse(data: $govern, metadata: $usecase, message: $message);
+        return $this->successResponse(data: $profile, message: $message);
     }
 
-    public function updateUsecaseCustom(Request $request, $id_usecase){
+    public function updateUsecaseProfile(Request $request, $id_usecase) {
         $validator = Validator::make($request->all(), [
-            'name_usecase' => 'required',
-            'deskripsi' => 'required',
-            'base_color1' => 'required',
-            'base_color2' => 'required',
-            'base_color3' => 'required',
-            'base_color4' => 'required',
+            'nama_pimpinan' => 'required',
+            'jabatan_pimpinan' => 'required',
+            'nama_wakil' =>  'required',
+            'jabatan_wakil' => 'required',
+            'alamat' => 'required',
+            'telepon' => 'required',
+            'link_map' => 'required',
         ]);
 
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-        [$custom, $usecase, $message] = $this->usecaseService->updateUsecaseCustom($validator->validate(), $id_usecase);
+        [$profile, $message] = $this->usecaseService->updateUsecaseProfile($validator->validate(), $id_usecase);
 
-        return $this->successResponse(data: $custom, metadata: $usecase, message: $message);
+        return $this->successResponse(data: $profile, message: $message);
     }
 
-    public function deleteUsecaseGovernment($id_usecase){
-        $message = $this->usecaseService->deleteUsecaseGovern($id_usecase);
+    public function deleteUsecase($id_usecase) {
+        $message = $this->usecaseService->deleteUsecase($id_usecase);
         return $this->successResponse(message: $message);
     }
 
-    public function deleteUsecaseCustom($id_usecase){
-        $message = $this->usecaseService->deleteUsecaseCustom($id_usecase);
-
+    public function deleteUsecaseProfile($id_usecase) {
+        $message = $this->usecaseService->deleteUsecaseProfile($id_usecase);
         return $this->successResponse(message: $message);
+    }
+
+    public function getAllPolygon() {
+        $data = $this->usecaseService->getAllPolygon();
+        return $this->successResponse(data: $data);
+    }
+
+    public function uploadPolygon(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required',
+            'polygon' => 'required|file|mimetypes:application/json'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        [$polygon, $message] = $this->usecaseService->uploadPolygon($validator->validate());
+        return $this->successResponse(data: $polygon, message: $message);
+    }
+
+    public function updateUsecasePolygon(Request $request, $id_usecase) {
+        $validator = Validator::make($request->all(), [
+            'id_polygon' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $message = $this->usecaseService->updateUsecasePolygon($validator->validate(), $id_usecase);
+        return $this->successResponse(message: $message);
+    }
+
+    public function getUsecasePolygon($id_usecase) {
+        $data = $this->usecaseService->getUsecasePolygon($id_usecase);
+        return $this->successResponse(data: $data);
+    }
+
+    public function getUserPolygon() {
+        $data = $this->usecaseService->getUsecasePolygon($this->id_usecase);
+        return $this->successResponse(data: $data);
     }
 
     public function uploadLogo(Request $request, $id_usecase){

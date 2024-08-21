@@ -6,6 +6,7 @@ use App\Exceptions\ErrorResponse;
 use Exception;
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
 trait FileStorage
@@ -26,7 +27,7 @@ trait FileStorage
             ]);
 
             $bucket = env('MINIO_BUCKET');
-            $key = "{$params['dir']}/{$params['type']}_{$params['name_usecase']}_{$idUsecase}.{$file->extension()}";
+            $key = "usecase/{$params['dir']}/{$params['type']}_{$params['name_usecase']}_{$idUsecase}.{$file->extension()}";
 
             $contentType = mime_content_type($file->getPathname());
     
@@ -45,6 +46,44 @@ trait FileStorage
         }
     }
 
+    public function uploadJson($data, $params) {
+        try {
+            $s3Client = new S3Client([
+                'version' => env('MINIO_VERSION', 'latest'),
+                'region'  => env('MINIO_REGION', 'us-east-1'),
+                'endpoint' => env('MINIO_ENDPOINT'),
+                'use_path_style_endpoint' => true,
+                'credentials' => [
+                    'key'    => env('MINIO_KEY'),
+                    'secret' => env('MINIO_SECRET'),
+                ],
+            ]);
+    
+            $bucket = env('MINIO_BUCKET');
+            $key = "usecase/{$params['dir']}/{$params['type']}_{$params['nama']}.json";
+    
+            $result = $s3Client->putObject([
+                'Bucket' => $bucket,
+                'Key'    => $key,
+                'SourceFile' => $data->getPathname(),
+                'ContentType' => 'application/json',
+                'ContentDisposition' => 'inline',
+            ]);
+    
+            return $key;
+        } catch (AwsException $e) {
+            throw new ErrorResponse(
+                type: 'AWS Server Error', 
+                message: 'Pengunggahan file tidak berhasil. Mohon coba lagi nanti'
+            );
+        } catch (Exception $err) {
+            throw new ErrorResponse(
+                type: 'Internal Server Error', 
+                message: 'Pengunggahan file tidak berhasil. Mohon coba lagi nanti'
+            );
+        }
+    }
+    
     public function getFile($path){
         if(empty($path)) $path = 'image_not_found.png';
 
@@ -78,7 +117,6 @@ trait FileStorage
         }
         return $url;
     }
-
     public function deleteFile($path){
         try {
             $s3Client = new S3Client([

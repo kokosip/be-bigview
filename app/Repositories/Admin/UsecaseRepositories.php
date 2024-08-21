@@ -11,7 +11,7 @@ class UsecaseRepositories {
     public function getListUsecase($search, $perPage){
         try {
             $db = DB::table('usecase')
-                ->select('id_usecase', 'name_usecase', 'type_dashboard', 'base_color1', 'base_color2', 'base_color3', 'base_color4');
+                ->select('id_usecase', 'name_usecase', 'base_color1', 'base_color2', 'base_color3', 'base_color4');
 
             if($search){
                 $db = $db->whereRaw("name_usecase LIKE ? ", ["%{$search}%"]);
@@ -36,21 +36,16 @@ class UsecaseRepositories {
         }
     }
 
-    public function addUsecaseGovernment($data){
+    public function getGeoData($data){
         try {
-            $result = DB::table('usecase_government')->insert($data);
-            return $result;
-        } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan usecase government.');
-        }
-    }
+            $result = DB::table('geo_provinsi_kota')
+                    ->where('kode_provinsi', $data['kode_provinsi'])
+                    ->where('kode_kab_kota', $data['kode_kab_kota'])
+                    ->first();
 
-    public function addUsecaseCustom($data){
-        try {
-            $result = DB::table('usecase_custom')->insert($data);
             return $result;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan usecase custom.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil data geografi.');
         }
     }
 
@@ -66,51 +61,70 @@ class UsecaseRepositories {
     public function updateUsecase($data, $id_usecase){
         try {
             $db = DB::table('usecase')
-            ->where('id_usecase', $id_usecase)
-            ->update($data);
-
+                ->where('id_usecase', $id_usecase)
+                ->update($data);
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal Memperbarui Usecase.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui usecase.');
         }
     }
 
-    public function updateUsecaseGovern($data, $id_usecase){
+    public function addUsecaseProfile($data) {
         try {
-            $db = DB::table('usecase_government')
+            $db = DB::table('profile')
+                ->insert($data);
+
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan usecase profile.');
+        }
+    }
+
+    public function updateUsecaseProfile($data, $id_usecase){
+        try {
+            $db = DB::table('profile')
                 ->where('id_usecase', $id_usecase)
                 ->update($data);
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal Memperbarui Usecase Government.');
-        }
-    }
-
-    public function updateUsecaseCustom($data, $id_usecase){
-        try {
-            $db = DB::table('usecase_custom')
-            ->where('id_usecase', $id_usecase)
-            ->update($data);
-
-            return $db;
-        } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal Memperbarui Usecase Custom.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui profile usecase.');
         }
     }
 
     public function getUsecaseById($id_usecase){
         try {
             $db = DB::table('usecase as u')
-                ->leftJoin('usecase_government as ug', 'u.id_usecase', '=', 'ug.id_usecase')
-                ->leftJoin('usecase_custom as uc', 'u.id_usecase', '=', 'uc.id_usecase')
-                ->selectRaw("u.*, ug.kode_provinsi, ug.kode_kab_kota, uc.deskripsi, u.pic_logo, ug.pic_leader, ug.pic_vice")
-                ->where('u.id_usecase', $id_usecase)
+                ->where('id_usecase', $id_usecase)
+                ->select('name_usecase', 'kode_provinsi', 'id_polygon','kode_kab_kota', 'base_color1', 'base_color2', 'base_color3', 'base_color4')
                 ->first();
 
             return $db;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil usecase.');
+        }
+    }
+
+    public function getAllPolygon() {
+        try {
+            $db = DB::table('polygon')
+                ->get();
+
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil polygon.');
+        }
+    }
+
+    public function getPolygon($id_polygon) {
+        try {
+            $db = DB::table('polygon')
+                ->where('id', $id_polygon)
+                ->first();
+
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil polygon.');
         }
     }
 
@@ -126,37 +140,31 @@ class UsecaseRepositories {
         }
     }
 
-    public function deleteUsecaseGovern($id_usecase){
+    public function deleteUsecaseProfile($id_usecase) {
         try {
-            $db = DB::table('usecase_government')
+            $db = DB::table('profile')
             ->where('id_usecase', $id_usecase)
             ->delete();
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapuse usecase government.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus profile usecase.');
         }
     }
 
-    public function deleteUsecaseCustom($id_usecase){
+    public function uploadPolygon($data) {
         try {
-            $db = DB::table('usecase_custom')
-            ->where('id_usecase', $id_usecase)
-            ->delete();
+            $db = DB::table('polygon')
+                ->insertGetId($data);
 
-            return $db;
+            $row = DB::table('polygon')
+                ->where('id', $db)
+                ->first();
+
+            return $row;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal menghapus usecase custom.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan polygon.');
         }
-    }
-
-    public function getPeriodeById($id_periode) {
-        $db = DB::table('periode')
-            ->select('id', 'start_year', 'end_year', 'id_usecase')
-            ->where('id', $id_periode)
-            ->first();
-
-        return $db;
     }
 
     public function addVisi($data) {
@@ -406,7 +414,7 @@ class UsecaseRepositories {
 
     public function getProvinsiKotaByIdUsecase($id_usecase) {
         try {
-            $db = DB::table('usecase_government as u')
+            $db = DB::table('usecase as u')
                 ->select(
                     'gpk.kode_provinsi_bps',
                     'gpk.kode_provinsi',
@@ -515,33 +523,38 @@ class UsecaseRepositories {
 
     public function findUseCase($id_usecase,$select=['*']){
 		$data = DB::table('usecase')
-                ->where('usecase.id_usecase', $id_usecase)
+                ->where('id_usecase', $id_usecase)
                 ->select($select)
-                ->leftJoin('usecase_government', 'usecase.id_usecase', '=', 'usecase_government.id_usecase')
-                ->select('usecase.*', 'usecase_government.address as alamat', 'usecase_government.phone as telepon', 'usecase_government.link_map')
                 ->first();
 
 		$nama_daerah='';
 
 		if($select[0]!='*' && in_array('kode_provinsi',$select) || $select[0]=='*'){
 			$prefix='Gubernur';
-            $data_government = DB::table('usecase_government')->where('id_usecase',$id_usecase)->first();
-			$daerah=DB::table('geo_provinsi_kota')->where('kode_kab_kota',$data_government->kode_kab_kota)->first();
+            $data_government = DB::table('profile')->where('id_usecase',$id_usecase)->first();
+			$daerah=DB::table('geo_provinsi_kota')->where('kode_kab_kota',$data->kode_kab_kota)->first();
+            $data->pic_logo = $data_government->pic_logo;
 
 			// $nama_daerah='Provinsi '.$daerah->nama_provinsi;
 			$nama_daerah=$daerah->nama_provinsi ?? '';
 			$nama_daerah_title=$daerah->nama_provinsi ?? '';
 
 			$data->level_usecase=1;
-			$data->center_lat=$daerah->lat ?? 0;
-			$data->center_lon=$daerah->lon ?? 0;
 
-			if($data_government->kode_kab_kota!=$data_government->kode_provinsi.'00'){
+            // temp fix untuk usecase dengan kolom 'lat', 'lon' yang masih null
+            if (is_null($data->lat)) {
+                $data->center_lat = 0;
+                $data->center_lon = 0;
+            }
+			$data->center_lat=$data->lat ?? 0;
+			$data->center_lon=$data->lon ?? 0;
+
+			if($data->kode_kab_kota!=$data->kode_provinsi.'00'){
 				$data->level_usecase=2;
 				$data->center_lat=(float)$daerah->lat;
 				$data->center_lon=(float)$daerah->lon;
 
-				$kako=DB::table('geo_provinsi_kota')->where('kode_kab_kota',$data_government->kode_kab_kota)->first();
+				$kako=DB::table('geo_provinsi_kota')->where('kode_kab_kota',$data->kode_kab_kota)->first();
 				$nama_daerah=$kako->nama_kab_kota ?? '';
 				$nama_kab_kota=explode(' ', $kako->nama_kab_kota);
 				$prefix='Bupati';

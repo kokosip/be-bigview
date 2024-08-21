@@ -454,6 +454,8 @@ class SosialKependudukanServices {
         }
         $rows = $this->sosialRepositories->getMapIPM($idUsecase, $params);
 
+        $output = [];
+
         foreach ($rows as $item) {
             $output[$item->city]["city"] = $item->city;
             $output[$item->city]["lat"] = $item->lat;
@@ -621,8 +623,12 @@ class SosialKependudukanServices {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
+        
         $rows = $this->sosialRepositories->getTahunJenisPekerjaan($idUsecase);
 
+        if ($rows->isEmpty()) {
+            return $rows;
+        }
         $response = $this->filterTahun($rows);
 
         return $response;
