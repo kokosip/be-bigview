@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/adminlogin', [AuthController::class, 'loginSuper']);
 
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

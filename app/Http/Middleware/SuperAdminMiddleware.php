@@ -17,7 +17,7 @@ class SuperAdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && (Auth::user()->level == 0)) {
+        if (Auth::guard('superadmin')->check()) {
             return $next($request);
         }
 
