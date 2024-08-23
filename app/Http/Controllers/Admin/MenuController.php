@@ -95,7 +95,7 @@ class MenuController extends Controller
         return $this->successResponse(data: $data, message: "Data Berhasil di Update");
     }
 
-    public function sortMenu(Request $request) {
+    public function sortMenu(Request $request, $id_role) {
         $validator = Validator::make($request->all(), [
             'menu_order' => 'required|array',
             'menu_order.*' => 'integer'
@@ -105,7 +105,7 @@ class MenuController extends Controller
             return $this->validationResponse($validator);
         }
 
-        $admin_info['id_role'] = $this->admin_role;
+        $admin_info['id_role'] = $id_role;
         $admin_info['id_usecase'] = $this->admin_usecase;
 
         $data = $this->menuService->sortMenu($validator->validated()['menu_order'], $admin_info);
