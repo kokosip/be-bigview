@@ -105,6 +105,19 @@ class UsecaseRepositories {
         }
     }
 
+    public function getUsecaseProfileById($id_usecase) {
+        try {
+            $db = DB::table('profile')
+                ->where('id_usecase', $id_usecase)
+                ->select('nama_usecase', 'nama_pimpinan', 'jabatan_pimpinan', 'nama_wakil', 'jabatan_wakil', 'pic_leader', 'pic_vice', 'alamat', 'telepon', 'pic_logo', 'link_map')
+                ->first();
+
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil usecase.');
+        }
+    }
+
     public function getAllPolygon() {
         try {
             $db = DB::table('polygon')

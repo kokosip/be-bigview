@@ -51,6 +51,24 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data);
     }
 
+    public function getUsecaseProfileById($id_usecase) {
+        $data = $this->usecaseService->getUsecaseProfileById($id_usecase);
+
+        return $this->successResponse(data: $data);
+    }
+
+    public function getUserUsecase() {
+        $data = $this->usecaseService->getUsecaseById($this->id_usecase);
+
+        return $this->successResponse(data: $data);
+    }
+
+    public function getUserProfile() {
+        $data = $this->usecaseService->getUsecaseProfileById($this->id_usecase);
+
+        return $this->successResponse(data: $data);
+    }
+
     public function addUsecase(Request $request) {
         $validator = Validator::make($request->all(), [
             'name_usecase' => 'required',
@@ -123,6 +141,25 @@ class UsecaseController extends Controller
             return $this->validationResponse($validator);
         }
         [$profile, $message] = $this->usecaseService->updateUsecaseProfile($validator->validate(), $id_usecase);
+
+        return $this->successResponse(data: $profile, message: $message);
+    }
+
+    public function updateUserProfile(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'nama_pimpinan' => 'required',
+            'jabatan_pimpinan' => 'required',
+            'nama_wakil' =>  'required',
+            'jabatan_wakil' => 'required',
+            'alamat' => 'required',
+            'telepon' => 'required',
+            'link_map' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+        [$profile, $message] = $this->usecaseService->updateUsecaseProfile($validator->validate(), $this->id_usecase);
 
         return $this->successResponse(data: $profile, message: $message);
     }
@@ -271,6 +308,22 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, message: $message);
     }
 
+    public function updateUserVisi(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'id_visi' => 'required|string',
+            'short_desc' => 'required|string',
+            'description' => 'sometimes|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+        [$data, $message] = $this->usecaseService->updateVisi($this->id_usecase, $validatedData);
+        return $this->successResponse(data: $data, message: $message);
+    }
+
     public function deleteVisi(Request $request, $id_usecase) {
 
         $validator = Validator::make($request->all(), [
@@ -298,6 +351,22 @@ class UsecaseController extends Controller
         $validatedData = $validator->validated();
 
         [$data, $metadata] = $this->usecaseService->getListVisi($id_usecase, $validatedData);
+
+        return $this->successResponse(data: $data, metadata: $metadata);
+    }
+    
+    public function listUserVisi(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'perPage' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        [$data, $metadata] = $this->usecaseService->getListVisi($this->id_usecase, $validatedData);
 
         return $this->successResponse(data: $data, metadata: $metadata);
     }
@@ -337,6 +406,24 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, message: $message);
     }
 
+    public function updateUserMisi(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'id_misi' => 'required|string',
+            'short_desc' => 'required|string',
+            'description' => 'sometimes|string',
+            'urutan' => 'sometimes|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+
+        $validatedData = $validator->validated();
+
+        [$data, $message] = $this->usecaseService->updateMisi($this->id_usecase, $validatedData);
+        return $this->successResponse(data: $data, message: $message);
+    }
+
     public function deleteMisi(Request $request, $id_usecase) {
         $validator = Validator::make($request->all(), [
             'id_misi' => 'required|string',
@@ -361,6 +448,18 @@ class UsecaseController extends Controller
             return $this->validationResponse($validator);
         }
         [$data, $metadata] = $this->usecaseService->getListMisi($id_usecase, $validator->validated());
+        return $this->successResponse(data: $data, metadata: $metadata);
+    }
+
+    public function listUserMisi(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'perPage' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+        [$data, $metadata] = $this->usecaseService->getListMisi($this->id_usecase, $validator->validated());
         return $this->successResponse(data: $data, metadata: $metadata);
     }
 

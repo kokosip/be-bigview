@@ -202,6 +202,16 @@ class UsecaseServices {
         }
     }
 
+    public function getUsecaseProfileById($id_usecase) {
+        $result = $this->usecaseRepositories->getUsecaseProfileById($id_usecase);
+
+        if($result){
+            return $result;
+        } else {
+            throw new ErrorResponse(type: 'Not Found', message: 'Profile tidak ditemukan', statusCode: 404);
+        }
+    }
+
     public function setLogo($idUsecase, $file){
         $data = $this->getUsecaseById($idUsecase);
         if (!$data){
