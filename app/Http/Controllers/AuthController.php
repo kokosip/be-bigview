@@ -37,15 +37,15 @@ class AuthController extends Controller
             $responseBody = json_decode($response->body());
 
             if (!$responseBody->success) {
-                throw new ErrorResponse(type: 'Unauthorized', message:"reCaptcha gagal.", statusCode: 400);
+                throw new ErrorResponse(type: 'Unauthorized', message: "reCaptcha gagal.", statusCode: 400);
             }
         }
         $credentials = $validator->validate();
         if (!$token = Auth::attempt([
             'username' => $credentials['username'],
-            'password'=> $credentials['password'],
+            'password' => $credentials['password'],
         ])) {
-            throw new ErrorResponse(type: 'Unauthorized', message:"username atau password tidak sesuai", statusCode: 400);
+            throw new ErrorResponse(type: 'Unauthorized', message: "username atau password tidak sesuai", statusCode: 400);
         }
 
         Auth::factory()->getTTL() * 60 * 8;
@@ -58,7 +58,8 @@ class AuthController extends Controller
         return $this->successResponse($response);
     }
 
-    public function loginSuper(Request $request) {
+    public function loginSuper(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'username' => 'required|string',
             'password' => 'required',
@@ -81,19 +82,19 @@ class AuthController extends Controller
             $responseBody = json_decode($response->body());
 
             if (!$responseBody->success) {
-                throw new ErrorResponse(type: 'Unauthorized', message:"reCaptcha gagal.", statusCode: 400);
+                throw new ErrorResponse(type: 'Unauthorized', message: "reCaptcha gagal.", statusCode: 400);
             }
         }
         $credentials = $validator->validate();
         if (!$token = Auth::guard('superadmin')->attempt([
             'username' => $credentials['username'],
-            'password'=> $credentials['password'],
+            'password' => $credentials['password'],
         ])) {
-            throw new ErrorResponse(type: 'Unauthorized', message:"username atau password tidak sesuai", statusCode: 400);
+            throw new ErrorResponse(type: 'Unauthorized', message: "username atau password tidak sesuai", statusCode: 400);
         }
 
         Auth::factory()->getTTL() * 60 * 8;
-        $user = Auth::user();
+        $user = Auth::guard('superadmin')->user();
 
         $response = [
             'user' => $user,
