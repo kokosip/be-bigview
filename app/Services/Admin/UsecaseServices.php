@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\DB;
 use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\Storage;
 
-class UsecaseServices {
+class UsecaseServices
+{
 
     use FileStorage;
     use ApiResponse;
@@ -20,7 +21,8 @@ class UsecaseServices {
         $this->usecaseRepositories = $usecaseRepositories;
     }
 
-    public function getListUsecase($search, $perPage){
+    public function getListUsecase($search, $perPage)
+    {
         $rows = $this->usecaseRepositories->getListUsecase($search, $perPage);
 
         if ($rows->isEmpty()) {
@@ -37,35 +39,38 @@ class UsecaseServices {
         return [$rows->items(), $pagination];
     }
 
-    public function getListNameUsecase(){
+    public function getListNameUsecase()
+    {
         $rows = $this->usecaseRepositories->getListNameUsecase();
 
         if ($rows->isEmpty()) {
-          throw new ErrorResponse(type:"Not Found", message:"Data tabel kosong",statusCode:404);
+            throw new ErrorResponse(type: "Not Found", message: "Data tabel kosong", statusCode: 404);
         }
 
         return $rows;
     }
 
-    public function addUsecase($data) {
+    public function addUsecase($data)
+    {
         $row_geo = $this->usecaseRepositories->getGeoData($data);
         if (is_null($row_geo)) {
-            throw new ErrorResponse(type:"Not Found", message:"Data geo tidak ditemukan.",statusCode:404);
+            throw new ErrorResponse(type: "Not Found", message: "Data geo tidak ditemukan.", statusCode: 404);
         }
-        
+
         $data['lat'] = $row_geo->lat;
         $data['lon'] = $row_geo->lon;
 
         $id_usecase = $this->usecaseRepositories->addUsecase($data);
         $message = 'Berhasil menambahkan usecase.';
-        
+
         return [$data, $message];
     }
 
-    public function addUsecaseProfile($data, $idUsecase) {
+    public function addUsecaseProfile($data, $idUsecase)
+    {
         $usecase = $this->getUsecaseById($idUsecase);
         if (!$usecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
 
         $data['nama_usecase'] = $usecase->name_usecase;
@@ -73,14 +78,15 @@ class UsecaseServices {
 
         $this->usecaseRepositories->addUsecaseProfile($data);
         $message = 'Berhasil menambahkan profile usecase.';
-        
+
         return [$data, $message];
     }
 
-    public function updateUsecase($data, $idUsecase) {
+    public function updateUsecase($data, $idUsecase)
+    {
         $usecase = $this->getUsecaseById($idUsecase);
         if (!$usecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
 
         $this->usecaseRepositories->updateUsecase($data, $idUsecase);
@@ -88,10 +94,11 @@ class UsecaseServices {
         return [$data, $message];
     }
 
-    public function updateUsecaseProfile($data, $idUsecase) {
+    public function updateUsecaseProfile($data, $idUsecase)
+    {
         $usecase = $this->getUsecaseById($idUsecase);
         if (!$usecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
 
         $this->usecaseRepositories->updateUsecaseProfile($data, $idUsecase);
@@ -99,10 +106,11 @@ class UsecaseServices {
         return [$data, $message];
     }
 
-    public function deleteUsecase($idUsecase) {
+    public function deleteUsecase($idUsecase)
+    {
         $usecase = $this->getUsecaseById($idUsecase);
         if (!$usecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
 
         $this->usecaseRepositories->deleteUsecase($idUsecase);
@@ -111,10 +119,11 @@ class UsecaseServices {
         return $message;
     }
 
-    public function deleteUsecaseProfile($idUsecase) {
+    public function deleteUsecaseProfile($idUsecase)
+    {
         $usecase = $this->getUsecaseById($idUsecase);
         if (!$usecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
 
         $this->usecaseRepositories->deleteUsecaseProfile($idUsecase);
@@ -123,7 +132,8 @@ class UsecaseServices {
         return $message;
     }
 
-    public function getAllPolygon() {
+    public function getAllPolygon()
+    {
         $rows = $this->usecaseRepositories->getAllPolygon();
 
         foreach ($rows as $row) {
@@ -136,7 +146,8 @@ class UsecaseServices {
         return $response;
     }
 
-    public function uploadPolygon($data) {
+    public function uploadPolygon($data)
+    {
         $params = [
             'nama' => strtolower(str_replace(' ', '', $data['nama'])),
             'type' => 'polygon',
@@ -153,10 +164,11 @@ class UsecaseServices {
         return [$polygon, $message];
     }
 
-    public function updateUsecasePolygon($data, $idUsecase) {
+    public function updateUsecasePolygon($data, $idUsecase)
+    {
         $usecase = $this->getUsecaseById($idUsecase);
-        if (!$usecase){
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+        if (!$usecase) {
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
 
         $this->usecaseRepositories->updateUsecase($data, $idUsecase);
@@ -165,14 +177,15 @@ class UsecaseServices {
         return $message;
     }
 
-    public function getUsecasePolygon($idUsecase) {
+    public function getUsecasePolygon($idUsecase)
+    {
         $usecase = $this->getUsecaseById($idUsecase);
-        if (!$usecase){
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+        if (!$usecase) {
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
         $id_polygon = $usecase->id_polygon;
         if (is_null($id_polygon)) {
-            throw new ErrorResponse(type:'Not Found', message:'Polygon tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Polygon tidak ditemukan.', statusCode: 404);
         }
         $data_polygon = $this->usecaseRepositories->getPolygon($id_polygon);
 
@@ -182,7 +195,8 @@ class UsecaseServices {
         return $data;
     }
 
-    public function updateLogoUsecase($data, $id_usecase){
+    public function updateLogoUsecase($data, $id_usecase)
+    {
         $pic_data = [
             "pic_logo" => $data,
         ];
@@ -192,30 +206,33 @@ class UsecaseServices {
         return [$result, $data];
     }
 
-    public function getUsecaseById($id_usecase){
+    public function getUsecaseById($id_usecase)
+    {
         $result = $this->usecaseRepositories->getUsecaseById($id_usecase);
 
-        if($result){
+        if ($result) {
             return $result;
         } else {
             throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan', statusCode: 404);
         }
     }
 
-    public function getUsecaseProfileById($id_usecase) {
+    public function getUsecaseProfileById($id_usecase)
+    {
         $result = $this->usecaseRepositories->getUsecaseProfileById($id_usecase);
 
-        if($result){
+        if ($result) {
             return $result;
         } else {
             throw new ErrorResponse(type: 'Not Found', message: 'Profile tidak ditemukan', statusCode: 404);
         }
     }
 
-    public function setLogo($idUsecase, $file){
+    public function setLogo($idUsecase, $file)
+    {
         $data = $this->getUsecaseById($idUsecase);
-        if (!$data){
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+        if (!$data) {
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
         $name_usecase = str_replace(' ', '', strtolower($data->name_usecase));
 
@@ -235,16 +252,16 @@ class UsecaseServices {
             $this->deleteFile($oldImg);
         }
 
-        if($result[0] == 1){
+        if ($result[0] == 1) {
             if ($oldImg == $path) {
-                $message = 'Berhasil mengunggah Logo '.$data->name_usecase;
+                $message = 'Berhasil mengunggah Logo ' . $data->name_usecase;
             } else {
-                $message = 'Berhasil memperbarui Logo '.$data->name_usecase;
+                $message = 'Berhasil memperbarui Logo ' . $data->name_usecase;
             }
-        } else if($result[0] == 0){
-            $message = 'Berhasil memperbarui Logo '.$data->name_usecase;
+        } else if ($result[0] == 0) {
+            $message = 'Berhasil memperbarui Logo ' . $data->name_usecase;
         } else {
-            throw new ErrorResponse(type: 'Failed', message:'Gagal menambahkan Logo', statusCode:500);
+            throw new ErrorResponse(type: 'Failed', message: 'Gagal menambahkan Logo', statusCode: 500);
         }
 
         $data = [
@@ -255,11 +272,12 @@ class UsecaseServices {
         return [$message, $data];
     }
 
-    public function getLogo($idUsecase){
+    public function getLogo($idUsecase)
+    {
         $data = $this->getUsecaseById($idUsecase);
 
         if (!$data) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
 
         $path = $data->pic_logo;
@@ -273,18 +291,19 @@ class UsecaseServices {
         return $response;
     }
 
-    public function deleteLogo($idUsecase) {
+    public function deleteLogo($idUsecase)
+    {
         $data = $this->getUsecaseById($idUsecase);
         if (!$data) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
-    
+
         $path = $data->pic_logo;
-    
+
         $newData = [
             "pic_logo" => null,
         ];
-    
+
         if ($path == null) {
             $message = "Logo " . $data->name_usecase . " sudah null";
             $returnData = [
@@ -292,9 +311,9 @@ class UsecaseServices {
             ];
             return [$returnData, $message];
         }
-    
+
         $delete = $this->deleteFile($path);
-    
+
         if ($delete) {
             $result = $this->usecaseRepositories->updateUsecaseProfile($newData, $idUsecase);
             $message = "Logo " . $data->name_usecase . " berhasil dihapus";
@@ -302,52 +321,53 @@ class UsecaseServices {
                 'path' => null,
             ];
         } else {
-            throw new ErrorResponse(type: 'Failed', message:'Gagal Menghapus Logo.', statusCode:500);
+            throw new ErrorResponse(type: 'Failed', message: 'Gagal Menghapus Logo.', statusCode: 500);
         }
-    
+
         return [$returnData, $message];
     }
-    
 
-    public function setProfile($idUsecase, $files) {
+
+    public function setProfile($idUsecase, $files)
+    {
         $data = $this->getUsecaseById($idUsecase);
         if (!$data) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
         $name_usecase = str_replace(' ', '', strtolower($data->name_usecase));
         $uploadedFiles = [];
         $picFiles = [];
-    
+
         foreach (['leader', 'vice'] as $role) {
             if (isset($files[$role])) {
                 $picFiles[$role] = $files[$role];
             }
         }
-    
+
         foreach ($picFiles as $type => $file) {
             $path = $this->uploadFile($idUsecase, ['file' => $file], [
                 'name_usecase' => $name_usecase,
                 'type' => $type,
                 'dir' => 'profile',
             ]);
-    
+
             $uploadedFiles[] = [
                 'type' => $type,
                 'filename' => pathinfo($path, PATHINFO_BASENAME),
                 'path' => $path,
             ];
-    
+
             $kolom = 'pic_' . strtolower($type);
             $result = $this->updateProfile($path, $idUsecase, $kolom);
             $oldImg = $data->{$kolom};
-            
+
             if ($oldImg !== $path && $oldImg && strpos($oldImg, "profile/{$type}_{$name_usecase}_{$idUsecase}") === 0) {
                 $this->deleteFile($oldImg);
             }
-    
+
             $checkUpdate['S_' . $type] = $result[0];
         }
-    
+
         foreach (['leader_name' => 'leader', 'vice_name' => 'vice'] as $name_key => $type) {
             if (isset($files[$name_key])) {
                 $result = $this->updateProfile($files[$name_key], $idUsecase, $name_key);
@@ -359,7 +379,7 @@ class UsecaseServices {
                 ];
             }
         }
-    
+
         $successItems = [];
         foreach (['leader', 'vice'] as $role) {
             if (isset($checkUpdate['S_' . $role]) && ($checkUpdate['S_' . $role] == 0 || $checkUpdate['S_' . $role] == 1)) {
@@ -377,12 +397,13 @@ class UsecaseServices {
                 'path' => $file['path']
             ];
         }
-    
+
         return [$returnData, $message];
     }
-    
 
-    public function updateProfile($data, $idUsecase, $type) {
+
+    public function updateProfile($data, $idUsecase, $type)
+    {
         $pic_data = [
             $type => $data,
         ];
@@ -394,10 +415,11 @@ class UsecaseServices {
 
 
 
-    public function updateContact($idUsecase, $data) {
+    public function updateContact($idUsecase, $data)
+    {
         $dataUsecase = $this->getUsecaseById($idUsecase);
         if (!$dataUsecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
 
         $data['address'] = null;
@@ -427,10 +449,11 @@ class UsecaseServices {
         return [$data, $message];
     }
 
-    public function addVisi($idUsecase, $data) {
+    public function addVisi($idUsecase, $data)
+    {
         $dataUsecase = $this->getUsecaseById($idUsecase);
         if (!$dataUsecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
         $dataVisi = [
             'id_usecase' => $idUsecase,
@@ -445,10 +468,11 @@ class UsecaseServices {
         return [$result, $message];
     }
 
-    public function updateVisi($idUsecase, $data) {
+    public function updateVisi($idUsecase, $data)
+    {
         $dataUsecase = $this->getUsecaseById($idUsecase);
         if (!$dataUsecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
         $dataVisi = [
             'short_desc' => $data['short_desc'],
@@ -477,10 +501,11 @@ class UsecaseServices {
         return 'Visi berhasil dihapus';
     }
 
-    public function getListVisi($idUsecase, $data) {
+    public function getListVisi($idUsecase, $data)
+    {
         $dataUsecase = $this->getUsecaseById($idUsecase);
         if (!$dataUsecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
         $perPage = $data['perPage'];
         $rows = $this->usecaseRepositories->getListVisi($idUsecase, $perPage);
@@ -495,10 +520,11 @@ class UsecaseServices {
         return [$rows->items(), $pagination];
     }
 
-    public function addMisi($idUsecase, $data) {
+    public function addMisi($idUsecase, $data)
+    {
         $dataUsecase = $this->getUsecaseById($idUsecase);
         if (!$dataUsecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
         $dataMisi = [
             'id_usecase' => $idUsecase,
@@ -517,10 +543,11 @@ class UsecaseServices {
         return [$result, $message];
     }
 
-    public function updateMisi($idUsecase, $data) {
+    public function updateMisi($idUsecase, $data)
+    {
         $oldMisi = $this->usecaseRepositories->getMisiById($data['id_misi']);
         if (!$oldMisi) {
-            throw new ErrorResponse(type:'Not Found', message:'Misi tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Misi tidak ditemukan.', statusCode: 404);
         }
 
         $dataMisi = [
@@ -536,11 +563,12 @@ class UsecaseServices {
         return [$result, $message];
     }
 
-    public function deleteMisi($idUsecase, $data) {
+    public function deleteMisi($idUsecase, $data)
+    {
         $id = $data["id_misi"];
         $oldMisi = $this->usecaseRepositories->getMisiById($id);
         if (!$oldMisi) {
-            throw new ErrorResponse(type:'Not Found', message:'Misi tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Misi tidak ditemukan.', statusCode: 404);
         }
         $this->usecaseRepositories->deleteMisi($id);
 
@@ -548,10 +576,11 @@ class UsecaseServices {
         return $message;
     }
 
-    public function getListMisi($idUsecase, $data) {
+    public function getListMisi($idUsecase, $data)
+    {
         $dataUsecase = $this->getUsecaseById($idUsecase);
         if (!$dataUsecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
 
         $perPage = $data['perPage'];
@@ -567,10 +596,11 @@ class UsecaseServices {
         return [$rows->items(), $pagination];
     }
 
-    public function getListSektor($idUsecase) {
+    public function getListSektor($idUsecase)
+    {
         $dataUsecase = $this->getUsecaseById($idUsecase);
         if (!$dataUsecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
 
         $data = $this->usecaseRepositories->getListSektor($idUsecase);
@@ -586,29 +616,32 @@ class UsecaseServices {
         return $formatData;
     }
 
-    public function getListDataSektor($idUsecase, $data) {
+    public function getListDataSektor($idUsecase, $data)
+    {
         $dataUsecase = $this->getUsecaseById($idUsecase);
         if (!$dataUsecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
         $sektor = $data['sektor'];
         $data = $this->usecaseRepositories->getListDataSektor($idUsecase, $sektor);
-        
+
         return $data;
     }
 
-    public function getListIndikator($idUsecase, $data) {
+    public function getListIndikator($idUsecase, $data)
+    {
         $dataUsecase = $this->getUsecaseById($idUsecase);
         if (!$dataUsecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
         $sektor = $data['sektor'];
         $data = $this->usecaseRepositories->getListIndikator($idUsecase, $sektor);
-        
+
         return $data;
     }
 
-    public function getListSatuan() {
+    public function getListSatuan()
+    {
         $data = $this->usecaseRepositories->getListSatuan();
 
         $formatData = [];
@@ -621,10 +654,11 @@ class UsecaseServices {
         return $formatData;
     }
 
-    public function getListOpd($idUsecase, $data) {
+    public function getListOpd($idUsecase, $data)
+    {
         $dataUsecase = $this->getUsecaseById($idUsecase);
         if (!$dataUsecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
         $sektor = $data['sektor'];
         $data = $this->usecaseRepositories->getListOpd($idUsecase, $sektor);
@@ -636,14 +670,15 @@ class UsecaseServices {
                 'value' => $row->opd,
             ];
         }
-        
+
         return $formatData;
     }
 
-    public function addSektorIku($idUsecase, $data) {
+    public function addSektorIku($idUsecase, $data)
+    {
         $dataUsecase = $this->getUsecaseById($idUsecase);
         if (!$dataUsecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
         $provinsi_kota = $this->usecaseRepositories->getProvinsiKotaByIdUsecase($idUsecase);
         $dataSektorIku = [
@@ -668,11 +703,12 @@ class UsecaseServices {
         return [$result, $message];
     }
 
-    public function updateSektorIku($id_usecase, $data) {
+    public function updateSektorIku($id_usecase, $data)
+    {
         $idSektor = $data['id_sektor'];
         $oldSektorIku = $this->usecaseRepositories->getSektorIkuById($idSektor);
         if (!$oldSektorIku) {
-            throw new ErrorResponse(type:'Not Found', message:'Sektor IKU tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Sektor IKU tidak ditemukan.', statusCode: 404);
         }
         $dataSektorIku = [
             'indikator' => $data['indikator'],
@@ -688,18 +724,20 @@ class UsecaseServices {
         return [$result, $message];
     }
 
-    public function deleteSektorIku($id_usecase, $data) {
+    public function deleteSektorIku($id_usecase, $data)
+    {
         $idSektor = $data['id_sektor'];
         $oldSektorIku = $this->usecaseRepositories->getSektorIkuById($idSektor);
         if (!$oldSektorIku) {
-            throw new ErrorResponse(type:'Not Found', message:'Sektor IKU tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Sektor IKU tidak ditemukan.', statusCode: 404);
         }
         $result = $this->usecaseRepositories->deleteSektorIku($idSektor);
         $message = "Sektor IKU berhasil dihapus";
         return [$message];
     }
 
-    public function addIndikator($data) {
+    public function addIndikator($data)
+    {
         $sektor = $data['sektor'];
         $maxIkk = $this->usecaseRepositories->getMaxIkk($sektor);
 
@@ -716,13 +754,14 @@ class UsecaseServices {
         return [$result, $message];
     }
 
-    public function importSektorIku($idUsecase, $sektor, $data) {
+    public function importSektorIku($idUsecase, $sektor, $data)
+    {
         $dataUsecase = $this->getUsecaseById($idUsecase);
         if (!$dataUsecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
         if (count($data) < 2) {
-            throw new ErrorResponse(type:'Unsupported Media Type', message:'Format file tidak sesuai.', statusCode:415);
+            throw new ErrorResponse(type: 'Unsupported Media Type', message: 'Format file tidak sesuai.', statusCode: 415);
         }
         $provinsi_kota = $this->usecaseRepositories->getProvinsiKotaByIdUsecase($idUsecase);
 
@@ -755,10 +794,11 @@ class UsecaseServices {
         return [$result, $message];
     }
 
-    public function addSektor($data, $idUsecase) {
+    public function addSektor($data, $idUsecase)
+    {
         $dataUsecase = $this->getUsecaseById($idUsecase);
         if (!$dataUsecase) {
-            throw new ErrorResponse(type:'Not Found', message:'Usecase tidak ditemukan.', statusCode:404);
+            throw new ErrorResponse(type: 'Not Found', message: 'Usecase tidak ditemukan.', statusCode: 404);
         }
         if (!isset($data['link_iku'])) {
             $data['link_iku'] = null;
@@ -773,7 +813,8 @@ class UsecaseServices {
         return [$result, $message];
     }
 
-    public function getSektorById($idSektor) {
+    public function getSektorById($idSektor)
+    {
         $result = $this->usecaseRepositories->getSektorById($idSektor);
 
         if ($result) {
@@ -783,28 +824,32 @@ class UsecaseServices {
         }
     }
 
-    public function deleteSektor($idSektor) {
+    public function deleteSektor($idSektor)
+    {
         $this->getSektorById($idSektor);
 
         $this->usecaseRepositories->deleteSektor($idSektor);
         return 'Sektor berhasil dihapus.';
     }
 
-    public function updateSektor($data, $idSektor) {
+    public function updateSektor($data, $idSektor)
+    {
         $this->getSektorById($idSektor);
 
         $data = $this->usecaseRepositories->updateSektor($data, $idSektor);
         return [$data, 'Berhasil memperbarui data sektor.'];
     }
 
-    public function getSektorUsecase($idUsecase) {
+    public function getSektorUsecase($idUsecase)
+    {
         $this->getUsecaseById($idUsecase);
 
         $data = $this->usecaseRepositories->getSektorUsecase($idUsecase);
         return $data;
     }
 
-    public function editSubadminSektor($data, $idUsecase) {
+    public function editSubadminSektor($data, $idUsecase)
+    {
         $this->getUsecaseById($idUsecase);
         $access_sektor = $data['sektor_order'];
         $id_subadmin = $data['id_subadmin'];
@@ -814,18 +859,21 @@ class UsecaseServices {
         return $data;
     }
 
-    public function sortSektor($data, $idUsecase) {
+    public function sortSektor($data, $idUsecase)
+    {
         $sektorOrder = $data['sektor_order'];
         $data = $this->usecaseRepositories->sortSektor($sektorOrder, $idUsecase);
         return $data;
     }
 
-    public function getAssignedSektor($idUser) {
+    public function getAssignedSektor($idUser)
+    {
         $data = $this->usecaseRepositories->getAssignedSektor($idUser);
         return $data;
     }
 
-    public function updateAssignedSektor($data, $idSektor, $idUser) {
+    public function updateAssignedSektor($data, $idSektor, $idUser)
+    {
         $this->getSektorById($idSektor);
 
         $currentAssignedSektor = $this->usecaseRepositories->getAssignedSektor($idUser);
@@ -838,12 +886,10 @@ class UsecaseServices {
         }
 
         if (!$sectorFound) {
-            throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak memiliki akses untuk sektor ini.', statusCode:403);
+            throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak memiliki akses untuk sektor ini.', statusCode: 403);
         }
 
         $data = $this->usecaseRepositories->updateAssignedSektor($data, $idSektor);
         return [$data, 'Berhasil memperbarui data sektor.'];
     }
-
-
 }

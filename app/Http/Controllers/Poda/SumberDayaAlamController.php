@@ -23,13 +23,15 @@ class SumberDayaAlamController extends Controller
         $this->idUsecase = Auth::user()->id_usecase ?? null;
     }
 
-    public function listIndikator($subject){
-            $data = $this->sdaService->getListIndikator($this->idUsecase, $subject);
+    public function listIndikator($subject)
+    {
+        $data = $this->sdaService->getListIndikator($this->idUsecase, $subject);
 
         return $this->successResponse(data: $data);
     }
 
-    public function listJenis(Request $request, $subject){
+    public function listJenis(Request $request, $subject)
+    {
         $validator = Validator::make($request->all(), [
             'indikator' => 'required'
         ]);
@@ -42,20 +44,22 @@ class SumberDayaAlamController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function listTahun(Request $request, $subject){
-            $validator = Validator::make($request->all(), [
-                'indikator' => 'required'
-            ]);
-    
-            if ($validator->fails()) {
-                return $this->validationResponse($validator);
-            }
-            $data = $this->sdaService->getListTahun($this->idUsecase, $subject, $validator->validate());
+    public function listTahun(Request $request, $subject)
+    {
+        $validator = Validator::make($request->all(), [
+            'indikator' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationResponse($validator);
+        }
+        $data = $this->sdaService->getListTahun($this->idUsecase, $subject, $validator->validate());
 
         return $this->successResponse(data: $data);
     }
 
-    public function periodeSda(Request $request, $subject){
+    public function periodeSda(Request $request, $subject)
+    {
         $validator = Validator::make($request->all(), [
             'indikator' => 'required'
         ]);
@@ -68,7 +72,8 @@ class SumberDayaAlamController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function mapSda(Request $request, $subject){
+    public function mapSda(Request $request, $subject)
+    {
         $validator = Validator::make($request->all(), [
             'indikator' => 'required',
             'jenis' => 'required',
@@ -83,7 +88,8 @@ class SumberDayaAlamController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function barSda(Request $request, $subject){
+    public function barSda(Request $request, $subject)
+    {
         $validator = Validator::make($request->all(), [
             'indikator' => 'required',
             'jenis' => 'required',
@@ -98,7 +104,8 @@ class SumberDayaAlamController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function areaSda(Request $request, $subject){
+    public function areaSda(Request $request, $subject)
+    {
         $validator = Validator::make($request->all(), [
             'indikator' => 'required',
             'jenis' => 'required',
@@ -113,7 +120,8 @@ class SumberDayaAlamController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailSda(Request $request, $subject){
+    public function detailSda(Request $request, $subject)
+    {
         $validator = Validator::make($request->all(), [
             'indikator' => 'required',
             'jenis' => 'required',

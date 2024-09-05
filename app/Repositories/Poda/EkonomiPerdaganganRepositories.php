@@ -6,10 +6,12 @@ use App\Exceptions\ErrorResponse;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-class EkonomiPerdaganganRepositories {
+class EkonomiPerdaganganRepositories
+{
 
     // Start PAD
-    public function getAreaPad($idUsecase){
+    public function getAreaPad($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pad')
                 ->select('category', 'total as data')
@@ -22,7 +24,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getDetailPad($idUsecase){
+    public function getDetailPad($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pad_detail')
                 ->select('city as category', 'tahun as column', 'pad as data')
@@ -37,7 +40,8 @@ class EkonomiPerdaganganRepositories {
     // End PAD
 
     // Start Trend-Perdagangan
-    public function getPeriodeTrendPerdagangan($idUsecase){
+    public function getPeriodeTrendPerdagangan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_tren_perdagangan_filter_year')
                 ->select('minYear', 'maxYear')
@@ -50,7 +54,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getAreaTrendPerdagangan($idUsecase, $periode){
+    public function getAreaTrendPerdagangan($idUsecase, $periode)
+    {
         try {
             $tahun = explode('-', $periode['periode']);
 
@@ -69,7 +74,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getDetailTrendPerdagangan($idUsecase, $periode){
+    public function getDetailTrendPerdagangan($idUsecase, $periode)
+    {
         try {
             $tahun = explode('-', $periode['periode']);
 
@@ -90,7 +96,8 @@ class EkonomiPerdaganganRepositories {
     // End Trend-Perdagangan
 
     // Start Top Komoditas
-    public function getTahunKomoditas($idUsecase){
+    public function getTahunKomoditas($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_komoditas_perdagangan')->distinct()
                 ->where('id_usecase', $idUsecase)
@@ -103,7 +110,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getBarKomoditas($idUsecase, $tahun){
+    public function getBarKomoditas($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_eko_komoditas_perdagangan')
                 ->select('chart_categories', 'nilai as data')
@@ -119,7 +127,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getDetailKomoditas($idUsecase, $tahun){
+    public function getDetailKomoditas($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_eko_komoditas_perdagangan')
                 ->selectRaw("chart_categories as category, 'Nominal' as `column`, nilai as data")
@@ -137,7 +146,8 @@ class EkonomiPerdaganganRepositories {
     // End Top Komoditas
 
     // Start PAD KabKot
-    public function getTahunPadKabKota($idUsecase){
+    public function getTahunPadKabKota($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pad')->distinct()
                 ->where('id_usecase', $idUsecase)
@@ -150,7 +160,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getBarPadKabKota($idUsecase, $tahun){
+    public function getBarPadKabKota($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_eko_pad_detail')
                 ->select('city as chart_categories', 'pad as data')
@@ -166,7 +177,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getDetailPadKabKota($idUsecase, $tahun){
+    public function getDetailPadKabKota($idUsecase, $tahun)
+    {
         try {
             $startYear = $tahun['tahun'] - 2;
 
@@ -185,7 +197,8 @@ class EkonomiPerdaganganRepositories {
     // End PAD KabKot
 
     // Start Inflasi dan IHK
-    public function getMonthPeriodeInflasi($idUsecase){
+    public function getMonthPeriodeInflasi($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_inflasi_ihk_filter_year')
                 ->select('bulan', 'tahun', 'id_bulan')
@@ -199,7 +212,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getNamaDaerahInflasi($idUsecase){
+    public function getNamaDaerahInflasi($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_inflasi_ihk_filter_kabkot')->distinct()
                 ->where('id_usecase', $idUsecase)
@@ -212,7 +226,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getTahunInflasi($idUsecase){
+    public function getTahunInflasi($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_inflasi_ihk_filter_year')->distinct()
                 ->where('id_usecase', $idUsecase)
@@ -225,7 +240,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getBulanInflasi($idUsecase, $tahun){
+    public function getBulanInflasi($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_eko_inflasi_ihk_filter_year')
                 ->where('id_usecase', $idUsecase)
@@ -239,7 +255,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getMapInflasi($idUsecase, $params){
+    public function getMapInflasi($idUsecase, $params)
+    {
         try {
             $db = DB::table('mart_poda_eko_inflasi_ihk_map')
                 ->select('jenis', 'city', 'lat', 'lon', 'merged_data as data')
@@ -254,12 +271,13 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getDualChartInflasi($idUsecase, $params){
+    public function getDualChartInflasi($idUsecase, $params)
+    {
         try {
             $datemonth = explode('-', $params['periode']);
 
-            $startDateMonth = substr($datemonth[0], 0, 4)."-".substr($datemonth[0], 4)."-01";
-            $endDateMonth = substr($datemonth[1], 0, 4)."-".substr($datemonth[1], 4)."-02";
+            $startDateMonth = substr($datemonth[0], 0, 4) . "-" . substr($datemonth[0], 4) . "-01";
+            $endDateMonth = substr($datemonth[1], 0, 4) . "-" . substr($datemonth[1], 4) . "-02";
 
             $db = DB::table('mart_poda_eko_inflasi_ihk_chart')
                 ->select('name as jenis', 'bulan', 'tahun', 'value as data')
@@ -274,7 +292,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getDetailInflasi($idUsecase, $tahun){
+    public function getDetailInflasi($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_eko_inflasi_ihk_detail')
                 ->selectRaw("kab_kota as category, CONCAT(bulan, ' ', tahun) as category2, jenis as `column`, merge_data as data")
@@ -291,7 +310,8 @@ class EkonomiPerdaganganRepositories {
     // End Inflasi dan IHK
 
     // Start PDRB
-    public function getTahunPDRB($idUsecase){
+    public function getTahunPDRB($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pdrb_filter_year')->distinct()
                 ->where('id_usecase', $idUsecase)
@@ -304,7 +324,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getKategoriPDRB($idUsecase){
+    public function getKategoriPDRB($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pdrb_filter_kategori')->distinct()
                 ->where('id_usecase', $idUsecase)
@@ -316,7 +337,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getSektorPDRB($idUsecase){
+    public function getSektorPDRB($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pdrb_filter_sektor')->distinct()
                 ->where('id_usecase', $idUsecase)
@@ -328,7 +350,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getCardPDRB($idUsecase, $params){
+    public function getCardPDRB($idUsecase, $params)
+    {
         try {
             $db = DB::table('mart_poda_eko_pdrb_card')
                 ->where('id_usecase', $idUsecase)
@@ -344,7 +367,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getBarPDRB($idUsecase, $params){
+    public function getBarPDRB($idUsecase, $params)
+    {
         try {
             $db = DB::table('mart_poda_eko_pdrb_bar_chart')
                 ->select('chart_categories', 'chart_series as data')
@@ -362,7 +386,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function checkAreaPDRB($idUsecase){
+    public function checkAreaPDRB($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pdrb_area_chart')->distinct()
                 ->select('chart_categories')
@@ -375,13 +400,14 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getAreaPDRB($idUsecase, $params){
+    public function getAreaPDRB($idUsecase, $params)
+    {
         try {
             $category = $this->checkAreaPDRB($idUsecase);
 
             $db = DB::table('mart_poda_eko_pdrb_area_chart');
 
-            if($category->chart_categories == 'Tahun'){
+            if ($category->chart_categories == 'Tahun') {
                 $db = $db->select('tahun as category', 'chart_series as data')
                     ->whereBetween('tahun', [$params['tahun'] - 4, $params['tahun']]);
             } else {
@@ -401,7 +427,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getDetailPDRB($idUsecase, $params){
+    public function getDetailPDRB($idUsecase, $params)
+    {
         try {
             $db = DB::table('mart_poda_eko_pdrb_detail')
                 ->select('sektor as category', 'satuan as column', 'value as data')
@@ -420,7 +447,8 @@ class EkonomiPerdaganganRepositories {
     // End PDRB
 
     // Start Pariwisata
-    public function getIndikatorPariwisata($idUsecase){
+    public function getIndikatorPariwisata($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_filter_indikator')
                 ->where('id_usecase', $idUsecase)
@@ -433,7 +461,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getNamaDaerahPariwisataDTW($idUsecase){
+    public function getNamaDaerahPariwisataDTW($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_dayatarik_filter_kabkot')->distinct()
                 ->where('id_usecase', $idUsecase)
@@ -445,7 +474,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getPeriodePariwisataDTW($idUsecase){
+    public function getPeriodePariwisataDTW($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_dayatarik_filter_tahun')
                 ->selectRaw('min(tahun) as minYear, max(tahun) as maxYear')
@@ -458,7 +488,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getTahunPariwisataDTW($idUsecase){
+    public function getTahunPariwisataDTW($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_dayatarik_filter_map')->distinct()
                 ->where('id_usecase', $idUsecase)
@@ -471,7 +502,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getMapPariwisataDTW($idUsecase, $tahun){
+    public function getMapPariwisataDTW($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_dayatarik_map')
                 ->select('city', 'lat', 'lon', 'daya_tarik_wisata as data')
@@ -485,7 +517,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getLinePariwisataDTW($idUsecase, $params){
+    public function getLinePariwisataDTW($idUsecase, $params)
+    {
         try {
             $periode = explode('-', $params['periode']);
             $startYear = $periode[0];
@@ -505,7 +538,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getDetailPariwisataDTW($idUsecase, $periode){
+    public function getDetailPariwisataDTW($idUsecase, $periode)
+    {
         try {
             $tahun = explode('-', $periode['periode']);
 
@@ -525,7 +559,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getPeriodePariwisataHotel($idUsecase){
+    public function getPeriodePariwisataHotel($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_hotel_filter_tahun')
                 ->selectRaw('min(tahun) as minYear, max(tahun) as maxYear')
@@ -538,7 +573,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getTahunPariwisataHotel($idUsecase){
+    public function getTahunPariwisataHotel($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_hotel_filter_tahun')
                 ->where('id_usecase', $idUsecase)
@@ -551,7 +587,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getMapPariwisataHotel($idUsecase, $tahun){
+    public function getMapPariwisataHotel($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_hotel_map')
                 ->select('vervar as city', 'turvar as jenis', 'lat', 'lon', 'value as data')
@@ -566,7 +603,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getBarPariwisataHotel($idUsecase, $tahun){
+    public function getBarPariwisataHotel($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_hotel_column_chart')
                 ->selectRaw('jenis_hotel as chart_categories, sum(value) as data')
@@ -582,7 +620,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getLinePariwisataHotel($idUsecase, $periode){
+    public function getLinePariwisataHotel($idUsecase, $periode)
+    {
         try {
             $tahun = explode('-', $periode['periode']);
 
@@ -603,7 +642,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getDetailPariwisataHotel($idUsecase, $tahun){
+    public function getDetailPariwisataHotel($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_hotel_detail_table')
                 ->select('kab_kota as category', 'turvar as column', 'value as data')
@@ -618,7 +658,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getPeriodePariwisataWisatawan($idUsecase){
+    public function getPeriodePariwisataWisatawan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_wisatawan_card')
                 ->selectRaw('min(tahun) as minYear, max(tahun) as maxYear')
@@ -631,7 +672,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getCardPariwisataWisatawan($idUsecase, $periode){
+    public function getCardPariwisataWisatawan($idUsecase, $periode)
+    {
         try {
             $tahun = explode('-', $periode['periode']);
 
@@ -651,7 +693,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getLinePariwisataWisatawan($idUsecase, $periode){
+    public function getLinePariwisataWisatawan($idUsecase, $periode)
+    {
         try {
             $tahun = explode('-', $periode['periode']);
 
@@ -672,7 +715,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getDetailPariwisataWisatawan($idUsecase, $periode){
+    public function getDetailPariwisataWisatawan($idUsecase, $periode)
+    {
         try {
             $tahun = explode('-', $periode['periode']);
 
@@ -699,7 +743,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getTahunPariwisataTPK($idUsecase){
+    public function getTahunPariwisataTPK($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_tpk_filter_tahun')
                 ->where('id_usecase', $idUsecase)
@@ -712,10 +757,11 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getBulanPariwisataTPK($idUsecase, $tahun){
+    public function getBulanPariwisataTPK($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_tpk_detail')
-                ->select('bulan','id_bulan')->distinct()
+                ->select('bulan', 'id_bulan')->distinct()
                 ->where('id_usecase', $idUsecase)
                 ->where('tahun', $tahun)
                 ->orderBy('id_bulan', 'asc')
@@ -727,7 +773,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getCardPariwisataTPK($idUsecase, $params){
+    public function getCardPariwisataTPK($idUsecase, $params)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_tpk_detail')
                 ->selectRaw('AVG(value) as data')
@@ -744,7 +791,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getLinePariwisataTPK($idUsecase, $tahun){
+    public function getLinePariwisataTPK($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_tpk_detail')
                 ->selectRaw('id_bulan, bulan as category, hotel_bintang as jenis, sum(value) as data')
@@ -761,7 +809,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getDetailPariwisataTPK($idUsecase, $tahun){
+    public function getDetailPariwisataTPK($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_tpk_detail')
                 ->select('hotel_bintang as category', 'bulan as column', 'value as data')
@@ -776,7 +825,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getPeriodePariwisataResto($idUsecase){
+    public function getPeriodePariwisataResto($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_restoran_filter_tahun')
                 ->selectRaw('min(tahun) as minYear, max(tahun) as maxYear')
@@ -789,7 +839,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getTahunPariwisataResto($idUsecase){
+    public function getTahunPariwisataResto($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_restoran_filter_tahun')
                 ->where('id_usecase', $idUsecase)
@@ -802,7 +853,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getNamaDaerahPariwisataResto($idUsecase){
+    public function getNamaDaerahPariwisataResto($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_restoran_filter_kabkot')->distinct()
                 ->where('id_usecase', $idUsecase)
@@ -814,7 +866,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getMapPariwisataResto($idUsecase, $tahun){
+    public function getMapPariwisataResto($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_eko_pariwisata_restoran_map')
                 ->select('city', 'lat', 'lon', 'value as data')
@@ -828,7 +881,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getLinePariwisataResto($idUsecase, $params){
+    public function getLinePariwisataResto($idUsecase, $params)
+    {
         try {
             $periode = explode('-', $params['periode']);
             $startYear = $periode[0];
@@ -848,7 +902,8 @@ class EkonomiPerdaganganRepositories {
         }
     }
 
-    public function getDetailPariwisataResto($idUsecase, $periode){
+    public function getDetailPariwisataResto($idUsecase, $periode)
+    {
         try {
             $tahun = explode('-', $periode['periode']);
 

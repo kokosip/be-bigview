@@ -6,9 +6,11 @@ use App\Exceptions\ErrorResponse;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-class SumberDayaAlamRepositories {
+class SumberDayaAlamRepositories
+{
 
-    public function getListIndikator($idUsecase, $subject){
+    public function getListIndikator($idUsecase, $subject)
+    {
         try {
             $db = DB::table('mart_poda_sda_list_indikator')
                 ->where('id_usecase', $idUsecase)
@@ -21,7 +23,8 @@ class SumberDayaAlamRepositories {
         }
     }
 
-    public function getListJenis($idUsecase, $subject, $indikator){
+    public function getListJenis($idUsecase, $subject, $indikator)
+    {
         try {
             $db = DB::table('mart_poda_sda_list_jenis')
                 ->where('id_usecase', $idUsecase)
@@ -31,11 +34,12 @@ class SumberDayaAlamRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil list jenis.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list jenis.');
         }
     }
 
-    public function getListTahun($idUsecase, $subject, $indikator){
+    public function getListTahun($idUsecase, $subject, $indikator)
+    {
         try {
             $db = DB::table('mart_poda_sda_filer_tahun')
                 ->where('id_usecase', $idUsecase)
@@ -46,11 +50,12 @@ class SumberDayaAlamRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil list tahun.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list tahun.');
         }
     }
 
-    public function getPeriodeSda($idUsecase, $subject, $indikator){
+    public function getPeriodeSda($idUsecase, $subject, $indikator)
+    {
         try {
             $db = DB::table('mart_poda_sda_filer_periode')
                 ->select('minYear', 'maxYear')
@@ -61,11 +66,12 @@ class SumberDayaAlamRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil periode SDA');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil periode SDA');
         }
     }
 
-    public function getMapSda($idUsecase, $subject, $params){
+    public function getMapSda($idUsecase, $subject, $params)
+    {
         try {
             $db = DB::table('mart_poda_sda_leaflet')
                 ->selectRaw("city, CAST(data as SIGNED) as data")
@@ -77,12 +83,13 @@ class SumberDayaAlamRepositories {
                 ->get();
 
             return $db;
-        } catch (Exception $e){
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil map SDA.');
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil map SDA.');
         }
     }
 
-    public function getBarSda($idUsecase, $subject, $params){
+    public function getBarSda($idUsecase, $subject, $params)
+    {
         try {
             $db = DB::table('mart_poda_sda_bar_chart')
                 ->select('chart_categories', 'data')
@@ -94,12 +101,13 @@ class SumberDayaAlamRepositories {
                 ->get();
 
             return $db;
-        } catch (Exception $e){
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil bar SDA.');
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil bar SDA.');
         }
     }
 
-    public function getAreaSda($idUsecase, $subject, $params){
+    public function getAreaSda($idUsecase, $subject, $params)
+    {
         try {
             $periode = explode('-', $params['periode']);
 
@@ -117,12 +125,13 @@ class SumberDayaAlamRepositories {
                 ->get();
 
             return $db;
-        } catch (Exception $e){
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil area SDA.');
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil area SDA.');
         }
     }
 
-    public function getDetailSda($idUsecase, $subject, $params){
+    public function getDetailSda($idUsecase, $subject, $params)
+    {
         try {
             $periode = explode('-', $params['periode']);
 
@@ -139,8 +148,8 @@ class SumberDayaAlamRepositories {
                 ->get();
 
             return $db;
-        } catch (Exception $e){
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil detail SDA.');
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil detail SDA.');
         }
     }
 }

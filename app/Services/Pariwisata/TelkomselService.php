@@ -18,7 +18,8 @@ class TelkomselService
         $this->usecaseRepositories = $usecaseRepositories;
     }
 
-    public function getTripMap($data, $id_usecase) {
+    public function getTripMap($data, $id_usecase)
+    {
         if (!isset($data['origin'])) {
             $data['origin'] = null;
         }
@@ -44,7 +45,8 @@ class TelkomselService
         return $response_final;
     }
 
-    public function getTopOrigin($data, $id_usecase) {
+    public function getTopOrigin($data, $id_usecase)
+    {
         if (!isset($data['origin'])) {
             $data['origin'] = null;
         }
@@ -68,7 +70,8 @@ class TelkomselService
         return $response;
     }
 
-    public function getTopDestination($data, $id_usecase) {
+    public function getTopDestination($data, $id_usecase)
+    {
         if (!isset($data['origin'])) {
             $data['origin'] = null;
         }
@@ -94,7 +97,8 @@ class TelkomselService
         return $response;
     }
 
-    public function getNumberOfTrips($data, $id_usecase) {
+    public function getNumberOfTrips($data, $id_usecase)
+    {
         if (!isset($data['kab_kota'])) {
             $data['kab_kota'] = null;
         }
@@ -118,7 +122,8 @@ class TelkomselService
         return $response;
     }
 
-    public function getNumberOfTripsOrigin($data, $id_usecase) {
+    public function getNumberOfTripsOrigin($data, $id_usecase)
+    {
         if (!isset($data['kab_kota'])) {
             $data['kab_kota'] = null;
         }
@@ -152,7 +157,8 @@ class TelkomselService
         return $response;
     }
 
-    public function getNumberOfTripsDestination($data, $id_usecase) {
+    public function getNumberOfTripsDestination($data, $id_usecase)
+    {
         if (!isset($data['kab_kota'])) {
             $data['kab_kota'] = null;
         }
@@ -189,7 +195,8 @@ class TelkomselService
         return $response;
     }
 
-    public function getMovementOfTrips($data, $id_usecase) {
+    public function getMovementOfTrips($data, $id_usecase)
+    {
         if (!isset($data['origin'])) {
             $data['origin'] = null;
         }
@@ -216,7 +223,8 @@ class TelkomselService
         return $response;
     }
 
-    public function getLengthOfStay($data, $id_usecase) {
+    public function getLengthOfStay($data, $id_usecase)
+    {
         if (!isset($data['origin'])) {
             $data['origin'] = null;
         }
@@ -244,7 +252,8 @@ class TelkomselService
         return $response;
     }
 
-    public function getMovementOfGender($data, $id_usecase) {
+    public function getMovementOfGender($data, $id_usecase)
+    {
         $rows = $this->telkomselRepositories->getMovementOfGender($id_usecase, $data);
 
         $total = $rows->sum('jumlah');
@@ -276,9 +285,10 @@ class TelkomselService
         return $response;
     }
 
-    public function getMovementOfAge($data, $id_usecase) {
+    public function getMovementOfAge($data, $id_usecase)
+    {
         $rows = $this->telkomselRepositories->getMovementOfAge($id_usecase, $data);
-        
+
         $categories = [];
         $data = [];
 
@@ -295,7 +305,8 @@ class TelkomselService
         return $response;
     }
 
-    public function getStatusSES($data, $id_usecase) {
+    public function getStatusSES($data, $id_usecase)
+    {
         if (!isset($data['origin'])) {
             $data['origin'] = null;
         }
@@ -316,8 +327,9 @@ class TelkomselService
 
         return $response;
     }
-    
-    public function getMatrixOrigin($data, $id_usecase) {
+
+    public function getMatrixOrigin($data, $id_usecase)
+    {
         $usecase = $this->usecaseRepositories->getUsecaseById($id_usecase);
         $kode_kab_kota = $usecase->kode_kab_kota;
         $name_usecase = $usecase->name_usecase;
@@ -352,7 +364,8 @@ class TelkomselService
         return $response;
     }
 
-    public function getJenisWisatawan($data, $id_usecase) {
+    public function getJenisWisatawan($data, $id_usecase)
+    {
         $data = $this->telkomselRepositories->getJenisWisatawan($id_usecase, $data);
 
         $response = [];
@@ -369,7 +382,8 @@ class TelkomselService
         return $response;
     }
 
-    public function getFilterProvinsi($id_usecase) {
+    public function getFilterProvinsi($id_usecase)
+    {
         $data = $this->telkomselRepositories->getFilterProvinsi($id_usecase);
 
         $idx = 0;
@@ -385,7 +399,8 @@ class TelkomselService
         return $data_kota;
     }
 
-    public function getFilterKabKota($data, $id_usecase) {
+    public function getFilterKabKota($data, $id_usecase)
+    {
         $data = $this->telkomselRepositories->getFilterKabKota($id_usecase, $data);
 
         $idx = 0;
@@ -401,7 +416,8 @@ class TelkomselService
         return $data_kota;
     }
 
-    public function getFilterTahun($id_usecase) {
+    public function getFilterTahun($id_usecase)
+    {
         $data = $this->telkomselRepositories->getFilterTahun($id_usecase);
 
         foreach ($data as $key => $value) {
@@ -416,7 +432,8 @@ class TelkomselService
         return $response;
     }
 
-    public function getFilterPeriode($id_usecase) {
+    public function getFilterPeriode($id_usecase)
+    {
         $data = $this->telkomselRepositories->getFilterPeriode($id_usecase);
 
         foreach ($data as $key => $value) {
@@ -432,9 +449,10 @@ class TelkomselService
         return $response;
     }
 
-    public function getMovementTripMap($data, $id_usecase) {
+    public function getMovementTripMap($data, $id_usecase)
+    {
         if (!isset($data['origin'])) {
-            $data['origin'] = null; 
+            $data['origin'] = null;
         }
         $data = $this->telkomselRepositories->getMovementTripMap($id_usecase, $data);
 
@@ -449,9 +467,10 @@ class TelkomselService
         return $data;
     }
 
-    public function getMovementHeatMap($data, $id_usecase) {
+    public function getMovementHeatMap($data, $id_usecase)
+    {
         if (!isset($data['origin'])) {
-            $data['origin'] = null; 
+            $data['origin'] = null;
         }
         $usecase = $this->usecaseRepositories->getUsecaseById($id_usecase);
 
@@ -466,7 +485,8 @@ class TelkomselService
         return $data;
     }
 
-    public function getFilterSingleYear($id_usecase) {
+    public function getFilterSingleYear($id_usecase)
+    {
         $rows = $this->telkomselRepositories->getFilterSingleYear($id_usecase);
         $years = [];
         foreach ($rows as $row) array_push($years, $row->tahun);
@@ -479,7 +499,8 @@ class TelkomselService
         return $data;
     }
 
-    public function getTrendJumlahPerjalanan($data, $id_usecase) {
+    public function getTrendJumlahPerjalanan($data, $id_usecase)
+    {
         if (!isset($data['parent_origin'])) {
             $data['parent_origin'] = null;
         }
@@ -510,7 +531,8 @@ class TelkomselService
         return $data;
     }
 
-    public function getFilterMonth($data, $id_usecase) {
+    public function getFilterMonth($data, $id_usecase)
+    {
         $rows = $this->telkomselRepositories->getFilterMonth($id_usecase, $data);
 
         $months = [
@@ -540,19 +562,21 @@ class TelkomselService
         return $data;
     }
 
-    public function getTempatWisata($id_usecase) {
+    public function getTempatWisata($id_usecase)
+    {
         $rows = $this->telkomselRepositories->getTempatWisata($id_usecase);
 
         foreach ($rows as &$row) {
             $row->tag = explode(",", $row->tag);
             $row->image = $this->getFile($row->image);
-            $row->image_google = 'https://drive.google.com/thumbnail?id='. $row->image_google. '&sz=w1000';
+            $row->image_google = 'https://drive.google.com/thumbnail?id=' . $row->image_google . '&sz=w1000';
         }
 
         return $rows;
     }
 
-    public function getFilterDestination($data, $id_usecase) {
+    public function getFilterDestination($data, $id_usecase)
+    {
         $usecase = $this->usecaseRepositories->getUsecaseById($id_usecase);
         $kode_kab_kota = $usecase->kode_kab_kota;
 
@@ -560,7 +584,8 @@ class TelkomselService
         return $data;
     }
 
-    public function getTrendWisataByLamaTinggal($data, $id_usecase) {
+    public function getTrendWisataByLamaTinggal($data, $id_usecase)
+    {
         if (!isset($data['destination'])) {
             $data['destination'] = null;
         }
@@ -568,7 +593,8 @@ class TelkomselService
         return $data;
     }
 
-    public function getJumlahWisatawan($data, $id_usecase) {
+    public function getJumlahWisatawan($data, $id_usecase)
+    {
         if (!isset($data['destination'])) {
             $data['destination'] = null;
         }
@@ -576,7 +602,8 @@ class TelkomselService
         return $data;
     }
 
-    public function getKelompokUsiaWisatawan($data, $id_usecase) {
+    public function getKelompokUsiaWisatawan($data, $id_usecase)
+    {
         if (!isset($data['destination'])) {
             $data['destination'] = null;
         }

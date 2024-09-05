@@ -23,10 +23,11 @@ class UsecaseController extends Controller
         $this->id_usecase = Auth::user()->id_usecase ?? null;
     }
 
-    public function listUsecase(Request $request){
+    public function listUsecase(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'search' => 'required',
-            'per_page'=> 'sometimes',
+            'per_page' => 'sometimes',
         ]);
 
         if ($validator->fails()) {
@@ -40,36 +41,42 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, metadata: $metadata);
     }
 
-    public function listNameUsecase(){
+    public function listNameUsecase()
+    {
         $data = $this->usecaseService->getListNameUsecase();
 
         return $this->successResponse(data: $data);
     }
-    public function getUsecaseById($id_usecase){
+    public function getUsecaseById($id_usecase)
+    {
         $data = $this->usecaseService->getUsecaseById($id_usecase);
 
         return $this->successResponse(data: $data);
     }
 
-    public function getUsecaseProfileById($id_usecase) {
+    public function getUsecaseProfileById($id_usecase)
+    {
         $data = $this->usecaseService->getUsecaseProfileById($id_usecase);
 
         return $this->successResponse(data: $data);
     }
 
-    public function getUserUsecase() {
+    public function getUserUsecase()
+    {
         $data = $this->usecaseService->getUsecaseById($this->id_usecase);
 
         return $this->successResponse(data: $data);
     }
 
-    public function getUserProfile() {
+    public function getUserProfile()
+    {
         $data = $this->usecaseService->getUsecaseProfileById($this->id_usecase);
 
         return $this->successResponse(data: $data);
     }
 
-    public function addUsecase(Request $request) {
+    public function addUsecase(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'name_usecase' => 'required',
             'kode_provinsi' => 'required',
@@ -88,7 +95,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $usecase, message: $message);
     }
 
-    public function addUsecaseProfile(Request $request, $id_usecase) {
+    public function addUsecaseProfile(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'nama_pimpinan' => 'required',
             'jabatan_pimpinan' => 'required',
@@ -107,7 +115,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $profile, message: $message);
     }
 
-    public function updateUsecase(Request $request, $id_usecase) {
+    public function updateUsecase(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'name_usecase' => 'required',
             'kode_provinsi' => 'required',
@@ -126,7 +135,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $profile, message: $message);
     }
 
-    public function updateUsecaseProfile(Request $request, $id_usecase) {
+    public function updateUsecaseProfile(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'nama_pimpinan' => 'required',
             'jabatan_pimpinan' => 'required',
@@ -145,7 +155,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $profile, message: $message);
     }
 
-    public function updateUserProfile(Request $request) {
+    public function updateUserProfile(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'nama_pimpinan' => 'required',
             'jabatan_pimpinan' => 'required',
@@ -164,22 +175,26 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $profile, message: $message);
     }
 
-    public function deleteUsecase($id_usecase) {
+    public function deleteUsecase($id_usecase)
+    {
         $message = $this->usecaseService->deleteUsecase($id_usecase);
         return $this->successResponse(message: $message);
     }
 
-    public function deleteUsecaseProfile($id_usecase) {
+    public function deleteUsecaseProfile($id_usecase)
+    {
         $message = $this->usecaseService->deleteUsecaseProfile($id_usecase);
         return $this->successResponse(message: $message);
     }
 
-    public function getAllPolygon() {
+    public function getAllPolygon()
+    {
         $data = $this->usecaseService->getAllPolygon();
         return $this->successResponse(data: $data);
     }
 
-    public function uploadPolygon(Request $request) {
+    public function uploadPolygon(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'nama' => 'required',
             'polygon' => 'required|file|mimetypes:application/json'
@@ -193,7 +208,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $polygon, message: $message);
     }
 
-    public function updateUsecasePolygon(Request $request, $id_usecase) {
+    public function updateUsecasePolygon(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'id_polygon' => 'required'
         ]);
@@ -206,17 +222,20 @@ class UsecaseController extends Controller
         return $this->successResponse(message: $message);
     }
 
-    public function getUsecasePolygon($id_usecase) {
+    public function getUsecasePolygon($id_usecase)
+    {
         $data = $this->usecaseService->getUsecasePolygon($id_usecase);
         return $this->successResponse(data: $data);
     }
 
-    public function getUserPolygon() {
+    public function getUserPolygon()
+    {
         $data = $this->usecaseService->getUsecasePolygon($this->id_usecase);
         return $this->successResponse(data: $data);
     }
 
-    public function uploadLogo(Request $request, $id_usecase){
+    public function uploadLogo(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'file' => 'required|file',
         ]);
@@ -228,18 +247,21 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function getLogo($id_usecase){
+    public function getLogo($id_usecase)
+    {
         $data = $this->usecaseService->getLogo($id_usecase);
 
         return $this->successResponse(data: $data);
     }
 
-    public function deleteLogo($id_usecase){
+    public function deleteLogo($id_usecase)
+    {
         [$data, $message] = $this->usecaseService->deleteLogo($id_usecase);
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function uploadProfilePimpinan(Request $request, $id_usecase) {
+    public function uploadProfilePimpinan(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'leader' => 'file',
             'vice' => 'file',
@@ -248,35 +270,37 @@ class UsecaseController extends Controller
         ], [
             'required' => 'At least one of Leader file, Vice file, Leader name, or Vice name is required.',
         ]);
-    
+
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-    
+
         $validatedData = $validator->validated();
-    
+
         [$data, $message] = $this->usecaseService->setProfile($id_usecase, $validatedData);
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function updateContact(Request $request, $id_usecase) {
+    public function updateContact(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'address' => 'sometimes|string',
             'phone' => 'sometimes|string',
             'link_map' => 'sometimes|string',
         ]);
-    
+
         if ($validator->fails()) {
             return $this->validationResponse($validator);
         }
-    
+
         $validatedData = $validator->validated();
-    
+
         [$data, $message] = $this->usecaseService->updateContact($id_usecase, $validatedData);
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function addVisi(Request $request, $id_usecase) {
+    public function addVisi(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'short_desc' => 'required|string',
             'description' => 'sometimes|string',
@@ -292,7 +316,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function updateVisi(Request $request, $id_usecase) {
+    public function updateVisi(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'id_visi' => 'required|string',
             'short_desc' => 'required|string',
@@ -308,7 +333,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function updateUserVisi(Request $request) {
+    public function updateUserVisi(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'id_visi' => 'required|string',
             'short_desc' => 'required|string',
@@ -324,7 +350,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function deleteVisi(Request $request, $id_usecase) {
+    public function deleteVisi(Request $request, $id_usecase)
+    {
 
         $validator = Validator::make($request->all(), [
             'id_visi' => 'required|string',
@@ -339,7 +366,8 @@ class UsecaseController extends Controller
         return $this->successResponse(message: $message);
     }
 
-    public function listVisi(Request $request, $id_usecase) {
+    public function listVisi(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'perPage' => 'required|string',
         ]);
@@ -354,8 +382,9 @@ class UsecaseController extends Controller
 
         return $this->successResponse(data: $data, metadata: $metadata);
     }
-    
-    public function listUserVisi(Request $request) {
+
+    public function listUserVisi(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'perPage' => 'required|string',
         ]);
@@ -371,7 +400,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, metadata: $metadata);
     }
 
-    public function addMisi(Request $request, $id_usecase) {
+    public function addMisi(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'short_desc' => 'required|string',
             'description' => 'sometimes|string',
@@ -388,7 +418,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function updateMisi(Request $request, $id_usecase) {
+    public function updateMisi(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'id_misi' => 'required|string',
             'short_desc' => 'required|string',
@@ -406,7 +437,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function updateUserMisi(Request $request) {
+    public function updateUserMisi(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'id_misi' => 'required|string',
             'short_desc' => 'required|string',
@@ -424,7 +456,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function deleteMisi(Request $request, $id_usecase) {
+    public function deleteMisi(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'id_misi' => 'required|string',
         ]);
@@ -439,7 +472,8 @@ class UsecaseController extends Controller
         return $this->successResponse(message: $message);
     }
 
-    public function listMisi(Request $request, $id_usecase) {
+    public function listMisi(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'perPage' => 'required|string',
         ]);
@@ -451,7 +485,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, metadata: $metadata);
     }
 
-    public function listUserMisi(Request $request) {
+    public function listUserMisi(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'perPage' => 'required|string',
         ]);
@@ -463,12 +498,14 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, metadata: $metadata);
     }
 
-    public function listSektor($id_usecase) {
+    public function listSektor($id_usecase)
+    {
         $data = $this->usecaseService->getListSektor($id_usecase);
         return $this->successResponse(data: $data);
     }
 
-    public function listDataSektor(Request $request, $id_usecase) {
+    public function listDataSektor(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'sektor' => 'required',
         ]);
@@ -480,7 +517,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function listIndikator(Request $request, $id_usecase) {
+    public function listIndikator(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'sektor' => 'required',
         ]);
@@ -492,12 +530,14 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function listSatuan() {
+    public function listSatuan()
+    {
         $data = $this->usecaseService->getListSatuan();
         return $this->successResponse(data: $data);
     }
 
-    public function listOpd(Request $request, $id_usecase) {
+    public function listOpd(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'sektor' => 'required',
         ]);
@@ -509,7 +549,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function addSektorIku(Request $request, $id_usecase) {
+    public function addSektorIku(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'indikator' => 'required',
             'satuan' => 'required',
@@ -527,7 +568,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function updateSektorIku(Request $request, $id_usecase) {
+    public function updateSektorIku(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'id_sektor' => 'required',
             'indikator' => 'required',
@@ -546,7 +588,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function deleteSektorIku(Request $request, $id_usecase) {
+    public function deleteSektorIku(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'id_sektor' => 'required',
         ]);
@@ -561,7 +604,8 @@ class UsecaseController extends Controller
         return $this->successResponse(message: $message);
     }
 
-    public function addIndikator(Request $request) {
+    public function addIndikator(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'sektor' => 'required',
             'indikator' => 'required',
@@ -573,11 +617,12 @@ class UsecaseController extends Controller
 
         $validatedData = $validator->validated();
 
-        [$data, $message] = $this->usecaseService-> addIndikator($validatedData);
+        [$data, $message] = $this->usecaseService->addIndikator($validatedData);
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function importSektorIKU(Request $request, $id_usecase) {
+    public function importSektorIKU(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'sektor' => 'required',
             'file' => 'required|file|mimes:csv,txt',
@@ -595,11 +640,12 @@ class UsecaseController extends Controller
         fclose($file_to_read);
         $sektor = $request->sektor;
 
-        [$data, $message] = $this->usecaseService-> importSektorIku($id_usecase, $sektor, $data);
+        [$data, $message] = $this->usecaseService->importSektorIku($id_usecase, $sektor, $data);
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function addSektor(Request $request, $id_usecase) {
+    public function addSektor(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'nama_sektor' => 'required',
             'state_iku' => 'required',
@@ -624,12 +670,14 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function deleteSektor($id_sektor) {
+    public function deleteSektor($id_sektor)
+    {
         $message = $this->usecaseService->deleteSektor($id_sektor);
         return $this->successResponse(message: $message);
     }
 
-    public function updateSektor(Request $request, $id_sektor) {
+    public function updateSektor(Request $request, $id_sektor)
+    {
         $validator = Validator::make($request->all(), [
             'nama_sektor' => 'required',
             'state_iku' => 'required',
@@ -654,12 +702,14 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data, message: $message);
     }
 
-    public function getSektorUsecase($id_usecase) {
-        $data= $this->usecaseService->getSektorUsecase($id_usecase);
+    public function getSektorUsecase($id_usecase)
+    {
+        $data = $this->usecaseService->getSektorUsecase($id_usecase);
         return $data;
     }
 
-    public function editSubadminSektor(Request $request, $id_usecase) {
+    public function editSubadminSektor(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'id_subadmin' => 'required',
             'sektor_order' => 'required|array',
@@ -674,7 +724,8 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function sortSektor(Request $request, $id_usecase) {
+    public function sortSektor(Request $request, $id_usecase)
+    {
         $validator = Validator::make($request->all(), [
             'sektor_order' => 'required|array',
             'sektor_order.*' => 'integer'
@@ -688,12 +739,14 @@ class UsecaseController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function getAssignedSektor() {
+    public function getAssignedSektor()
+    {
         $data = $this->usecaseService->getAssignedSektor($this->user_id);
         return $data;
     }
 
-    public function updateAssignedSektor(Request $request, $id_sektor) {
+    public function updateAssignedSektor(Request $request, $id_sektor)
+    {
         $validator = Validator::make($request->all(), [
             'nama_sektor' => 'required',
             'state_iku' => 'required',

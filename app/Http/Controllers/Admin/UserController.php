@@ -25,7 +25,8 @@ class UserController extends Controller
         $this->user_id_usecase = Auth::user()->id_usecase ?? null;
     }
 
-    public function listUser(Request $request){
+    public function listUser(Request $request)
+    {
         $search = $request->input("search");
         $perPage = is_null($request->input('per_page')) ? 10 : $request->input('per_page');
 
@@ -33,7 +34,8 @@ class UserController extends Controller
         return $this->successResponse(data: $data, metadata: $metadata);
     }
 
-    public function addUser(Request $request){
+    public function addUser(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'id_usecase' => 'required',
             'name' => 'required',
@@ -48,17 +50,20 @@ class UserController extends Controller
         return $this->successResponse(data: $data, message: "User Berhasil ditambahkan");
     }
 
-    public function getUserById($id_user){
+    public function getUserById($id_user)
+    {
         $data = $this->userService->getUserById($id_user);
         return $this->successResponse(data: $data);
     }
 
-    public function deleteUser($id_user){
+    public function deleteUser($id_user)
+    {
         $this->userService->deleteUser($id_user);
         return $this->successResponse(message: "Data Berhasil dihapus");
     }
 
-    public function updateUser(Request $request, $id_user){
+    public function updateUser(Request $request, $id_user)
+    {
         $validator = Validator::make($request->all(), [
             'id_usecase' => 'required',
             'name' => 'required',
@@ -74,7 +79,8 @@ class UserController extends Controller
         return $this->successResponse(data: $data, message: "User Berhasil diperbaharui");
     }
 
-    public function updateIsActived(Request $request, $id_user){
+    public function updateIsActived(Request $request, $id_user)
+    {
         $validator = Validator::make($request->all(), [
             'is_actived' => 'required'
         ]);
@@ -86,7 +92,8 @@ class UserController extends Controller
         return $this->successResponse(data: $data, message: "User Berhasil diperbaharui");
     }
 
-    public function addSubAdmin(Request $request){
+    public function addSubAdmin(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'username' => 'required',
@@ -109,10 +116,11 @@ class UserController extends Controller
         $data['id_usecase'] = $this->user_id_usecase;
 
         $data = $this->userService->addSubAdmin($data, $this->user_id);
-        return $this->successResponse(data: $data, message:'User berhasil ditambahkan.');
+        return $this->successResponse(data: $data, message: 'User berhasil ditambahkan.');
     }
 
-    public function userDetail() {
+    public function userDetail()
+    {
         $data = $this->userService->getUserDetail($this->user_id, $this->user_id_usecase);
         return $this->successResponse(data: $data);
     }

@@ -7,7 +7,8 @@ use App\Repositories\Admin\MasterRepositories;
 use App\Repositories\Poda\EkonomiPerdaganganRepositories;
 use App\Traits\FormatChart;
 
-class EkonomiPerdaganganServices {
+class EkonomiPerdaganganServices
+{
 
     use FormatChart;
     protected $ekonomiRepositories;
@@ -20,7 +21,8 @@ class EkonomiPerdaganganServices {
     }
 
     //Start Ekonomi PAD
-    public function getAreaPad($idUsecase){
+    public function getAreaPad($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -36,7 +38,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getDetailPad($idUsecase){
+    public function getDetailPad($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -53,7 +56,8 @@ class EkonomiPerdaganganServices {
     // End Ekonomi PAD
 
     // Start Trend Perdagangan
-    public function getPeriodeTrendPerdagangan($idUsecase){
+    public function getPeriodeTrendPerdagangan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -62,7 +66,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getAreaTrendPerdagangan($idUsecase, $periode){
+    public function getAreaTrendPerdagangan($idUsecase, $periode)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -78,7 +83,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getDetailTrendPerdagangan($idUsecase, $periode){
+    public function getDetailTrendPerdagangan($idUsecase, $periode)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -95,7 +101,8 @@ class EkonomiPerdaganganServices {
     // End Trend Perdagangan
 
     // Start Top Komoditas
-    public function getTahunKomoditas($idUsecase){
+    public function getTahunKomoditas($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -106,7 +113,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getBarKomoditas($idUsecase, $tahun){
+    public function getBarKomoditas($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -122,7 +130,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getDetailKomoditas($idUsecase, $tahun){
+    public function getDetailKomoditas($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -130,7 +139,7 @@ class EkonomiPerdaganganServices {
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
 
-        $title = "Top 10 Komoditas Perdagangan, ". $tahun['tahun'];
+        $title = "Top 10 Komoditas Perdagangan, " . $tahun['tahun'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
@@ -139,7 +148,8 @@ class EkonomiPerdaganganServices {
     // End Top Komoditas
 
     // Start Pad KabKota
-    public function getTahunPadKabkota($idUsecase){
+    public function getTahunPadKabkota($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -150,7 +160,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getBarPadKabkota($idUsecase, $tahun){
+    public function getBarPadKabkota($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -166,7 +177,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getDetailPadKabkota($idUsecase, $tahun){
+    public function getDetailPadKabkota($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -174,7 +186,7 @@ class EkonomiPerdaganganServices {
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
 
-        $title = "Top 10 Kab/Kota by PAD, ". $tahun['tahun'];
+        $title = "Top 10 Kab/Kota by PAD, " . $tahun['tahun'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
@@ -183,7 +195,8 @@ class EkonomiPerdaganganServices {
     // End Pad KabKota
 
     // Start Inflasi dan IHK
-    public function getMonthPeriodeInflasi($idUsecase){
+    public function getMonthPeriodeInflasi($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -194,7 +207,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getNamaDaerahInflasi($idUsecase){
+    public function getNamaDaerahInflasi($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -205,7 +219,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getTahunInflasi($idUsecase){
+    public function getTahunInflasi($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -216,7 +231,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getBulanInflasi($idUsecase, $tahun){
+    public function getBulanInflasi($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -227,7 +243,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getMapInflasi($idUsecase, $params){
+    public function getMapInflasi($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -249,7 +266,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getDualChartInflasi($idUsecase, $params){
+    public function getDualChartInflasi($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -268,7 +286,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getDetailInflasi($idUsecase, $tahun){
+    public function getDetailInflasi($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -276,7 +295,7 @@ class EkonomiPerdaganganServices {
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
 
-        $title = "Detail Inflasi dan IHK, ". $tahun['tahun'];
+        $title = "Detail Inflasi dan IHK, " . $tahun['tahun'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
@@ -285,7 +304,8 @@ class EkonomiPerdaganganServices {
     // End Inflasi dan IHK
 
     // Start PDRB
-    public function getTahunPDRB($idUsecase){
+    public function getTahunPDRB($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -296,7 +316,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getKategoriPDRB($idUsecase){
+    public function getKategoriPDRB($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -307,7 +328,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getSektorPDRB($idUsecase){
+    public function getSektorPDRB($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -323,7 +345,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getCardPDRB($idUsecase, $params){
+    public function getCardPDRB($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -334,7 +357,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getBarPDRB($idUsecase, $params){
+    public function getBarPDRB($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -357,13 +381,14 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getAreaPDRB($idUsecase, $params){
+    public function getAreaPDRB($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
         $rows = $this->ekonomiRepositories->getAreaPDRB($idUsecase, $params);
 
-        if($rows[1] == 'Tahun'){
+        if ($rows[1] == 'Tahun') {
             $x_axis_title = 'Tahun';
         } else {
             $x_axis_title = 'Triwulan';
@@ -379,7 +404,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getDetailPDRB($idUsecase, $params){
+    public function getDetailPDRB($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -387,7 +413,7 @@ class EkonomiPerdaganganServices {
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
 
-        $title = "Detail PDRB Berdasarkan ".$params['filter']. " - " .$params['jenis']." (Rupiah), ". $params['tahun'];
+        $title = "Detail PDRB Berdasarkan " . $params['filter'] . " - " . $params['jenis'] . " (Rupiah), " . $params['tahun'];
 
         $data = [];
         foreach ($rows as $value) {
@@ -402,7 +428,8 @@ class EkonomiPerdaganganServices {
     // End PDRB
 
     // Start Pariwisata
-    public function getIndikatorPariwisata($idUsecase){
+    public function getIndikatorPariwisata($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -413,7 +440,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getNamaDaerahPariwisataDTW($idUsecase){
+    public function getNamaDaerahPariwisataDTW($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -424,7 +452,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getPeriodePariwisataDTW($idUsecase){
+    public function getPeriodePariwisataDTW($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -435,7 +464,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getTahunPariwisataDTW($idUsecase){
+    public function getTahunPariwisataDTW($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -446,7 +476,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getMapPariwisataDTW($idUsecase, $tahun){
+    public function getMapPariwisataDTW($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -468,7 +499,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getLinePariwisataDTW($idUsecase, $params){
+    public function getLinePariwisataDTW($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -485,7 +517,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getDetailPariwisataDTW($idUsecase, $periode){
+    public function getDetailPariwisataDTW($idUsecase, $periode)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -493,14 +526,15 @@ class EkonomiPerdaganganServices {
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
 
-        $title = "Detail Daya Tarik Wisata, ". $periode['periode'];
+        $title = "Detail Daya Tarik Wisata, " . $periode['periode'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
         return $response;
     }
 
-    public function getPeriodePariwisataHotel($idUsecase){
+    public function getPeriodePariwisataHotel($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -511,7 +545,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getTahunPariwisataHotel($idUsecase){
+    public function getTahunPariwisataHotel($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -522,7 +557,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getMapPariwisataHotel($idUsecase, $tahun){
+    public function getMapPariwisataHotel($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -544,7 +580,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getBarPariwisataHotel($idUsecase, $tahun){
+    public function getBarPariwisataHotel($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -560,7 +597,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getLinePariwisataHotel($idUsecase, $periode){
+    public function getLinePariwisataHotel($idUsecase, $periode)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -576,7 +614,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getDetailPariwisataHotel($idUsecase, $tahun){
+    public function getDetailPariwisataHotel($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -584,14 +623,15 @@ class EkonomiPerdaganganServices {
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
 
-        $title = "Detail Jumlah Hotel, ". $tahun['tahun'];
+        $title = "Detail Jumlah Hotel, " . $tahun['tahun'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
         return $response;
     }
 
-    public function getPeriodePariwisataWisatawan($idUsecase){
+    public function getPeriodePariwisataWisatawan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -602,7 +642,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getCardPariwisataWisatawan($idUsecase, $periode){
+    public function getCardPariwisataWisatawan($idUsecase, $periode)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -614,8 +655,8 @@ class EkonomiPerdaganganServices {
         }
 
         $rows[] = [
-            "name"=> "Total",
-            "data"=> $total
+            "name" => "Total",
+            "data" => $total
         ];
 
         $response = $this->getCard($rows);
@@ -623,7 +664,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getLinePariwisataWisatawan($idUsecase, $periode){
+    public function getLinePariwisataWisatawan($idUsecase, $periode)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -639,20 +681,22 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getDetailPariwisataWisatawan($idUsecase, $periode){
+    public function getDetailPariwisataWisatawan($idUsecase, $periode)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
         $rows = $this->ekonomiRepositories->getDetailPariwisataWisatawan($idUsecase, $periode);
 
-        $title = "Detail Jumlah Wisatawan, ". $periode['periode'];
+        $title = "Detail Jumlah Wisatawan, " . $periode['periode'];
 
         $response = $this->detailTable($rows, "", $title, 'Tahun');
 
         return $response;
     }
 
-    public function getTahunPariwisataTPK($idUsecase){
+    public function getTahunPariwisataTPK($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -663,7 +707,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getBulanPariwisataTPK($idUsecase, $tahun){
+    public function getBulanPariwisataTPK($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -674,7 +719,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getCardPariwisataTPK($idUsecase, $params){
+    public function getCardPariwisataTPK($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -685,7 +731,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getLinePariwisataTPK($idUsecase, $tahun){
+    public function getLinePariwisataTPK($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -701,20 +748,22 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getDetailPariwisataTPK($idUsecase, $tahun){
+    public function getDetailPariwisataTPK($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
         $rows = $this->ekonomiRepositories->getDetailPariwisataTPK($idUsecase, $tahun);
 
-        $title = "Detail Tingkat Penghunian Kamar, ". $tahun['tahun'];
+        $title = "Detail Tingkat Penghunian Kamar, " . $tahun['tahun'];
 
         $response = $this->detailTable($rows, "", $title, "Jenis Hotel");
 
         return $response;
     }
 
-    public function getPeriodePariwisataResto($idUsecase){
+    public function getPeriodePariwisataResto($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -725,7 +774,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getTahunPariwisataResto($idUsecase){
+    public function getTahunPariwisataResto($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -736,7 +786,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getNamaDaerahPariwisataResto($idUsecase){
+    public function getNamaDaerahPariwisataResto($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -747,7 +798,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getMapPariwisataResto($idUsecase, $tahun){
+    public function getMapPariwisataResto($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -769,7 +821,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getLinePariwisataResto($idUsecase, $params){
+    public function getLinePariwisataResto($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -786,7 +839,8 @@ class EkonomiPerdaganganServices {
         return $response;
     }
 
-    public function getDetailPariwisataResto($idUsecase, $periode){
+    public function getDetailPariwisataResto($idUsecase, $periode)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -794,7 +848,7 @@ class EkonomiPerdaganganServices {
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
 
-        $title = "Detail Jumlah Restoran/Rumah Makan, ". $periode['periode'];
+        $title = "Detail Jumlah Restoran/Rumah Makan, " . $periode['periode'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 

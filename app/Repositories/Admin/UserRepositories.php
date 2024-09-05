@@ -6,16 +6,18 @@ use Exception;
 use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\DB;
 
-class UserRepositories {
+class UserRepositories
+{
 
-    public function getListUser($search, $perPage){
+    public function getListUser($search, $perPage)
+    {
         try {
             $db = DB::table('user as u')
                 ->leftJoin('role as r', 'u.id_role', '=', 'r.id')
                 ->select('u.id_usecase', 'name', 'username', 'r.nama_role');
 
-            if($search){
-                $db = $db->whereRaw("name LIKE ? or username LIKE ? 
+            if ($search) {
+                $db = $db->whereRaw("name LIKE ? or username LIKE ?
                     or name LIKE ? ", ["%{$search}%", "%{$search}%", "%{$search}%"]);
             }
 
@@ -23,10 +25,11 @@ class UserRepositories {
             return $result;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan list user.');
-        } 
+        }
     }
 
-    public function getUserById($id_user){
+    public function getUserById($id_user)
+    {
         try {
             $db = DB::table('user')
                 ->select('id_user', 'id_usecase', 'id_role', 'name', 'username')
@@ -36,19 +39,21 @@ class UserRepositories {
             return $db;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil user.');
-        } 
+        }
     }
 
-    public function insertUser($data) {
+    public function insertUser($data)
+    {
         try {
             DB::table('user')->insert($data);
             return $data;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan user.');
-        } 
+        }
     }
 
-    public function deleteUser($id_user) {
+    public function deleteUser($id_user)
+    {
         try {
             $db = DB::table('user')
                 ->where('id_user', $id_user)
@@ -57,10 +62,11 @@ class UserRepositories {
             return $db;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus user.');
-        } 
+        }
     }
 
-    public function updateMenu($data, $id_user) {
+    public function updateMenu($data, $id_user)
+    {
         try {
             $db = DB::table('user')
                 ->where('id_user', $id_user)
@@ -69,10 +75,11 @@ class UserRepositories {
             return $db;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui user.');
-        } 
+        }
     }
 
-    public function getUserRole($id_user) {
+    public function getUserRole($id_user)
+    {
         try {
             $db = DB::table('user')
                 ->where('id_user', $id_user)
@@ -81,11 +88,12 @@ class UserRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Gagal mengambil role user');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil role user');
         }
     }
 
-    public function getSubadmin($id_usecase) {
+    public function getSubadmin($id_usecase)
+    {
         try {
             $db = DB::table('user')
                 ->where('id_usecase', $id_usecase)
@@ -96,6 +104,6 @@ class UserRepositories {
             return $db;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil subadmin.');
-        } 
+        }
     }
 }

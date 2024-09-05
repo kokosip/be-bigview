@@ -6,7 +6,8 @@ use App\Repositories\Admin\RoleRepositories;
 use App\Exceptions\ErrorResponse;
 use Exception;
 
-class RoleServices {
+class RoleServices
+{
     protected $roleRepositories;
 
     public function __construct(RoleRepositories $roleRepositories)
@@ -14,12 +15,14 @@ class RoleServices {
         $this->roleRepositories = $roleRepositories;
     }
 
-    public function insertRole($data) {
+    public function insertRole($data)
+    {
         $this->roleRepositories->insertRole($data);
         return $data;
     }
 
-    public function getListRole($search, $perPage){
+    public function getListRole($search, $perPage)
+    {
         $rows = $this->roleRepositories->getListRole($search, $perPage);
 
         $pagination = [
@@ -35,31 +38,35 @@ class RoleServices {
         ];
     }
 
-    public function getListNameRole(){
+    public function getListNameRole()
+    {
         $rows = $this->roleRepositories->getListNameRole();
         return $rows;
     }
 
-    public function getRoleById($id_role){
+    public function getRoleById($id_role)
+    {
         $result = $this->roleRepositories->getRoleById($id_role);
-        if(!$result){
+        if (!$result) {
             throw new ErrorResponse(type: 'Not Found', message: 'Role tidak ditemukan', statusCode: 404);
         }
         return $result;
     }
 
-    public function deleteRole($id_role){
+    public function deleteRole($id_role)
+    {
         $oldRole = $this->getRoleById($id_role);
-        if(!$oldRole){
+        if (!$oldRole) {
             throw new ErrorResponse(type: 'Not Found', message: 'Role tidak ditemukan', statusCode: 404);
         }
         $result = $this->roleRepositories->deleteRole($id_role);
         return $result;
     }
 
-    public function updateRole($data, $id_role){
+    public function updateRole($data, $id_role)
+    {
         $oldRole = $this->getRoleById($id_role);
-        if(!$oldRole){
+        if (!$oldRole) {
             throw new ErrorResponse(type: 'Not Found', message: 'Role tidak ditemukan', statusCode: 404);
         }
         $result = $this->roleRepositories->updateRole($data, $id_role);

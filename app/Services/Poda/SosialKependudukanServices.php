@@ -8,7 +8,8 @@ use App\Traits\FormatChart;
 use App\Exceptions\ErrorResponse;
 use Exception;
 
-class SosialKependudukanServices {
+class SosialKependudukanServices
+{
 
     use FormatChart;
     protected $sosialRepositories;
@@ -22,8 +23,8 @@ class SosialKependudukanServices {
 
     public function getAxisTitleByIndikator($indikator)
     {
-        switch($indikator){
-            // IPM
+        switch ($indikator) {
+                // IPM
             case "Indeks Pembangunan Manusia":
                 $axis_title = "Indeks";
                 break;
@@ -40,7 +41,7 @@ class SosialKependudukanServices {
                 $axis_title = "Rata-rata";
                 break;
 
-            // Kemiskinan
+                // Kemiskinan
             case "Garis Kemiskinan":
                 $axis_title = "Garis Kemiskinan (Rp/Kapita/Bulan)";
                 break;
@@ -62,7 +63,8 @@ class SosialKependudukanServices {
     }
 
     // Start Kependudukan
-    public function getTahunJumlahPenduduk($idUsecase){
+    public function getTahunJumlahPenduduk($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -73,14 +75,15 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getMapJumlahPenduduk($idUsecase, $tahun){
+    public function getMapJumlahPenduduk($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
         $rows = $this->sosialRepositories->getMapJumlahPenduduk($idUsecase, $tahun);
 
         $data = [];
-        foreach($rows as $item){
+        foreach ($rows as $item) {
             $output[$item->city]["city"] = $item->city;
             $output[$item->city]["lat"] = $item->lat;
             $output[$item->city]["lon"] = $item->lon;
@@ -102,7 +105,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getPieJumlahPenduduk($idUsecase, $tahun){
+    public function getPieJumlahPenduduk($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -113,7 +117,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getBarJumlahPenduduk($idUsecase, $tahun){
+    public function getBarJumlahPenduduk($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -130,7 +135,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getDetailJumlahPenduduk($idUsecase, $tahun){
+    public function getDetailJumlahPenduduk($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -138,7 +144,7 @@ class SosialKependudukanServices {
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
 
-        $title = "Detail Jumlah Penduduk dan jenis Kelamin, ". $tahun['tahun'];
+        $title = "Detail Jumlah Penduduk dan jenis Kelamin, " . $tahun['tahun'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
@@ -147,7 +153,8 @@ class SosialKependudukanServices {
     // End Kependudukan
 
     // Start Rentang Usia
-    public function getTahunRentangUsia($idUsecase){
+    public function getTahunRentangUsia($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -158,7 +165,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getStackedBarRentangUsia($idUsecase, $tahun){
+    public function getStackedBarRentangUsia($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -169,7 +177,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getDetailRentangUsia($idUsecase, $tahun){
+    public function getDetailRentangUsia($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -180,7 +189,7 @@ class SosialKependudukanServices {
             throw new ErrorResponse(type: 'Not Found', message: 'Kode Kabupaten/Kota tidak ditemukan.', statusCode: 404);
         }
 
-        $title = "Detail Rentang Usia Menurut Jenis Kelamin, ". $tahun['tahun'];
+        $title = "Detail Rentang Usia Menurut Jenis Kelamin, " . $tahun['tahun'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
@@ -189,7 +198,8 @@ class SosialKependudukanServices {
     // End Rentang Usia
 
     // Start Laju Pertumbuhan
-    public function getPeriodeLaju($idUsecase){
+    public function getPeriodeLaju($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -200,7 +210,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getNamaDaerahLaju($idUsecase){
+    public function getNamaDaerahLaju($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -211,11 +222,12 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getDualAxesLaju($idUsecase, $params){
+    public function getDualAxesLaju($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
-        $rows = $this->sosialRepositories->getDualAxesLaju($idUsecase,$params);
+        $rows = $this->sosialRepositories->getDualAxesLaju($idUsecase, $params);
 
         $chart_type = "dual-axes";
 
@@ -230,7 +242,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getDetailLaju($idUsecase, $periode){
+    public function getDetailLaju($idUsecase, $periode)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -241,7 +254,7 @@ class SosialKependudukanServices {
             throw new ErrorResponse(type: 'Not Found', message: 'Kode Kabupaten/Kota tidak ditemukan.', statusCode: 404);
         }
 
-        $title = "Detail Laju Pertumbuhan Penduduk (%), ". $periode['periode'];
+        $title = "Detail Laju Pertumbuhan Penduduk (%), " . $periode['periode'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
@@ -250,7 +263,8 @@ class SosialKependudukanServices {
     // End Laju Pertumbuhan
 
     // Start Rasio Jenis Kelamin
-    public function getTahunRasio($idUsecase){
+    public function getTahunRasio($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -261,14 +275,15 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getMapRasio($idUsecase, $tahun){
+    public function getMapRasio($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
         $rows = $this->sosialRepositories->getMapRasio($idUsecase, $tahun);
 
         $data = [];
-        foreach($rows as $item){
+        foreach ($rows as $item) {
             $output[$item->city]["city"] = $item->city;
             $output[$item->city]["lat"] = $item->lat;
             $output[$item->city]["lon"] = $item->lon;
@@ -284,7 +299,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getBarRasio($idUsecase, $tahun){
+    public function getBarRasio($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -304,7 +320,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getDetailRasio($idUsecase, $tahun){
+    public function getDetailRasio($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -315,7 +332,7 @@ class SosialKependudukanServices {
             throw new ErrorResponse(type: 'Not Found', message: 'Kode Kabupaten/Kota tidak ditemukan.', statusCode: 404);
         }
 
-        $title = "Detail Rasio Jenis Kelamin, ". $tahun['tahun'];
+        $title = "Detail Rasio Jenis Kelamin, " . $tahun['tahun'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
@@ -324,7 +341,8 @@ class SosialKependudukanServices {
     // End Rasio Jenis Kelamin
 
     // Start Kepadatan Penduduk
-    public function getTahunKepadatan($idUsecase){
+    public function getTahunKepadatan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -335,13 +353,14 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getMapKepadatan($idUsecase, $tahun){
+    public function getMapKepadatan($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
         $rows = $this->sosialRepositories->getMapKepadatan($idUsecase, $tahun);
 
-        foreach($rows as $item){
+        foreach ($rows as $item) {
             $output[$item->city]["city"] = $item->city;
             $output[$item->city]["lat"] = $item->lat;
             $output[$item->city]["lon"] = $item->lon;
@@ -357,7 +376,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getBarKepadatan($idUsecase, $tahun){
+    public function getBarKepadatan($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -377,7 +397,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getDetailKepadatan($idUsecase, $tahun){
+    public function getDetailKepadatan($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -388,7 +409,7 @@ class SosialKependudukanServices {
             throw new ErrorResponse(type: 'Not Found', message: 'Kode Kabupaten/Kota tidak ditemukan.', statusCode: 404);
         }
 
-        $title = "Detail Kepadatan Penduduk, ". $tahun['tahun'];
+        $title = "Detail Kepadatan Penduduk, " . $tahun['tahun'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
@@ -397,7 +418,8 @@ class SosialKependudukanServices {
     // End Kepadatan Penduduk
 
     // Start IPM
-    public function getPeriodeIPM($idUsecase, $filter){
+    public function getPeriodeIPM($idUsecase, $filter)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -408,7 +430,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getNamaDaerahIPM($idUsecase, $filter){
+    public function getNamaDaerahIPM($idUsecase, $filter)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -419,7 +442,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getIndikatorIPM($idUsecase){
+    public function getIndikatorIPM($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -430,7 +454,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getAreaIPM($idUsecase, $params){
+    public function getAreaIPM($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -448,7 +473,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getMapIPM($idUsecase, $params){
+    public function getMapIPM($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -472,7 +498,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getDetailIPM($idUsecase, $params){
+    public function getDetailIPM($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -483,7 +510,7 @@ class SosialKependudukanServices {
             throw new ErrorResponse(type: 'Not Found', message: 'Kode Kabupaten/Kota tidak ditemukan.', statusCode: 404);
         }
 
-        $title = $params['filter'].", ". $params['periode'];
+        $title = $params['filter'] . ", " . $params['periode'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
@@ -492,7 +519,8 @@ class SosialKependudukanServices {
     // End IPM
 
     // Start Kemiskinan
-    public function getIndikatorKemiskinan($idUsecase){
+    public function getIndikatorKemiskinan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -503,7 +531,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getTahunKemiskinan($idUsecase){
+    public function getTahunKemiskinan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -514,7 +543,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getDaerahKemiskinan($idUsecase){
+    public function getDaerahKemiskinan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -525,7 +555,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getPeriodeKemiskinan($idUsecase, $filter){
+    public function getPeriodeKemiskinan($idUsecase, $filter)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -536,14 +567,15 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getMapKemiskinan($idUsecase, $params){
+    public function getMapKemiskinan($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
         $rows = $this->sosialRepositories->getMapKemiskinan($idUsecase, $params);
 
         $data = [];
-        foreach($rows as $item){
+        foreach ($rows as $item) {
             $output[$item->city]["city"] = $item->city;
             $output[$item->city]["lat"] = $item->lat;
             $output[$item->city]["lon"] = $item->lon;
@@ -559,7 +591,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getAreaKemiskinan($idUsecase, $params){
+    public function getAreaKemiskinan($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -577,7 +610,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getDetailKemiskinan($idUsecase, $params){
+    public function getDetailKemiskinan($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -588,7 +622,7 @@ class SosialKependudukanServices {
             throw new ErrorResponse(type: 'Not Found', message: 'Kode Kabupaten/Kota tidak ditemukan.', statusCode: 404);
         }
 
-        $title = "Detail Kemiskinan Penduduk, ". $params['tahun'];
+        $title = "Detail Kemiskinan Penduduk, " . $params['tahun'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
@@ -597,7 +631,8 @@ class SosialKependudukanServices {
     // End Kemiskinan
 
     // Start Pekerjaan dan Angkatan Kerja
-    public function getIndikatorPekerjaan($idUsecase){
+    public function getIndikatorPekerjaan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -608,7 +643,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getTahunPekerjaan($idUsecase){
+    public function getTahunPekerjaan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -619,11 +655,12 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getTahunJenisPekerjaan($idUsecase){
+    public function getTahunJenisPekerjaan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
-        
+
         $rows = $this->sosialRepositories->getTahunJenisPekerjaan($idUsecase);
 
         if ($rows->isEmpty()) {
@@ -634,7 +671,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getPeriodePekerjaan($idUsecase, $filter){
+    public function getPeriodePekerjaan($idUsecase, $filter)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -645,7 +683,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getBarJenisPekerjaan($idUsecase, $tahun){
+    public function getBarJenisPekerjaan($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -661,13 +700,14 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getMapPekerjaan($idUsecase, $params){
+    public function getMapPekerjaan($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
         $rows = $this->sosialRepositories->getMapPekerjaan($idUsecase, $params);
 
-        foreach($rows as $item){
+        foreach ($rows as $item) {
             $output[$item->city]["city"] = $item->city;
             $output[$item->city]["lat"] = $item->lat;
             $output[$item->city]["lon"] = $item->lon;
@@ -683,7 +723,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getLinePekerjaan($idUsecase, $params){
+    public function getLinePekerjaan($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -701,20 +742,22 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getDetailJenisPekerjaan($idUsecase, $params){
+    public function getDetailJenisPekerjaan($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
         $rows = $this->sosialRepositories->getDetailJenisPekerjaan($idUsecase, $params);
 
-        $title = "Detail Pekerjaan dan Angkatan Kerja berdasarkan Jenis Pekerjaan, ". $params['tahun'];
+        $title = "Detail Pekerjaan dan Angkatan Kerja berdasarkan Jenis Pekerjaan, " . $params['tahun'];
 
         $response = $this->detailTable($rows, "", $title, "Jenis Pekerjaan");
 
         return $response;
     }
 
-    public function getDetailPekerjaan($idUsecase, $params){
+    public function getDetailPekerjaan($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -725,7 +768,7 @@ class SosialKependudukanServices {
             throw new ErrorResponse(type: 'Not Found', message: 'Kode Kabupaten/Kota tidak ditemukan.', statusCode: 404);
         }
 
-        $title = "Detail Pekerjaan dan Angkatan Kerja berdasarkan Jenis Pekerjaan, ". $params['periode'];
+        $title = "Detail Pekerjaan dan Angkatan Kerja berdasarkan Jenis Pekerjaan, " . $params['periode'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
@@ -734,7 +777,8 @@ class SosialKependudukanServices {
     // End Pekerjaan dan Angkatan Kerja
 
     // Start Pendidikan
-    public function getTahunAjaranPendidikan($idUsecase){
+    public function getTahunAjaranPendidikan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -745,7 +789,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getTahunPendidikan($idUsecase){
+    public function getTahunPendidikan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -756,7 +801,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getJenjangPendidikan($idUsecase){
+    public function getJenjangPendidikan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -767,7 +813,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getIndikatorPendidikan($idUsecase){
+    public function getIndikatorPendidikan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -778,7 +825,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getBarPendidikan($idUsecase, $params){
+    public function getBarPendidikan($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -798,7 +846,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getBarJenjangPendidikan($idUsecase, $tahun){
+    public function getBarJenjangPendidikan($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -813,7 +862,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getMapPendidikan($idUsecase, $params){
+    public function getMapPendidikan($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -835,7 +885,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getDetailPendidikan($idUsecase, $tahun){
+    public function getDetailPendidikan($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -846,7 +897,7 @@ class SosialKependudukanServices {
             throw new ErrorResponse(type: 'Not Found', message: 'Kode Kabupaten/Kota tidak ditemukan.', statusCode: 404);
         }
 
-        $title = "Detail Jumlah Infrastruktur Pendidikan, ". $tahun['tahun'];
+        $title = "Detail Jumlah Infrastruktur Pendidikan, " . $tahun['tahun'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 
@@ -855,7 +906,8 @@ class SosialKependudukanServices {
     // End Pendidikan
 
     // Start Kesehatan
-    public function getTahunKesehatan($idUsecase){
+    public function getTahunKesehatan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -866,7 +918,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getIndikatorKesehatan($idUsecase){
+    public function getIndikatorKesehatan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -877,7 +930,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getPeriodeKesehatan($idUsecase){
+    public function getPeriodeKesehatan($idUsecase)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -888,7 +942,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getBarKesehatan($idUsecase, $params){
+    public function getBarKesehatan($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -908,7 +963,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getBarColumnKesehatan($idUsecase, $params){
+    public function getBarColumnKesehatan($idUsecase, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -921,7 +977,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getMapKesehatan($idUsecase, $tahun){
+    public function getMapKesehatan($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -943,7 +1000,8 @@ class SosialKependudukanServices {
         return $response;
     }
 
-    public function getDetailKesehatan($idUsecase, $tahun){
+    public function getDetailKesehatan($idUsecase, $tahun)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -954,7 +1012,7 @@ class SosialKependudukanServices {
             throw new ErrorResponse(type: 'Not Found', message: 'Kode Kabupaten/Kota tidak ditemukan.', statusCode: 404);
         }
 
-        $title = "Detail Jumlah Infrastruktur Kesehatan, ". $tahun['tahun'];
+        $title = "Detail Jumlah Infrastruktur Kesehatan, " . $tahun['tahun'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 

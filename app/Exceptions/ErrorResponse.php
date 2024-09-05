@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Exceptions;
+
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
@@ -34,7 +35,6 @@ class ErrorResponse extends Exception
                 'message' => $this->getMessage()
             ], $this->statusCode);
         }
-        
     }
 
     public function getType()
