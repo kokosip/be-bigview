@@ -11,7 +11,7 @@ class Authenticate extends Middleware
     /**
      * Get the path the user should be redirected to when they are not authenticated.
      */
-    protected function redirectTo(Request $request): ?string
+    protected function redirectTo(Request $request)
     {
         if (!$request->expectsJson()) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'Anda tidak memiliki akses untuk fitur ini.', statusCode: 403);

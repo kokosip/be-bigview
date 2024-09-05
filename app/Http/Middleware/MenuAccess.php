@@ -25,9 +25,9 @@ class MenuAccess
             $id_menu = $request->route('id');
 
             $access = DB::table('user_menu')
-                    ->where('id_role', $id_role)
-                    ->where('id_menu', $id_menu)
-                    ->first();
+                ->where('id_role', $id_role)
+                ->where('id_menu', $id_menu)
+                ->first();
 
             if (!$access) {
                 throw new ErrorResponse(type: 'Unauthorized', message: 'Anda tidak memiliki akses.', statusCode: 403);

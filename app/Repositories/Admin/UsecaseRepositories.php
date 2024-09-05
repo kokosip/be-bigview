@@ -6,14 +6,16 @@ use Exception;
 use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\DB;
 
-class UsecaseRepositories {
+class UsecaseRepositories
+{
 
-    public function getListUsecase($search, $perPage){
+    public function getListUsecase($search, $perPage)
+    {
         try {
             $db = DB::table('usecase')
                 ->select('id_usecase', 'name_usecase', 'base_color1', 'base_color2', 'base_color3', 'base_color4');
 
-            if($search){
+            if ($search) {
                 $db = $db->whereRaw("name_usecase LIKE ? ", ["%{$search}%"]);
             }
 
@@ -24,7 +26,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function getListNameUsecase(){
+    public function getListNameUsecase()
+    {
         try {
             $db = DB::table('usecase')
                 ->select('id_usecase', 'name_usecase')
@@ -36,12 +39,13 @@ class UsecaseRepositories {
         }
     }
 
-    public function getGeoData($data){
+    public function getGeoData($data)
+    {
         try {
             $result = DB::table('geo_provinsi_kota')
-                    ->where('kode_provinsi', $data['kode_provinsi'])
-                    ->where('kode_kab_kota', $data['kode_kab_kota'])
-                    ->first();
+                ->where('kode_provinsi', $data['kode_provinsi'])
+                ->where('kode_kab_kota', $data['kode_kab_kota'])
+                ->first();
 
             return $result;
         } catch (Exception $e) {
@@ -49,7 +53,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function addUsecase($data){
+    public function addUsecase($data)
+    {
         try {
             $result = DB::table('usecase')->insertGetId($data);
             return $result;
@@ -58,7 +63,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function updateUsecase($data, $id_usecase){
+    public function updateUsecase($data, $id_usecase)
+    {
         try {
             $db = DB::table('usecase')
                 ->where('id_usecase', $id_usecase)
@@ -69,7 +75,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function addUsecaseProfile($data) {
+    public function addUsecaseProfile($data)
+    {
         try {
             $db = DB::table('profile')
                 ->insert($data);
@@ -80,7 +87,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function updateUsecaseProfile($data, $id_usecase){
+    public function updateUsecaseProfile($data, $id_usecase)
+    {
         try {
             $db = DB::table('profile')
                 ->where('id_usecase', $id_usecase)
@@ -92,11 +100,12 @@ class UsecaseRepositories {
         }
     }
 
-    public function getUsecaseById($id_usecase){
+    public function getUsecaseById($id_usecase)
+    {
         try {
             $db = DB::table('usecase as u')
                 ->where('id_usecase', $id_usecase)
-                ->select('name_usecase', 'kode_provinsi', 'id_polygon','kode_kab_kota', 'base_color1', 'base_color2', 'base_color3', 'base_color4')
+                ->select('name_usecase', 'kode_provinsi', 'id_polygon', 'kode_kab_kota', 'base_color1', 'base_color2', 'base_color3', 'base_color4')
                 ->first();
 
             return $db;
@@ -105,7 +114,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function getUsecaseProfileById($id_usecase) {
+    public function getUsecaseProfileById($id_usecase)
+    {
         try {
             $db = DB::table('profile')
                 ->where('id_usecase', $id_usecase)
@@ -118,7 +128,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function getAllPolygon() {
+    public function getAllPolygon()
+    {
         try {
             $db = DB::table('polygon')
                 ->get();
@@ -129,7 +140,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function getPolygon($id_polygon) {
+    public function getPolygon($id_polygon)
+    {
         try {
             $db = DB::table('polygon')
                 ->where('id', $id_polygon)
@@ -141,11 +153,12 @@ class UsecaseRepositories {
         }
     }
 
-    public function deleteUsecase($id_usecase){
+    public function deleteUsecase($id_usecase)
+    {
         try {
             $db = DB::table('usecase')
-            ->where('id_usecase', $id_usecase)
-            ->delete();
+                ->where('id_usecase', $id_usecase)
+                ->delete();
 
             return $db;
         } catch (Exception $e) {
@@ -153,11 +166,12 @@ class UsecaseRepositories {
         }
     }
 
-    public function deleteUsecaseProfile($id_usecase) {
+    public function deleteUsecaseProfile($id_usecase)
+    {
         try {
             $db = DB::table('profile')
-            ->where('id_usecase', $id_usecase)
-            ->delete();
+                ->where('id_usecase', $id_usecase)
+                ->delete();
 
             return $db;
         } catch (Exception $e) {
@@ -165,7 +179,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function uploadPolygon($data) {
+    public function uploadPolygon($data)
+    {
         try {
             $db = DB::table('polygon')
                 ->insertGetId($data);
@@ -180,21 +195,23 @@ class UsecaseRepositories {
         }
     }
 
-    public function addVisi($data) {
+    public function addVisi($data)
+    {
         try {
             $getId = DB::table('visi')
-                    ->insertGetId($data);
+                ->insertGetId($data);
 
             $getRow = DB::table('visi')
-                    ->where('id', $getId)
-                    ->first();
+                ->where('id', $getId)
+                ->first();
             return $getRow;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal menambahkan visi.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan visi.');
         }
     }
 
-    public function getVisiById($id_visi) {
+    public function getVisiById($id_visi)
+    {
         try {
             $db = DB::table('visi')
                 ->where('id', $id_visi)
@@ -202,32 +219,34 @@ class UsecaseRepositories {
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal mendapatkan visi.');
-        }        
-    }
-
-    public function updateVisi($data, $id_visi) {
-        try {
-            DB::table('visi')
-            ->where('id', $id_visi)
-            ->update($data);
-            $updatedRow = DB::table('visi')
-                        ->where('id', $id_visi)
-                        ->first();
-            return $updatedRow;
-        } catch (Exception $e) {
-            throw new ErrorResponse(type:'Internal Server Error', message: 'Gagal memperbarui visi');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan visi.');
         }
     }
 
-    public function deleteVisi($id_visi) {
-        try{
+    public function updateVisi($data, $id_visi)
+    {
+        try {
+            DB::table('visi')
+                ->where('id', $id_visi)
+                ->update($data);
+            $updatedRow = DB::table('visi')
+                ->where('id', $id_visi)
+                ->first();
+            return $updatedRow;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui visi');
+        }
+    }
+
+    public function deleteVisi($id_visi)
+    {
+        try {
             $db = DB::table('visi')
-            ->where('id', $id_visi)
-            ->delete();
+                ->where('id', $id_visi)
+                ->delete();
 
             return $db;
-        }catch(Exception $e){
+        } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus visi.');
         }
     }
@@ -239,23 +258,24 @@ class UsecaseRepositories {
                 ->select('short_desc', 'description')
                 ->where('id_usecase', $id_usecase)
                 ->paginate($perPage);
-        
+
             return $db;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan list visi.');
         }
     }
 
-    public function addMisi($data) {
+    public function addMisi($data)
+    {
         try {
             $urutanTertinggi = DB::table('misi')
-                            ->max('urutan') ?? 0;
+                ->max('urutan') ?? 0;
             $data['urutan'] = min($data['urutan'], $urutanTertinggi + 1);
-            
+
             $cekUrutan = DB::table('misi')
-                        ->where('urutan', $data['urutan'])
-                        ->exists();
-        
+                ->where('urutan', $data['urutan'])
+                ->exists();
+
             if ($cekUrutan) {
                 DB::table('misi')
                     ->where('urutan', '>=', $data['urutan'])
@@ -263,11 +283,11 @@ class UsecaseRepositories {
             }
 
             $getId = DB::table('misi')
-                    ->insertGetId($data);
+                ->insertGetId($data);
 
             $getRow = DB::table('misi')
-                    ->where('id', $getId)
-                    ->first();
+                ->where('id', $getId)
+                ->first();
 
             return $getRow;
         } catch (Exception $e) {
@@ -275,17 +295,18 @@ class UsecaseRepositories {
         }
     }
 
-    public function updateMisi($id_misi, $data) {
+    public function updateMisi($id_misi, $data)
+    {
         try {
             $oldUrutan = DB::table('misi')
-                        ->where('id', $id_misi)
-                        ->value('urutan');
+                ->where('id', $id_misi)
+                ->value('urutan');
             $urutanTertinggi = DB::table('misi')
-                            ->max('urutan') ?? 0;
+                ->max('urutan') ?? 0;
             $data['urutan'] = min($data['urutan'], $urutanTertinggi);
-        
+
             $isIncreasing = $data['urutan'] > $oldUrutan;
-        
+
             if ($isIncreasing) {
                 DB::table('misi')
                     ->where('urutan', '>', $oldUrutan)
@@ -311,13 +332,14 @@ class UsecaseRepositories {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui visi.');
         }
     }
-    
-    
 
-    public function deleteMisi($id_misi) {
+
+
+    public function deleteMisi($id_misi)
+    {
         try {
             $misiToDelete = DB::table('misi')->where('id', $id_misi)->first();
-        
+
             $urutanToDelete = $misiToDelete->urutan;
 
             $result = DB::table('misi')->where('id', $id_misi)->delete();
@@ -331,7 +353,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function getMisiById($id_misi) {
+    public function getMisiById($id_misi)
+    {
         try {
             $misi = DB::table('misi')->where('id', $id_misi)->first();
             return $misi;
@@ -340,10 +363,11 @@ class UsecaseRepositories {
         }
     }
 
-    public function getListMisi($id_Usecase, $perPage) {
+    public function getListMisi($id_Usecase, $perPage)
+    {
         try {
             $db = DB::table('misi')
-                ->select('urutan','short_desc', 'description')
+                ->select('urutan', 'short_desc', 'description')
                 ->where('id_usecase', $id_Usecase)
                 ->paginate($perPage);
 
@@ -352,8 +376,9 @@ class UsecaseRepositories {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan list misi.');
         }
     }
-    
-    public function getListSektor($id_sektor) {
+
+    public function getListSektor($id_sektor)
+    {
         try {
             $db = DB::table('master_sector_cms')
                 ->where('id_usecase', $id_sektor)
@@ -366,7 +391,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function getListDataSektor($id_usecase, $sektor) {
+    public function getListDataSektor($id_usecase, $sektor)
+    {
         try {
             $db = DB::table('iku_indikator_bigbox as iib')
                 ->select('id', 'urusan AS sektor', 'opd', 'indikator', 'satuan', 'tahun', 'nilai', 'flag_public')
@@ -382,7 +408,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function getListIndikator($id_usecase, $sektor) {
+    public function getListIndikator($id_usecase, $sektor)
+    {
         try {
             $db = DB::table('mart_detail_ikk_cms as mdic')
                 ->select('indikatorkinerja')
@@ -391,14 +418,15 @@ class UsecaseRepositories {
                 ->orderBy('indikatorkinerja')
                 ->distinct()
                 ->get();
-            
+
             return $db;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list indikator');
         }
     }
 
-    public function getListSatuan() {
+    public function getListSatuan()
+    {
         try {
             $db = DB::table('master_satuan_cms')
                 ->orderBy('satuan', 'asc')
@@ -410,7 +438,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function getListOpd($id_usecase, $sektor) {
+    public function getListOpd($id_usecase, $sektor)
+    {
         try {
             $db = DB::table('master_opd')
                 ->selectRaw('id_opd, opd')
@@ -425,7 +454,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function getProvinsiKotaByIdUsecase($id_usecase) {
+    public function getProvinsiKotaByIdUsecase($id_usecase)
+    {
         try {
             $db = DB::table('usecase as u')
                 ->select(
@@ -455,51 +485,55 @@ class UsecaseRepositories {
         }
     }
 
-    public function addSektorIku($data) {
+    public function addSektorIku($data)
+    {
         try {
             $getId = DB::table('iku_indikator_bigbox')->insertGetId($data);
             $getRow = DB::table('iku_indikator_bigbox')
-                    ->where('id', $getId)
-                    ->first();
-        
+                ->where('id', $getId)
+                ->first();
+
             return $getRow;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan sektor IKU.');
         }
     }
 
-    public function updateSektorIku($data, $id_sektor) {
+    public function updateSektorIku($data, $id_sektor)
+    {
         try {
             DB::table('iku_indikator_bigbox')
                 ->where('id', $id_sektor)
                 ->update($data);
 
             $getRow = DB::table('iku_indikator_bigbox')
-                    ->where('id', $id_sektor)
-                    ->first();
-                    
+                ->where('id', $id_sektor)
+                ->first();
+
             return $getRow;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui sektor IKU.');
         }
     }
 
-    public function deleteSektorIku($id_sektor) {
+    public function deleteSektorIku($id_sektor)
+    {
         try {
             $result = DB::table('iku_indikator_bigbox')
-                    ->where('id', $id_sektor)
-                    ->delete();
+                ->where('id', $id_sektor)
+                ->delete();
             return $result;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menghapus sektor IKU.');
         }
     }
 
-    public function getSektorIkuById($id_sektor) {
+    public function getSektorIkuById($id_sektor)
+    {
         try {
             $result = DB::table('iku_indikator_bigbox')
-                    ->where('id', $id_sektor)
-                    ->first();
+                ->where('id', $id_sektor)
+                ->first();
 
             return $result;
         } catch (Exception $e) {
@@ -507,249 +541,250 @@ class UsecaseRepositories {
         }
     }
 
-    public function getMaxIkk($sektor) {
+    public function getMaxIkk($sektor)
+    {
         try {
             $result = DB::table('mart_detail_ikk_cms')
-                    ->where('sektor', $sektor)
-                    ->orderBy('no_urut', 'desc')
-                    ->first();
+                ->where('sektor', $sektor)
+                ->orderBy('no_urut', 'desc')
+                ->first();
 
             return $result;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan max IKK.');
         }
-    } 
+    }
 
-    public function addIndikator($data) {
+    public function addIndikator($data)
+    {
         try {
             $getId = DB::table('mart_detail_ikk_cms')->insertGetId($data);
-    
+
             $getRow = DB::table('mart_detail_ikk_cms')
-                    ->where('id', $getId)
-                    ->first();
-        
+                ->where('id', $getId)
+                ->first();
+
             return $getRow;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan indikator.');
         }
     }
 
-    public function findUseCase($id_usecase,$select=['*']){
-		$data = DB::table('usecase')
-                ->where('id_usecase', $id_usecase)
-                ->select($select)
-                ->first();
+    public function findUseCase($id_usecase, $select = ['*'])
+    {
+        $data = DB::table('usecase')
+            ->where('id_usecase', $id_usecase)
+            ->select($select)
+            ->first();
 
-		$nama_daerah='';
+        $nama_daerah = '';
 
-		if($select[0]!='*' && in_array('kode_provinsi',$select) || $select[0]=='*'){
-			$prefix='Gubernur';
-            $data_government = DB::table('profile')->where('id_usecase',$id_usecase)->first();
-			$daerah=DB::table('geo_provinsi_kota')->where('kode_kab_kota',$data->kode_kab_kota)->first();
+        if ($select[0] != '*' && in_array('kode_provinsi', $select) || $select[0] == '*') {
+            $prefix = 'Gubernur';
+            $data_government = DB::table('profile')->where('id_usecase', $id_usecase)->first();
+            $daerah = DB::table('geo_provinsi_kota')->where('kode_kab_kota', $data->kode_kab_kota)->first();
             $data->pic_logo = $data_government->pic_logo;
 
-			// $nama_daerah='Provinsi '.$daerah->nama_provinsi;
-			$nama_daerah=$daerah->nama_provinsi ?? '';
-			$nama_daerah_title=$daerah->nama_provinsi ?? '';
+            // $nama_daerah='Provinsi '.$daerah->nama_provinsi;
+            $nama_daerah = $daerah->nama_provinsi ?? '';
+            $nama_daerah_title = $daerah->nama_provinsi ?? '';
 
-			$data->level_usecase=1;
+            $data->level_usecase = 1;
 
             // temp fix untuk usecase dengan kolom 'lat', 'lon' yang masih null
             if (is_null($data->lat)) {
                 $data->center_lat = 0;
                 $data->center_lon = 0;
             }
-			$data->center_lat=$data->lat ?? 0;
-			$data->center_lon=$data->lon ?? 0;
+            $data->center_lat = $data->lat ?? 0;
+            $data->center_lon = $data->lon ?? 0;
 
-			if($data->kode_kab_kota!=$data->kode_provinsi.'00'){
-				$data->level_usecase=2;
-				$data->center_lat=(float)$daerah->lat;
-				$data->center_lon=(float)$daerah->lon;
+            if ($data->kode_kab_kota != $data->kode_provinsi . '00') {
+                $data->level_usecase = 2;
+                $data->center_lat = (float)$daerah->lat;
+                $data->center_lon = (float)$daerah->lon;
 
-				$kako=DB::table('geo_provinsi_kota')->where('kode_kab_kota',$data->kode_kab_kota)->first();
-				$nama_daerah=$kako->nama_kab_kota ?? '';
-				$nama_kab_kota=explode(' ', $kako->nama_kab_kota);
-				$prefix='Bupati';
-				if($nama_kab_kota[0]=='Kota'){
-					$prefix='Walikota';
-				}
-				$nama_daerah_title='';
-				for ($i=1; $i < count($nama_kab_kota); $i++) { 
-					$nama_daerah_title.=' '.$nama_kab_kota[$i];
-				}
-				
-			}
+                $kako = DB::table('geo_provinsi_kota')->where('kode_kab_kota', $data->kode_kab_kota)->first();
+                $nama_daerah = $kako->nama_kab_kota ?? '';
+                $nama_kab_kota = explode(' ', $kako->nama_kab_kota);
+                $prefix = 'Bupati';
+                if ($nama_kab_kota[0] == 'Kota') {
+                    $prefix = 'Walikota';
+                }
+                $nama_daerah_title = '';
+                for ($i = 1; $i < count($nama_kab_kota); $i++) {
+                    $nama_daerah_title .= ' ' . $nama_kab_kota[$i];
+                }
+            }
 
-			$data->nama_daerah=$nama_daerah;
-			
-			$data->title_gubernur=$prefix.' '.$nama_daerah_title;
-			$data->title_wakil='Wakil '.$prefix.' '.$nama_daerah_title;
-		}
-		
-		if(($select[0]!='*' && in_array('pic_logo',$select)) || $select[0]=='*'){
-			$pic_logo=$data->pic_logo;
-			$data->pic_logo=url('/').'/storage/'.$pic_logo;
+            $data->nama_daerah = $nama_daerah;
 
-			if(!is_file(storage_path($pic_logo))){
-				$data->pic_logo=url('/images/default/usecase.png');
-			}
-		}
+            $data->title_gubernur = $prefix . ' ' . $nama_daerah_title;
+            $data->title_wakil = 'Wakil ' . $prefix . ' ' . $nama_daerah_title;
+        }
 
-		if(($select[0]!='*' && in_array('pic_gubernur',$select)) || $select[0]=='*'){
-			$pic_gubernur=$data_government->pic_leader;
-			$data_government->pic_leader=url('/').'/storage/'.$pic_gubernur;
-			if(!is_file(storage_path($pic_gubernur))){
-				$data_government->pic_leader=url('/images/default/kd_profile.png');
-			}
+        if (($select[0] != '*' && in_array('pic_logo', $select)) || $select[0] == '*') {
+            $pic_logo = $data->pic_logo;
+            $data->pic_logo = url('/') . '/storage/' . $pic_logo;
 
-			$pic_wakil=$data_government->pic_vice;
-			$data_government->pic_vice=url('/').'/storage/'.$pic_wakil;
-			if(!is_file(storage_path($pic_wakil))){
-				$data_government->pic_vice=url('/images/default/kd_profile.png');
-			}
-		}
+            if (!is_file(storage_path($pic_logo))) {
+                $data->pic_logo = url('/images/default/usecase.png');
+            }
+        }
 
-		if($select[0]=='*' && $nama_daerah==''){
-			$left_logo=url('/images/centryc.jpeg');
-			$right_logo=url('/images/logo-g20.png');
+        if (($select[0] != '*' && in_array('pic_gubernur', $select)) || $select[0] == '*') {
+            $pic_gubernur = $data_government->pic_leader;
+            $data_government->pic_leader = url('/') . '/storage/' . $pic_gubernur;
+            if (!is_file(storage_path($pic_gubernur))) {
+                $data_government->pic_leader = url('/images/default/kd_profile.png');
+            }
 
-			$brands=[
-				[
-					'brand_url'=>url('/images/logo_bigview.svg'),
-					'brand_desc'=>'Logo BigView'
-				],
-				[
-					'brand_url'=>url('/images/logo_centryc.svg'),
-					'brand_desc'=>'Logo Centryc'
-				],
-				[
-					'brand_url'=>url('/images/logo_g20.svg'),
-					'brand_desc'=>'Logo G20'
-				]
-			];
+            $pic_wakil = $data_government->pic_vice;
+            $data_government->pic_vice = url('/') . '/storage/' . $pic_wakil;
+            if (!is_file(storage_path($pic_wakil))) {
+                $data_government->pic_vice = url('/images/default/kd_profile.png');
+            }
+        }
 
-			$brands_sm=[
-				[
-					'brand_url'=>url('/images/logo_bigview_sm.svg'),
-					'brand_desc'=>'Logo BigView'
-				],
-				[
-					'brand_url'=>url('/images/logo_centryc_sm.svg'),
-					'brand_desc'=>'Logo Centryc'
-				],
-				[
-					'brand_url'=>url('/images/logo_g20.svg'),
-					'brand_desc'=>'Logo G20'
-				]
-			];
+        if ($select[0] == '*' && $nama_daerah == '') {
+            $left_logo = url('/images/centryc.jpeg');
+            $right_logo = url('/images/logo-g20.png');
 
-            
+            $brands = [
+                [
+                    'brand_url' => url('/images/logo_bigview.svg'),
+                    'brand_desc' => 'Logo BigView'
+                ],
+                [
+                    'brand_url' => url('/images/logo_centryc.svg'),
+                    'brand_desc' => 'Logo Centryc'
+                ],
+                [
+                    'brand_url' => url('/images/logo_g20.svg'),
+                    'brand_desc' => 'Logo G20'
+                ]
+            ];
 
-			$response=[
-				'id_usecase'=>$id_usecase,
-				'level_usecase'=>0,
-				'base_color1'=>$data->base_color1,
-				'base_color2'=>$data->base_color2,
-				'base_color3'=>$data->base_color3,
-				'base_color4'=>$data->base_color4,
-				'brands'=>$brands,
-				'brands_small'=>$brands_sm,
-				'total_brands'=>count($brands),
-				'footer_logo'=>[
-					[
-						'footer_url'=>url('/images/logo_bigbox.svg'),
-						'footer_desc'=>'Logo BigBox'
-					]
-				],
-				'left_logo'=>$left_logo,
-				'right_logo'=>$right_logo,
-				'footer_year'=>date('Y'),
-				'footer_brand'=>'TravelAja Centryc | G20 Indonesia'
-			];
+            $brands_sm = [
+                [
+                    'brand_url' => url('/images/logo_bigview_sm.svg'),
+                    'brand_desc' => 'Logo BigView'
+                ],
+                [
+                    'brand_url' => url('/images/logo_centryc_sm.svg'),
+                    'brand_desc' => 'Logo Centryc'
+                ],
+                [
+                    'brand_url' => url('/images/logo_g20.svg'),
+                    'brand_desc' => 'Logo G20'
+                ]
+            ];
 
-			return $response;
-		}
-		
-		
-		if($id_usecase == 98){
-			
-			$brands=[
-				[
-					'brand_url'=>url('/images/logo_bigview.svg'),
-					'brand_desc'=>'Logo BigView'
-				],
-				[
-					'brand_url'=>url('/images/logo_centryc.svg'),
-					'brand_desc'=>'Logo Centryc'
-				],
-				[
-					'brand_url'=>url('/images/logo_admedika.svg'),
-					'brand_desc'=>'Logo Admedika'
-				]
-			];
-		}
-		else{
-			$brands=[
-				[
-					'brand_url'=>url('/images/logo_bigview.svg'),
-					'brand_desc'=>'Logo BigView'
-				],
-				[
-					'brand_url'=>url('/images/logo_centryc.svg'),
-					'brand_desc'=>'Logo Centryc'
-				],
-			];
-		}
 
-		if($id_usecase == 98){
-			$brands_sm=[
-				[
-					'brand_url'=>url('/images/logo_bigview_sm.svg'),
-					'brand_desc'=>'Logo BigView'
-				],
-				[
-					'brand_url'=>url('/images/logo_centryc_sm.svg'),
-					'brand_desc'=>'Logo Centryc'
-				],
-				[
-					'brand_url'=>url('/images/logo_admedika_sm.svg'),
-					'brand_desc'=>'Logo Admedika'
-				]
-			];
-		}
-		else{
-			$brands_sm=[
-				[
-					'brand_url'=>url('/images/logo_bigview_sm.svg'),
-					'brand_desc'=>'Logo BigView'
-				],
-				[
-					'brand_url'=>url('/images/logo_centryc_sm.svg'),
-					'brand_desc'=>'Logo Centryc'
-				],
-			];
-		}
-		
-		$data->brands=$brands;
-		$data->brands_small=$brands_sm;
-		$data->total_brands=count($brands);
-		$data->footer_logo=[];
 
-		$data->left_logo=url('/images/logo_bigview.png');
-		$data->right_logo='';
-		$data->footer_year=date('Y');
-		$data->footer_brand='BigView';
+            $response = [
+                'id_usecase' => $id_usecase,
+                'level_usecase' => 0,
+                'base_color1' => $data->base_color1,
+                'base_color2' => $data->base_color2,
+                'base_color3' => $data->base_color3,
+                'base_color4' => $data->base_color4,
+                'brands' => $brands,
+                'brands_small' => $brands_sm,
+                'total_brands' => count($brands),
+                'footer_logo' => [
+                    [
+                        'footer_url' => url('/images/logo_bigbox.svg'),
+                        'footer_desc' => 'Logo BigBox'
+                    ]
+                ],
+                'left_logo' => $left_logo,
+                'right_logo' => $right_logo,
+                'footer_year' => date('Y'),
+                'footer_brand' => 'TravelAja Centryc | G20 Indonesia'
+            ];
 
-		return $data;
-	}
-    public function addSektor($data) {
+            return $response;
+        }
+
+
+        if ($id_usecase == 98) {
+
+            $brands = [
+                [
+                    'brand_url' => url('/images/logo_bigview.svg'),
+                    'brand_desc' => 'Logo BigView'
+                ],
+                [
+                    'brand_url' => url('/images/logo_centryc.svg'),
+                    'brand_desc' => 'Logo Centryc'
+                ],
+                [
+                    'brand_url' => url('/images/logo_admedika.svg'),
+                    'brand_desc' => 'Logo Admedika'
+                ]
+            ];
+        } else {
+            $brands = [
+                [
+                    'brand_url' => url('/images/logo_bigview.svg'),
+                    'brand_desc' => 'Logo BigView'
+                ],
+                [
+                    'brand_url' => url('/images/logo_centryc.svg'),
+                    'brand_desc' => 'Logo Centryc'
+                ],
+            ];
+        }
+
+        if ($id_usecase == 98) {
+            $brands_sm = [
+                [
+                    'brand_url' => url('/images/logo_bigview_sm.svg'),
+                    'brand_desc' => 'Logo BigView'
+                ],
+                [
+                    'brand_url' => url('/images/logo_centryc_sm.svg'),
+                    'brand_desc' => 'Logo Centryc'
+                ],
+                [
+                    'brand_url' => url('/images/logo_admedika_sm.svg'),
+                    'brand_desc' => 'Logo Admedika'
+                ]
+            ];
+        } else {
+            $brands_sm = [
+                [
+                    'brand_url' => url('/images/logo_bigview_sm.svg'),
+                    'brand_desc' => 'Logo BigView'
+                ],
+                [
+                    'brand_url' => url('/images/logo_centryc_sm.svg'),
+                    'brand_desc' => 'Logo Centryc'
+                ],
+            ];
+        }
+
+        $data->brands = $brands;
+        $data->brands_small = $brands_sm;
+        $data->total_brands = count($brands);
+        $data->footer_logo = [];
+
+        $data->left_logo = url('/images/logo_bigview.png');
+        $data->right_logo = '';
+        $data->footer_year = date('Y');
+        $data->footer_brand = 'BigView';
+
+        return $data;
+    }
+    public function addSektor($data)
+    {
         try {
             $getId = DB::table('sektor')->insertGetId($data);
             $getRow = DB::table('sektor')
-                        ->where('id_sektor', $getId)
-                        ->first();
-            
+                ->where('id_sektor', $getId)
+                ->first();
+
             $usecase = DB::table('user')->where('id_usecase', $data['id_usecase'])->where('level', 1)->first();
 
             $data_user_sektor = [];
@@ -764,11 +799,12 @@ class UsecaseRepositories {
         }
     }
 
-    public function getSektorById($id_sektor) {
+    public function getSektorById($id_sektor)
+    {
         try {
             $data = DB::table('sektor')
-                    ->where('id_sektor', $id_sektor)
-                    ->first();
+                ->where('id_sektor', $id_sektor)
+                ->first();
 
             return $data;
         } catch (Exception $e) {
@@ -776,7 +812,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function deleteSektor($id_sektor) {
+    public function deleteSektor($id_sektor)
+    {
         try {
             $row = DB::table('user_sektor')
                 ->where('id_sektor', $id_sektor)
@@ -785,13 +822,13 @@ class UsecaseRepositories {
             DB::table('user_sektor')
                 ->where('id_sektor', $id_sektor)
                 ->delete();
-            
+
             DB::table('sektor')
                 ->where('id_sektor', $id_sektor)
                 ->delete();
-            
+
             $order_deleted = $row->order;
-        
+
             $affected_rows = DB::table('user_sektor')
                 ->where('id_role', $row->id_role)
                 ->where('order', '>', $order_deleted)
@@ -807,21 +844,23 @@ class UsecaseRepositories {
         }
     }
 
-    public function updateSektor($data, $id_sektor) {
+    public function updateSektor($data, $id_sektor)
+    {
         try {
             DB::table('sektor')
                 ->where('id_sektor', $id_sektor)
                 ->update($data);
 
             return DB::table('sektor')
-                    ->where('id_sektor', $id_sektor)
-                    ->first();
+                ->where('id_sektor', $id_sektor)
+                ->first();
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui data sektor.');
         }
     }
 
-    public function getSektorUsecase($id_usecase) {
+    public function getSektorUsecase($id_usecase)
+    {
         try {
             $data = DB::table('sektor')
                 ->where('id_usecase', $id_usecase)
@@ -833,7 +872,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function editSubadminSektor($data, $id_subadmin, $id_usecase) {
+    public function editSubadminSektor($data, $id_subadmin, $id_usecase)
+    {
         try {
             $id_role_admin = (DB::table('user')->select('id_role')->where('id_usecase', $id_usecase)->where('level', 1)->first())->id_role;
             $id_role_sub = (DB::table('user')->select('id_role')->where('id_user', $id_subadmin)->first())->id_role;
@@ -842,34 +882,34 @@ class UsecaseRepositories {
                 ->where('id_role', $id_role_sub)
                 ->whereNotIn('id_sektor', $data)
                 ->delete();
-        
+
             $adminAccess = DB::table('user_sektor')
-                            ->where('id_role', $id_role_admin)
-                            ->orderBy('order', 'asc')
-                            ->get();
-        
+                ->where('id_role', $id_role_admin)
+                ->orderBy('order', 'asc')
+                ->get();
+
             $sortedData = [];
             foreach ($adminAccess as $adminRow) {
                 if (in_array($adminRow->id_sektor, $data)) {
                     $sortedData[] = $adminRow->id_sektor;
                 }
             }
-            
-            
-        
+
+
+
             $accessRows = [];
             $order = 1;
             foreach ($sortedData as $id_sektor) {
                 $checkAccess = DB::table('user_sektor')
-                                ->where('id_role', $id_role_sub)
-                                ->where('id_sektor', $id_sektor)
-                                ->first();
-        
+                    ->where('id_role', $id_role_sub)
+                    ->where('id_sektor', $id_sektor)
+                    ->first();
+
                 if ($checkAccess) {
                     DB::table('user_sektor')
                         ->where('id', $checkAccess->id)
                         ->update(['order' => $order]);
-        
+
                     $accessRows[] = [
                         'id' => $checkAccess->id,
                         'id_role' => $id_role_sub,
@@ -883,7 +923,7 @@ class UsecaseRepositories {
                         'id_sektor' => $id_sektor,
                         'order' => $order
                     ]);
-        
+
                     $accessRows[] = [
                         'id' => $newId,
                         'id_role' => $id_role_sub,
@@ -900,7 +940,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function sortSektor($data, $id_usecase) {
+    public function sortSektor($data, $id_usecase)
+    {
         try {
             $id_role = (DB::table('user')->where('id_usecase', $id_usecase)->where('level', 1)->first())->id_role;
             $subadmin = DB::table('user')->where('id_usecase', $id_usecase)->where('level', 2)->pluck('id_role')->toArray();
@@ -911,8 +952,8 @@ class UsecaseRepositories {
                 ->delete();
 
             $existingMenus = DB::table('user_sektor')
-                            ->where('id_role', $id_role)
-                            ->get();
+                ->where('id_role', $id_role)
+                ->get();
 
             $adminRows = [];
             $orderAdmin = 1;
@@ -933,9 +974,9 @@ class UsecaseRepositories {
                     ];
                 } else {
                     $newId = DB::table('user_sektor')->insertGetId([
-                            'id_role' => $id_role,
-                            'id_sektor' => $id_sektor,
-                            'order' => $orderAdmin
+                        'id_role' => $id_role,
+                        'id_sektor' => $id_sektor,
+                        'order' => $orderAdmin
                     ]);
 
                     $adminRows[] = [
@@ -956,8 +997,8 @@ class UsecaseRepositories {
                     ->delete();
 
                 $subAccess = DB::table('user_sektor')
-                        ->where('id_role', $id_sub)
-                        ->get();
+                    ->where('id_role', $id_sub)
+                    ->get();
 
                 $order = 1;
                 foreach ($data as $id_sektor) {
@@ -967,7 +1008,7 @@ class UsecaseRepositories {
                             ->where('id_role', $existingMenu->id_role)
                             ->where('id_sektor', $id_sektor)
                             ->update(['order' => $order]);
-                    } 
+                    }
                     $order++;
                 }
             }
@@ -977,7 +1018,8 @@ class UsecaseRepositories {
         }
     }
 
-    public function getAssignedSektor($id_user) {
+    public function getAssignedSektor($id_user)
+    {
         try {
             $id_role = DB::table('user')->where('id_user', $id_user)->value('id_role');
             $assignedSektor = DB::table('user_sektor')->where('id_role', $id_role)->pluck('id_sektor')->toArray();
@@ -988,19 +1030,18 @@ class UsecaseRepositories {
         }
     }
 
-    public function updateAssignedSektor($data, $id_sektor) {
+    public function updateAssignedSektor($data, $id_sektor)
+    {
         try {
             DB::table('sektor')
                 ->where('id_sektor', $id_sektor)
                 ->update($data);
 
             return DB::table('sektor')
-                    ->where('id_sektor', $id_sektor)
-                    ->first();
+                ->where('id_sektor', $id_sektor)
+                ->first();
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui data sektor.');
         }
     }
 }
-
-

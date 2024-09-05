@@ -17,12 +17,14 @@ class MasterController extends Controller
         $this->masterService = $masterService;
     }
 
-    public function listProvinsi(){
+    public function listProvinsi()
+    {
         $data = $this->masterService->getListProvinsi();
         return $this->successResponse($data);
     }
 
-    public function listKabkota(Request $request){
+    public function listKabkota(Request $request)
+    {
         $kode_provinsi = $request->input("kode_provinsi");
         $data = $this->masterService->getListKabkota($kode_provinsi);
         return $this->successResponse($data);

@@ -21,7 +21,8 @@ class RoleController extends Controller
         $this->menuService = $menuService;
     }
 
-    public function addRole(Request $request){
+    public function addRole(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'nama_role' => 'required|string',
             'level' => 'required',
@@ -34,30 +35,35 @@ class RoleController extends Controller
         return $this->successResponse($data);
     }
 
-    public function listRole(Request $request){
+    public function listRole(Request $request)
+    {
         $search = $request->input("search");
         $perPage = is_null($request->input('per_page')) ? 10 : $request->input('per_page');
 
         [$data, $metadata] = $this->roleService->getListRole($search, $perPage);
         return $this->successResponse(data: $data, metadata: $metadata);
-}
+    }
 
-    public function listNamesRole(){
+    public function listNamesRole()
+    {
         $data = $this->roleService->getListNameRole();
         return $this->successResponse(data: $data);
     }
 
-    public function getRoleById($id_role){
+    public function getRoleById($id_role)
+    {
         $data = $this->roleService->getRoleById($id_role);
         return $this->successResponse(data: $data);
     }
 
-    public function deleteRole($id_role){
+    public function deleteRole($id_role)
+    {
         $this->roleService->deleteRole($id_role);
         return $this->successResponse(message: "Data Berhasil dihapus");
     }
 
-    public function updateRole(Request $request, $id_role){
+    public function updateRole(Request $request, $id_role)
+    {
         $validator = Validator::make($request->all(), [
             'nama_role' => 'required|string'
         ]);
@@ -68,7 +74,8 @@ class RoleController extends Controller
         return $this->successResponse(message: "Data Berhasil di Update");
     }
 
-    public function listRoleMenu(Request $request){
+    public function listRoleMenu(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'id_role' => 'required',
             'id_parent' => 'nullable'
@@ -81,7 +88,8 @@ class RoleController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function addRoleMenu(Request $request){
+    public function addRoleMenu(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'id_role' => 'required',
             'id_menu' => 'required'
@@ -94,7 +102,8 @@ class RoleController extends Controller
         return $this->successResponse(message: "Role Menu Berhasil ditambahkan");
     }
 
-    public function deleteRoleMenu(Request $request){
+    public function deleteRoleMenu(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'id_role' => 'required',
             'id_menu' => 'required'

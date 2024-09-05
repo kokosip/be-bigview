@@ -11,10 +11,11 @@ use Illuminate\Support\Facades\Log;
 
 trait FileStorage
 {
-    public function uploadFile($idUsecase, $data, $params) {
+    public function uploadFile($idUsecase, $data, $params)
+    {
         try {
             $file = $data['file'];
-    
+
             $s3Client = new S3Client([
                 'version' => env('MINIO_VERSION', 'latest'),
                 'region'  => env('MINIO_REGION', 'us-east-1'),
@@ -30,7 +31,7 @@ trait FileStorage
             $key = "usecase/{$params['dir']}/{$params['type']}_{$params['name_usecase']}_{$idUsecase}.{$file->extension()}";
 
             $contentType = mime_content_type($file->getPathname());
-    
+
             $result = $s3Client->putObject([
                 'Bucket' => $bucket,
                 'Key'    => $key,
@@ -46,7 +47,8 @@ trait FileStorage
         }
     }
 
-    public function uploadJson($data, $params) {
+    public function uploadJson($data, $params)
+    {
         try {
             $s3Client = new S3Client([
                 'version' => env('MINIO_VERSION', 'latest'),
@@ -58,10 +60,10 @@ trait FileStorage
                     'secret' => env('MINIO_SECRET'),
                 ],
             ]);
-    
+
             $bucket = env('MINIO_BUCKET');
             $key = "usecase/{$params['dir']}/{$params['type']}_{$params['nama']}.json";
-    
+
             $result = $s3Client->putObject([
                 'Bucket' => $bucket,
                 'Key'    => $key,
@@ -69,23 +71,24 @@ trait FileStorage
                 'ContentType' => 'application/json',
                 'ContentDisposition' => 'inline',
             ]);
-    
+
             return $key;
         } catch (AwsException $e) {
             throw new ErrorResponse(
-                type: 'AWS Server Error', 
+                type: 'AWS Server Error',
                 message: 'Pengunggahan file tidak berhasil. Mohon coba lagi nanti'
             );
         } catch (Exception $err) {
             throw new ErrorResponse(
-                type: 'Internal Server Error', 
+                type: 'Internal Server Error',
                 message: 'Pengunggahan file tidak berhasil. Mohon coba lagi nanti'
             );
         }
     }
-    
-    public function getFile($path){
-        if(empty($path)) $path = 'image_not_found.png';
+
+    public function getFile($path)
+    {
+        if (empty($path)) $path = 'image_not_found.png';
 
         $s3Client = new S3Client([
             'version' => env('MINIO_VERSION', 'latest'),
@@ -104,7 +107,7 @@ trait FileStorage
                 'Bucket' => $bucket,
                 'Key'    => $path,
             ]);
-    
+
             $url = $s3Client->getObjectUrl($bucket, $path);
         } catch (AwsException $e) {
             if ($e->getStatusCode() == 404) {
@@ -113,11 +116,12 @@ trait FileStorage
                 throw new ErrorResponse(type: 'AWS Server Error', message: 'Pengambilan file tidak berhasil. Mohon coba lagi nanti');
             }
         } catch (Exception $err) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat');
         }
         return $url;
     }
-    public function deleteFile($path){
+    public function deleteFile($path)
+    {
         try {
             $s3Client = new S3Client([
                 'version' => env('MINIO_VERSION', 'latest'),
@@ -136,12 +140,12 @@ trait FileStorage
                 'Bucket' => $bucket,
                 'Key'    => $path,
             ]);
-    
+
             return true;
         } catch (AwsException $e) {
             throw new ErrorResponse(type: 'AWS Error', message: 'Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat', statusCode: 403);
         } catch (Exception $err) {
-            throw new ErrorResponse(type:'Internal Server Error', message:'Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat', statusCode:500);
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Pengapusan file tidak berhasil akibat masalah storage server. Mohon dicoba lagi setelah beberapa saat', statusCode: 500);
         }
-    } 
+    }
 }

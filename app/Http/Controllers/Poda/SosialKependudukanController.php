@@ -23,12 +23,14 @@ class SosialKependudukanController extends Controller
     }
 
     // Start Kependudukan
-    public function tahunJumlahPenduduk(){
+    public function tahunJumlahPenduduk()
+    {
         $data = $this->sosialService->getTahunJumlahPenduduk($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function mapJumlahPenduduk(Request $request){
+    public function mapJumlahPenduduk(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -39,7 +41,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function pieJumlahPenduduk(Request $request){
+    public function pieJumlahPenduduk(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -52,7 +55,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function barJumlahPenduduk(Request $request){
+    public function barJumlahPenduduk(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -64,7 +68,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailJumlahPenduduk(Request $request){
+    public function detailJumlahPenduduk(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -79,13 +84,15 @@ class SosialKependudukanController extends Controller
     // End Kependudukan
 
     // Start Rentang Usia
-    public function tahunRentangUsia(){
+    public function tahunRentangUsia()
+    {
         $data = $this->sosialService->getTahunRentangUsia($this->idUsecase);
 
         return $this->successResponse(data: $data);
     }
 
-    public function stackedBarRentangUsia(Request $request){
+    public function stackedBarRentangUsia(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -98,7 +105,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailRentangUsia(Request $request){
+    public function detailRentangUsia(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -113,17 +121,20 @@ class SosialKependudukanController extends Controller
     // End Rentang Usia
 
     // Start Laju Pertumbuhan
-    public function periodeLaju(){
+    public function periodeLaju()
+    {
         $data = $this->sosialService->getPeriodeLaju($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function namaDaerahLaju(){
+    public function namaDaerahLaju()
+    {
         $data = $this->sosialService->getNamaDaerahLaju($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function dualAxesLaju(Request $request){
+    public function dualAxesLaju(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'periode' => 'required',
             'nama_daerah' => 'required'
@@ -137,7 +148,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailLaju(Request $request){
+    public function detailLaju(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'periode' => 'required',
         ]);
@@ -152,12 +164,14 @@ class SosialKependudukanController extends Controller
     // End Laju Pertumbuhan
 
     // Start Rasio Jenis Kelamin
-    public function tahunRasio(){
+    public function tahunRasio()
+    {
         $data = $this->sosialService->getTahunRasio($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function mapRasio(Request $request){
+    public function mapRasio(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -170,7 +184,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function barRasio(Request $request){
+    public function barRasio(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -183,7 +198,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailRasio(Request $request){
+    public function detailRasio(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -198,12 +214,14 @@ class SosialKependudukanController extends Controller
     // End Rasio Jenis Kelamin
 
     // Start Kepadatan Penduduk
-    public function tahunKepadatan(){
+    public function tahunKepadatan()
+    {
         $data = $this->sosialService->getTahunKepadatan($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function mapKepadatan(Request $request){
+    public function mapKepadatan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -216,7 +234,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function barKepadatan(Request $request){
+    public function barKepadatan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -229,7 +248,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailKepadatan(Request $request){
+    public function detailKepadatan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -244,7 +264,8 @@ class SosialKependudukanController extends Controller
     // End Kepadatan Penduduk
 
     // Start IPM
-    public function periodeIPM(Request $request){
+    public function periodeIPM(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'filter' => 'required',
         ]);
@@ -257,7 +278,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function namaDaerahIPM(Request $request){
+    public function namaDaerahIPM(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'filter' => 'required',
         ]);
@@ -270,12 +292,14 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function indikatorIPM(){
+    public function indikatorIPM()
+    {
         $data = $this->sosialService->getIndikatorIPM($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function areaIPM(Request $request){
+    public function areaIPM(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'periode' => 'required',
             'filter' => 'required',
@@ -290,7 +314,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function mapIPM(Request $request){
+    public function mapIPM(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
             'filter' => 'required',
@@ -304,7 +329,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailIPM(Request $request){
+    public function detailIPM(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'periode' => 'required',
             'filter' => 'required',
@@ -320,25 +346,29 @@ class SosialKependudukanController extends Controller
     // End IPM
 
     // Start Kemiskinan
-    public function indikatorKemiskinan(){
+    public function indikatorKemiskinan()
+    {
         $data = $this->sosialService->getIndikatorKemiskinan($this->idUsecase);
 
         return $this->successResponse(data: $data);
     }
 
-    public function tahunKemiskinan(){
+    public function tahunKemiskinan()
+    {
         $data = $this->sosialService->getTahunKemiskinan($this->idUsecase);
 
         return $this->successResponse(data: $data);
     }
 
-    public function daerahKemiskinan(){
+    public function daerahKemiskinan()
+    {
         $data = $this->sosialService->getDaerahKemiskinan($this->idUsecase);
 
         return $this->successResponse(data: $data);
     }
 
-    public function periodeKemiskinan(Request $request){
+    public function periodeKemiskinan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'filter' => 'required',
         ]);
@@ -351,7 +381,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function mapKemiskinan(Request $request){
+    public function mapKemiskinan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
             'filter' => 'required',
@@ -365,7 +396,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function areaKemiskinan(Request $request){
+    public function areaKemiskinan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'periode' => 'required',
             'filter' => 'required',
@@ -380,7 +412,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailKemiskinan(Request $request){
+    public function detailKemiskinan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
             'filter' => 'required',
@@ -396,22 +429,26 @@ class SosialKependudukanController extends Controller
     // End Kemiskinan
 
     // Start Pekerjaan
-    public function indikatorPekerjaan(){
+    public function indikatorPekerjaan()
+    {
         $data = $this->sosialService->getIndikatorPekerjaan($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function tahunPekerjaan(){
+    public function tahunPekerjaan()
+    {
         $data = $this->sosialService->getTahunPekerjaan($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function tahunJenisPekerjaan(){
+    public function tahunJenisPekerjaan()
+    {
         $data = $this->sosialService->getTahunJenisPekerjaan($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function periodePekerjaan(Request $request){
+    public function periodePekerjaan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'filter' => 'required',
         ]);
@@ -424,7 +461,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function barJenisPekerjaan(Request $request){
+    public function barJenisPekerjaan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -437,7 +475,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function mapPekerjaan(Request $request){
+    public function mapPekerjaan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
             'filter' => 'required',
@@ -451,7 +490,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function linePekerjaan(Request $request){
+    public function linePekerjaan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'periode' => 'required',
             'filter' => 'required',
@@ -465,7 +505,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailJenisPekerjaan(Request $request){
+    public function detailJenisPekerjaan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -478,7 +519,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailPekerjaan(Request $request){
+    public function detailPekerjaan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'periode' => 'required',
             'indikator' => 'required',
@@ -494,27 +536,32 @@ class SosialKependudukanController extends Controller
     // End Pekerjaan
 
     // Start Pendidikan
-    public function tahunAjaranPendidikan(){
+    public function tahunAjaranPendidikan()
+    {
         $data = $this->sosialService->getTahunAjaranPendidikan($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function tahunPendidikan(){
+    public function tahunPendidikan()
+    {
         $data = $this->sosialService->getTahunPendidikan($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function jenjangPendidikan(){
+    public function jenjangPendidikan()
+    {
         $data = $this->sosialService->getJenjangPendidikan($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function indikatorPendidikan(){
+    public function indikatorPendidikan()
+    {
         $data = $this->sosialService->getIndikatorPendidikan($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function barPendidikan(Request $request){
+    public function barPendidikan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
             'jenjang' => 'required',
@@ -529,7 +576,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function barJenjangPendidikan(Request $request){
+    public function barJenjangPendidikan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -542,7 +590,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function mapPendidikan(Request $request){
+    public function mapPendidikan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
             'jenjang' => 'required',
@@ -556,7 +605,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailPendidikan(Request $request){
+    public function detailPendidikan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -571,22 +621,26 @@ class SosialKependudukanController extends Controller
     // End Pendidikan
 
     // Start Kesehatan
-    public function tahunKesehatan(){
+    public function tahunKesehatan()
+    {
         $data = $this->sosialService->getTahunKesehatan($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function indikatorKesehatan(){
+    public function indikatorKesehatan()
+    {
         $data = $this->sosialService->getIndikatorKesehatan($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function periodeKesehatan(){
+    public function periodeKesehatan()
+    {
         $data = $this->sosialService->getPeriodeKesehatan($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function barKesehatan(Request $request){
+    public function barKesehatan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
             'filter' => 'required'
@@ -600,7 +654,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function barColumnKesehatan(Request $request){
+    public function barColumnKesehatan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'periode' => 'required',
         ]);
@@ -613,7 +668,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function mapKesehatan(Request $request){
+    public function mapKesehatan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
@@ -626,7 +682,8 @@ class SosialKependudukanController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailKesehatan(Request $request){
+    public function detailKesehatan(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);

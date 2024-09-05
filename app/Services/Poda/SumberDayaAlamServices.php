@@ -7,7 +7,8 @@ use App\Repositories\Poda\SumberDayaAlamRepositories;
 use App\Traits\FormatChart;
 use App\Exceptions\ErrorResponse;
 
-class SumberDayaAlamServices {
+class SumberDayaAlamServices
+{
 
     use FormatChart;
     protected $sdaRepositories;
@@ -19,15 +20,17 @@ class SumberDayaAlamServices {
         $this->masterRepositories = $masterRepositories;
     }
 
-    public function getSubjectName($subject){
-        if($subject == 'pertanian'){
+    public function getSubjectName($subject)
+    {
+        if ($subject == 'pertanian') {
             return 'Tanaman Pangan';
         } else {
             return ucfirst($subject);
         }
     }
 
-    public function getListIndikator($idUsecase, $subject){
+    public function getListIndikator($idUsecase, $subject)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -38,7 +41,8 @@ class SumberDayaAlamServices {
         return $response;
     }
 
-    public function getListJenis($idUsecase, $subject, $indikator){
+    public function getListJenis($idUsecase, $subject, $indikator)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -49,7 +53,8 @@ class SumberDayaAlamServices {
         return $response;
     }
 
-    public function getListTahun($idUsecase, $subject, $indikator){
+    public function getListTahun($idUsecase, $subject, $indikator)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -60,7 +65,8 @@ class SumberDayaAlamServices {
         return $response;
     }
 
-    public function getPeriodeSda($idUsecase, $subject, $indikator){
+    public function getPeriodeSda($idUsecase, $subject, $indikator)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -71,7 +77,8 @@ class SumberDayaAlamServices {
         return $response;
     }
 
-    public function getMapSda($idUsecase, $subject, $params){
+    public function getMapSda($idUsecase, $subject, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -82,7 +89,8 @@ class SumberDayaAlamServices {
         return $response;
     }
 
-    public function getBarSda($idUsecase, $subject, $params){
+    public function getBarSda($idUsecase, $subject, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -99,14 +107,15 @@ class SumberDayaAlamServices {
         return $response;
     }
 
-    public function getAreaSda($idUsecase, $subject, $params){
+    public function getAreaSda($idUsecase, $subject, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
         $rows = $this->sdaRepositories->getAreaSda($idUsecase, $this->getSubjectName($subject), $params);
 
-        if($subject != 'perikanan'){
-            $y_axis_title =  $params['indikator']. " " .$params['jenis'];
+        if ($subject != 'perikanan') {
+            $y_axis_title =  $params['indikator'] . " " . $params['jenis'];
         } else {
             $y_axis_title =  $params['jenis'];
         }
@@ -121,7 +130,8 @@ class SumberDayaAlamServices {
         return $response;
     }
 
-    public function getDetailSda($idUsecase, $subject, $params){
+    public function getDetailSda($idUsecase, $subject, $params)
+    {
         if (empty($idUsecase)) {
             throw new ErrorResponse(type: 'Unauthorized', message: 'User tidak logged in.', statusCode: 401);
         }
@@ -129,7 +139,7 @@ class SumberDayaAlamServices {
 
         $kode_kabkota = $this->masterRepositories->getKodeKabkota($idUsecase);
 
-        $title = "Detail ". $params['indikator']. " ".$params['jenis'].", ". $params['periode'];
+        $title = "Detail " . $params['indikator'] . " " . $params['jenis'] . ", " . $params['periode'];
 
         $response = $this->detailTable($rows, $kode_kabkota->kode_kab_kota, $title);
 

@@ -7,7 +7,8 @@ use Carbon\Traits\ToStringFormat;
 
 trait FormatChart
 {
-    public function getPeriode($params) {
+    public function getPeriode($params)
+    {
         $periode = explode('-', $params['periode']);
 
         $startYear = $periode[0];
@@ -16,16 +17,18 @@ trait FormatChart
         return [$startYear, $endYear];
     }
 
-    public function getLowerCase($str){
+    public function getLowerCase($str)
+    {
         return str_replace(['/', ' '], '_', strtolower(($str)));
     }
 
-    public function filterTahun($data, $is_month = false) {
-        if(empty($data)){
+    public function filterTahun($data, $is_month = false)
+    {
+        if (empty($data)) {
             throw new ErrorResponse(type: 'Not Found', message: 'Filter Tahun Tidak tersedia.', statusCode: 404);
         }
 
-        if($is_month){
+        if ($is_month) {
             $response = [
                 'month' => $data,
                 'selected_month' => $data[count($data) - 1]
@@ -40,8 +43,9 @@ trait FormatChart
         return $response;
     }
 
-    public function filterPeriode($data) {
-        if(empty($data)){
+    public function filterPeriode($data)
+    {
+        if (empty($data)) {
             throw new ErrorResponse(type: 'Not Found', message: 'Filter Periode Tidak tersedia.', statusCode: 404);
         }
 
@@ -64,13 +68,14 @@ trait FormatChart
         return $response;
     }
 
-    public function filterMonthPeriode($data){
-        if(empty($data)){
+    public function filterMonthPeriode($data)
+    {
+        if (empty($data)) {
             throw new ErrorResponse(type: 'Not Found', message: 'Filter Month Tidak tersedia.', statusCode: 404);
         }
 
         $idx = 2;
-        if(count($data) < 2){
+        if (count($data) < 2) {
             $idx = count($data) - 1;
         }
 
@@ -93,8 +98,9 @@ trait FormatChart
         return $response;
     }
 
-    public function listNamaDaerah($data) {
-        if(empty($data)){
+    public function listNamaDaerah($data)
+    {
+        if (empty($data)) {
             throw new ErrorResponse(type: 'Not Found', message: 'Daftar Nama Daerah Tidak tersedia.', statusCode: 404);
         }
 
@@ -105,8 +111,9 @@ trait FormatChart
         return $response;
     }
 
-    public function listIndikator($data) {
-        if(empty($data)){
+    public function listIndikator($data)
+    {
+        if (empty($data)) {
             throw new ErrorResponse(type: 'Not Found', message: 'Daftar Indikator Tidak tersedia.', statusCode: 404);
         }
 
@@ -117,8 +124,9 @@ trait FormatChart
         return $response;
     }
 
-    public function getCard($data) {
-        if(empty($data)){
+    public function getCard($data)
+    {
+        if (empty($data)) {
             throw new ErrorResponse(type: 'Not Found', message: 'Daftar Card Tidak tersedia.', statusCode: 404);
         }
 
@@ -129,8 +137,9 @@ trait FormatChart
         return $response;
     }
 
-    public function mapLeaflet($data) {
-        if(empty($data)){
+    public function mapLeaflet($data)
+    {
+        if (empty($data)) {
             throw new ErrorResponse(type: 'Not Found', message: 'Map Leaflet tidak tersedia.', statusCode: 404);
         }
 
@@ -143,8 +152,9 @@ trait FormatChart
         return $response;
     }
 
-    public function pieChart($data, $tahun) {
-        if(empty($data)){
+    public function pieChart($data, $tahun)
+    {
+        if (empty($data)) {
             throw new ErrorResponse(type: 'Not Found', message: 'Pie Chart tidak tersedia.', statusCode: 404);
         }
 
@@ -169,8 +179,9 @@ trait FormatChart
         return $response;
     }
 
-    public function barChart($data, $kode_kab_kota = "", $chart_params) {
-        if(empty($data)){
+    public function barChart($data, $kode_kab_kota = "", $chart_params)
+    {
+        if (empty($data)) {
             throw new ErrorResponse(type: 'Not Found', message: 'Detail Data bar chart tidak tersedia.', statusCode: 404);
         }
 
@@ -179,7 +190,7 @@ trait FormatChart
             $chart_data[] = (float)($key->data);
         }
 
-        if($kode_kab_kota == ""){
+        if ($kode_kab_kota == "") {
             $xaxis_title = $chart_params['x_axis_title'];
         } else {
             $xaxis_title = substr($kode_kab_kota, 2) != "00" ? "Kecamatan" : "Kabupaten/Kota";
@@ -197,19 +208,20 @@ trait FormatChart
         return $response;
     }
 
-    public function barColumnChart($data, $chart_type, $params = null) {
-        if(empty($data)){
+    public function barColumnChart($data, $chart_type, $params = null)
+    {
+        if (empty($data)) {
             throw new ErrorResponse(type: 'Not Found', message: 'Detail Data Column Bar chart tidak tersedia.', statusCode: 404);
         }
 
 
 
         foreach ($data as $key) {
-            if($chart_type == 'dual-axes'){
-                if(in_array($params['name_column'], ['Indeks Harga Konsumen', 'Inflasi'])){
-                    $chart_category[] = substr($key->bulan, 0, 3)." ".$key->tahun;
+            if ($chart_type == 'dual-axes') {
+                if (in_array($params['name_column'], ['Indeks Harga Konsumen', 'Inflasi'])) {
+                    $chart_category[] = substr($key->bulan, 0, 3) . " " . $key->tahun;
                 }
-                if($key->jenis == $params['name_column']){
+                if ($key->jenis == $params['name_column']) {
                     $chart_category[] = $key->tahun;
                     $chart_data[$key->jenis]["data_column"][] = $key->data;
                     $chart_data[$key->jenis]["yAxis_title"] = $params['column_title'];
@@ -235,15 +247,16 @@ trait FormatChart
             ]
         ];
 
-        if($chart_type == 'dual-axes'){
+        if ($chart_type == 'dual-axes') {
             unset($response["widget_data"]["yAxis_title"]);
         }
 
         return $response;
     }
 
-    public function stackedBarChart($tahun, $data) {
-        if(empty($data)){
+    public function stackedBarChart($tahun, $data)
+    {
+        if (empty($data)) {
             throw new ErrorResponse(type: 'Not Found', message: 'Detail Data tidak tersedia.', statusCode: 404);
         }
 
@@ -277,7 +290,8 @@ trait FormatChart
                 [
                     "name" => "Laki-laki",
                     "data" => $lakilaki
-                ], [
+                ],
+                [
                     "name" => "Perempuan",
                     "data" => $perempuan
                 ]
@@ -285,19 +299,20 @@ trait FormatChart
         }
 
         $response = [
-                "year" => $tahun['tahun'],
-                "widget_type" => $widget_type,
-                "widget_title" => $widget_title,
-                "widget_data" => $chart_data,
-                "xAxis_title" => $xAxis_title,
-                "yAxis_title" => $yAxis_title
-            ];
+            "year" => $tahun['tahun'],
+            "widget_type" => $widget_type,
+            "widget_title" => $widget_title,
+            "widget_data" => $chart_data,
+            "xAxis_title" => $xAxis_title,
+            "yAxis_title" => $yAxis_title
+        ];
 
         return $response;
     }
 
-    public function areaLineChart($data, $params, $axis_title, $type_chart){
-        if(empty($data) && empty($params)){
+    public function areaLineChart($data, $params, $axis_title, $type_chart)
+    {
+        if (empty($data) && empty($params)) {
             throw new ErrorResponse(type: 'Not Found', message: "Data $type_chart tidak tersedia.", statusCode: 404);
         }
 
@@ -309,7 +324,7 @@ trait FormatChart
             $chart_data[] = round($key->data, 2);
         }
 
-        if(isset($params['filter'])){
+        if (isset($params['filter'])) {
             $indikator_name = $params['filter'];
         } else {
             $indikator_name = $axis_title['y_axis_title'];
@@ -337,8 +352,9 @@ trait FormatChart
         return $response;
     }
 
-    public function multiLineChart($data, $axis_title){
-        if(empty($data)){
+    public function multiLineChart($data, $axis_title)
+    {
+        if (empty($data)) {
             throw new ErrorResponse(type: 'Not Found', message: 'Detail Data Multi Line chart tidak tersedia.', statusCode: 404);
         }
 
@@ -361,12 +377,13 @@ trait FormatChart
         return $response;
     }
 
-    public function detailTable($data, $kode_kab_kota, $title, $alt_title = "") {
-        if(empty($data)){
+    public function detailTable($data, $kode_kab_kota, $title, $alt_title = "")
+    {
+        if (empty($data)) {
             throw new ErrorResponse(type: 'Not Found', message: 'Detail Data tidak tersedia.', statusCode: 404);
         }
 
-        if($kode_kab_kota != ""){
+        if ($kode_kab_kota != "") {
             $level = substr($kode_kab_kota, 2) != "00" ? "Kecamatan" : "Kabupaten/Kota";
         } else {
             $level = $alt_title;
@@ -374,21 +391,21 @@ trait FormatChart
 
         foreach ($data as $item) {
             $output[$item->category][$this->getLowerCase($level)] = $item->category;
-            if(isset($item->category2)){
+            if (isset($item->category2)) {
                 $output[$item->category]['month'] = $item->category2;
             }
-            $output[$item->category][$this->getLowerCase($item->column)] = (double) $item->data;
+            $output[$item->category][$this->getLowerCase($item->column)] = (float) $item->data;
         }
 
         $output = array_values($output);
 
         $response = [
-            "widget_type"=> "datatable-server",
-            "title"=> $title,
-            "sumber_data"=> "",
-            "widget_data"=> [
-                "t_head"=> array_map('strval', array_keys($output[0])),
-                "t_body"=> $output
+            "widget_type" => "datatable-server",
+            "title" => $title,
+            "sumber_data" => "",
+            "widget_data" => [
+                "t_head" => array_map('strval', array_keys($output[0])),
+                "t_body" => $output
             ]
         ];
 

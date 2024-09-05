@@ -22,25 +22,29 @@ class EkonomiPerdaganganController extends Controller
     }
 
     // Start Ekonomi PAD
-    public function areaPad(){
+    public function areaPad()
+    {
         $data = $this->ekonomiService->getAreaPad($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function detailPad(){
+    public function detailPad()
+    {
         $data = $this->ekonomiService->getDetailPad($this->idUsecase);
         return $this->successResponse(data: $data);
     }
     // End Ekonomi PAD
 
     // Start Trend Perdagangan
-    public function periodeTrendPerdagangan(){
+    public function periodeTrendPerdagangan()
+    {
         $data = $this->ekonomiService->getPeriodeTrendPerdagangan($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function areaTrendPerdagangan(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function areaTrendPerdagangan(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'periode' => 'required'
         ]);
 
@@ -51,8 +55,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailTrendPerdagangan(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function detailTrendPerdagangan(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'periode' => 'required'
         ]);
 
@@ -65,13 +70,15 @@ class EkonomiPerdaganganController extends Controller
     // End Perdagangan
 
     // Start Top Komoditas
-    public function tahunKomoditas(){
+    public function tahunKomoditas()
+    {
         $data = $this->ekonomiService->getTahunKomoditas($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function barKomoditas(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function barKomoditas(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required'
         ]);
 
@@ -82,8 +89,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailKomoditas(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function detailKomoditas(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required'
         ]);
 
@@ -96,13 +104,15 @@ class EkonomiPerdaganganController extends Controller
     // End Top Komoditas
 
     // Start Top Pad KabKota
-    public function tahunPadKabKota(){
+    public function tahunPadKabKota()
+    {
         $data = $this->ekonomiService->getTahunPadKabKota($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function barPadKabKota(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function barPadKabKota(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required'
         ]);
 
@@ -113,8 +123,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailPadKabKota(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function detailPadKabKota(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required'
         ]);
 
@@ -127,23 +138,27 @@ class EkonomiPerdaganganController extends Controller
     // End Top Komoditas
 
     // Start Inflasi dan IHK
-    public function monthPeriodeInflasi(){
+    public function monthPeriodeInflasi()
+    {
         $data = $this->ekonomiService->getMonthPeriodeInflasi($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function namaDaerahInflasi(){
+    public function namaDaerahInflasi()
+    {
         $data = $this->ekonomiService->getNamaDaerahInflasi($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function tahunInflasi(){
+    public function tahunInflasi()
+    {
         $data = $this->ekonomiService->getTahunInflasi($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function bulanInflasi(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function bulanInflasi(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required'
         ]);
 
@@ -154,8 +169,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function mapInflasi(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function mapInflasi(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required',
             'bulan' => 'required'
         ]);
@@ -167,8 +183,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function dualChartInflasi(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function dualChartInflasi(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'nama_daerah' => 'required',
             'periode' => 'required'
         ]);
@@ -180,8 +197,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailInflasi(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function detailInflasi(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required'
         ]);
 
@@ -194,23 +212,27 @@ class EkonomiPerdaganganController extends Controller
     // End Infalsi dan IHK
 
     // Start PDRB
-    public function tahunPDRB(){
+    public function tahunPDRB()
+    {
         $data = $this->ekonomiService->getTahunPDRB($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function kategoriPDRB(){
+    public function kategoriPDRB()
+    {
         $data = $this->ekonomiService->getKategoriPDRB($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function sektorPDRB(Request $request){
+    public function sektorPDRB(Request $request)
+    {
         $data = $this->ekonomiService->getSektorPDRB($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function cardPDRB(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function cardPDRB(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required',
             'filter' => 'required',
             'jenis' => 'required',
@@ -223,8 +245,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function barPDRB(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function barPDRB(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required',
             'filter' => 'required',
             'jenis' => 'required',
@@ -237,8 +260,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function areaPDRB(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function areaPDRB(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required',
             'filter' => 'required',
             'jenis' => 'required',
@@ -252,8 +276,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailPDRB(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function detailPDRB(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required',
             'filter' => 'required',
             'jenis' => 'required',
@@ -268,29 +293,34 @@ class EkonomiPerdaganganController extends Controller
     // End PDRB
 
     // Start Pariwisata
-    public function indikatorPariwisata(){
+    public function indikatorPariwisata()
+    {
         $data = $this->ekonomiService->getIndikatorPariwisata($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function namaDaerahPariwisataDTW(){
+    public function namaDaerahPariwisataDTW()
+    {
         $data = $this->ekonomiService->getNamaDaerahPariwisataDTW($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function periodePariwisataDTW(){
+    public function periodePariwisataDTW()
+    {
         $data = $this->ekonomiService->getPeriodePariwisataDTW($this->idUsecase);
-        
+
         return $this->successResponse(data: $data);
     }
 
-    public function tahunPariwisataDTW(Request $request){
+    public function tahunPariwisataDTW(Request $request)
+    {
         $data = $this->ekonomiService->getTahunPariwisataDTW($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function mapPariwisataDTW(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function mapPariwisataDTW(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
 
@@ -301,8 +331,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function linePariwisataDTW(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function linePariwisataDTW(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'periode' => 'required',
             'daerah' => 'required',
         ]);
@@ -314,8 +345,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailPariwisataDTW(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function detailPariwisataDTW(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'periode' => 'required',
         ]);
 
@@ -326,18 +358,21 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function periodePariwisataHotel(){
+    public function periodePariwisataHotel()
+    {
         $data = $this->ekonomiService->getPeriodePariwisataHotel($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function tahunPariwisataHotel(){
-            $data = $this->ekonomiService->getTahunPariwisataHotel($this->idUsecase);
+    public function tahunPariwisataHotel()
+    {
+        $data = $this->ekonomiService->getTahunPariwisataHotel($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function mapPariwisataHotel(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function mapPariwisataHotel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required'
         ]);
 
@@ -348,8 +383,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function barPariwisataHotel(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function barPariwisataHotel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required'
         ]);
 
@@ -360,8 +396,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function linePariwisataHotel(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function linePariwisataHotel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'periode' => 'required',
         ]);
 
@@ -372,8 +409,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailPariwisataHotel(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function detailPariwisataHotel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
 
@@ -384,13 +422,15 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function periodePariwisataWisatawan(){
+    public function periodePariwisataWisatawan()
+    {
         $data = $this->ekonomiService->getPeriodePariwisataWisatawan($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function cardPariwisataWisatawan(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function cardPariwisataWisatawan(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'periode' => 'required'
         ]);
 
@@ -401,8 +441,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function linePariwisataWisatawan(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function linePariwisataWisatawan(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'periode' => 'required'
         ]);
 
@@ -413,8 +454,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailPariwisataWisatawan(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function detailPariwisataWisatawan(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'periode' => 'required',
         ]);
 
@@ -425,13 +467,15 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function tahunPariwisataTPK(Request $request){
+    public function tahunPariwisataTPK(Request $request)
+    {
         $data = $this->ekonomiService->getTahunPariwisataTPK($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function bulanPariwisataTPK(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function bulanPariwisataTPK(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required'
         ]);
 
@@ -442,8 +486,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function cardPariwisataTPK(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function cardPariwisataTPK(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required',
             'bulan' => 'required'
         ]);
@@ -455,8 +500,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function linePariwisataTPK(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function linePariwisataTPK(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required'
         ]);
 
@@ -467,8 +513,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailPariwisataTPK(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function detailPariwisataTPK(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required',
         ]);
 
@@ -479,23 +526,27 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function periodePariwisataResto(){
+    public function periodePariwisataResto()
+    {
         $data = $this->ekonomiService->getPeriodePariwisataResto($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function tahunPariwisataResto(){
+    public function tahunPariwisataResto()
+    {
         $data = $this->ekonomiService->getTahunPariwisataResto($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function namaDaerahPariwisataResto(){
+    public function namaDaerahPariwisataResto()
+    {
         $data = $this->ekonomiService->getNamaDaerahPariwisataResto($this->idUsecase);
         return $this->successResponse(data: $data);
     }
 
-    public function mapPariwisataResto(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function mapPariwisataResto(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tahun' => 'required'
         ]);
 
@@ -506,8 +557,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function linePariwisataResto(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function linePariwisataResto(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'periode' => 'required',
             'daerah' => 'required',
         ]);
@@ -519,8 +571,9 @@ class EkonomiPerdaganganController extends Controller
         return $this->successResponse(data: $data);
     }
 
-    public function detailPariwisataResto(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function detailPariwisataResto(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'periode' => 'required',
         ]);
 

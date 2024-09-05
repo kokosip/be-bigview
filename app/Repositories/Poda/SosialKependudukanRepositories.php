@@ -6,9 +6,11 @@ use Exception;
 use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\DB;
 
-class SosialKependudukanRepositories {
+class SosialKependudukanRepositories
+{
 
-    public function getTahunJumlahPenduduk($idUsecase){
+    public function getTahunJumlahPenduduk($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_kependudukan_filter_tahun')
                 ->where('id_usecase', $idUsecase)
@@ -22,7 +24,8 @@ class SosialKependudukanRepositories {
     }
 
     // Start Kependudukan
-    public function getMapJumlahPenduduk($idUsecase, $tahun){
+    public function getMapJumlahPenduduk($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_kependudukan_map_leaflet')
                 ->select('city', 'Lakilaki', 'Perempuan', 'lat', 'lon')
@@ -36,7 +39,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getPieJumlahPenduduk($idUsecase, $tahun){
+    public function getPieJumlahPenduduk($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_kependudukan_pie_chart')
                 ->select('sumber_data', 'tahun', 'lakilaki', 'Perempuan', 'jumlah')
@@ -50,7 +54,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getBarJumlahPenduduk($idUsecase, $tahun){
+    public function getBarJumlahPenduduk($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_kependudukan_bar_chart')
                 ->select('city as chart_categories', 'datacontent as data')
@@ -64,7 +69,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getDetailJumlahPenduduk($idUsecase, $tahun){
+    public function getDetailJumlahPenduduk($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_kependudukan_detail_merged')
                 ->select('city as category', 'jenis as column', 'data')
@@ -80,7 +86,8 @@ class SosialKependudukanRepositories {
     // End Kependudukan
 
     // Start Rentang Usia
-    public function getTahunRentangUsia($idUsecase){
+    public function getTahunRentangUsia($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_rentang_usia_filter_tahun')
                 ->where('id_usecase', $idUsecase)
@@ -93,7 +100,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getStackedBarRentangUsia($idUsecase, $tahun){
+    public function getStackedBarRentangUsia($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_rentang_usia_bar_chart')
                 ->select('name', 'chart_categories', 'data')
@@ -107,7 +115,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getDetailRentangUsia($idUsecase, $tahun){
+    public function getDetailRentangUsia($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_rentang_usia_detail_merged')
                 ->select('kelompok_umur as category', 'jenis as column', 'data')
@@ -123,7 +132,8 @@ class SosialKependudukanRepositories {
     // End Rentang Usia
 
     // Start Laju Pertumbuhan
-    public function getPeriodeLaju($idUsecase){
+    public function getPeriodeLaju($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_lpp_filter_periode')
                 ->select('startYear', 'endYear', 'minYear', 'maxYear')
@@ -136,7 +146,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getNamaDaerahLaju($idUsecase){
+    public function getNamaDaerahLaju($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_lpp_filter_kabkot')->distinct()
                 ->where('id_usecase', $idUsecase)
@@ -149,7 +160,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getDualAxesLaju($idUsecase, $params){
+    public function getDualAxesLaju($idUsecase, $params)
+    {
         try {
             $year = explode('-', $params['periode']);
 
@@ -170,7 +182,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getDetailLaju($idUsecase, $periode){
+    public function getDetailLaju($idUsecase, $periode)
+    {
         try {
             $tahun = explode('-', $periode['periode']);
 
@@ -191,7 +204,8 @@ class SosialKependudukanRepositories {
     // End Laju Pertumbuhan
 
     // Start Rasio Jenis Kelamin
-    public function getTahunRasio($idUsecase){
+    public function getTahunRasio($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_rasio_jk_filter_tahun')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -204,7 +218,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getMapRasio($idUsecase, $tahun){
+    public function getMapRasio($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_rasio_jk_map_leaflet')
                 ->select('city', 'lat', 'lon', 'rasio')
@@ -218,7 +233,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getBarRasio($idUsecase, $tahun){
+    public function getBarRasio($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_rasio_jk_bar_chart')
                 ->select('chart_categories', 'data')
@@ -232,7 +248,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getDetailRasio($idUsecase, $tahun){
+    public function getDetailRasio($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_rasio_jk_detail')
                 ->select('kabupaten_kota as category', 'tahun as column', 'data')
@@ -248,7 +265,8 @@ class SosialKependudukanRepositories {
     // End Rasio Jenis Kelamin
 
     // Start Kepadatan Penduduk
-    public function getTahunKepadatan($idUsecase){
+    public function getTahunKepadatan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_kepadatan_penduduk_filter_tahun')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -261,7 +279,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getMapKepadatan($idUsecase, $tahun){
+    public function getMapKepadatan($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_kepadatan_penduduk_map_leaflet')
                 ->select('city', 'lat', 'lon', 'nilai')
@@ -275,7 +294,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getBarKepadatan($idUsecase, $tahun){
+    public function getBarKepadatan($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_kepadatan_penduduk_bar_chart')
                 ->select('chart_categories', 'data')
@@ -289,7 +309,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getDetailKepadatan($idUsecase, $tahun){
+    public function getDetailKepadatan($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_kepadatan_penduduk_detail')
                 ->select('kabupaten_kota as category', 'tahun as column', 'data')
@@ -305,7 +326,8 @@ class SosialKependudukanRepositories {
     // End Kepadatan Penduduk
 
     // Start IPM
-    public function getPeriodeIPM($idUsecase, $filter){
+    public function getPeriodeIPM($idUsecase, $filter)
+    {
         try {
             $db = DB::table('mart_poda_social_ipm_year_periode')
                 ->select('startYear', 'endYear', 'minYear', 'maxYear')
@@ -319,7 +341,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getNamaDaerahIPM($idUsecase, $filter){
+    public function getNamaDaerahIPM($idUsecase, $filter)
+    {
         try {
             $db = DB::table('mart_poda_social_ipm_area_chart')->distinct()
                 ->where('id_usecase', $idUsecase)
@@ -333,7 +356,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getIndikatorIPM($idUsecase){
+    public function getIndikatorIPM($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_ipm_filter_indikator')->distinct()
                 ->where('id_usecase', $idUsecase)
@@ -345,7 +369,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getAreaIPM($idUsecase, $params){
+    public function getAreaIPM($idUsecase, $params)
+    {
         try {
             $years = explode('-', $params['periode']);
 
@@ -353,7 +378,7 @@ class SosialKependudukanRepositories {
             $endYear = $years[1];
 
             $db = DB::table('mart_poda_social_ipm_area_chart')
-                ->select('city','tahun as category', 'data')
+                ->select('city', 'tahun as category', 'data')
                 ->where('id_usecase', $idUsecase)
                 ->where('city', $params['nama_daerah'])
                 ->where('filter', $params['filter'])
@@ -366,10 +391,11 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getMapIPM($idUsecase, $params){
+    public function getMapIPM($idUsecase, $params)
+    {
         try {
             $db = DB::table('mart_poda_social_ipm_map_leaflet')
-                ->select('city','lat','lon','ipm as data')
+                ->select('city', 'lat', 'lon', 'ipm as data')
                 ->where('id_usecase', $idUsecase)
                 ->where('filter', $params['filter'])
                 ->where('tahun', $params['tahun'])
@@ -381,7 +407,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getDetailIPM($idUsecase, $params){
+    public function getDetailIPM($idUsecase, $params)
+    {
         try {
             $periode = explode('-', $params['periode']);
 
@@ -403,7 +430,8 @@ class SosialKependudukanRepositories {
     // End IPM
 
     // Start Kemiskinan
-    public function getIndikatorKemiskinan($idUsecase){
+    public function getIndikatorKemiskinan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_kemiskinan_filter_indikator')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -415,7 +443,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getTahunKemiskinan($idUsecase){
+    public function getTahunKemiskinan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_kemiskinan_filter_tahun')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -428,7 +457,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getDaerahKemiskinan($idUsecase){
+    public function getDaerahKemiskinan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_kemiskinan_filterkab')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -440,7 +470,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getPeriodeKemiskinan($idUsecase, $filter){
+    public function getPeriodeKemiskinan($idUsecase, $filter)
+    {
         try {
             $db = DB::table('mart_poda_social_kemiskinan_filter_periode')
                 ->select('startYear', 'endYear', 'minYear', 'maxYear')
@@ -454,7 +485,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getMapKemiskinan($idUsecase, $params){
+    public function getMapKemiskinan($idUsecase, $params)
+    {
         try {
             $db = DB::table('mart_poda_social_kemiskinan_map_leaflet')
                 ->select('city', 'value as data', 'lat', 'lon')
@@ -469,7 +501,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getAreaKemiskinan($idUsecase, $params){
+    public function getAreaKemiskinan($idUsecase, $params)
+    {
         try {
             $years = explode('-', $params['periode']);
 
@@ -477,7 +510,7 @@ class SosialKependudukanRepositories {
             $endYear = $years[1];
 
             $db = DB::table('mart_poda_social_kemiskinan_area_chart')
-                ->select('kabupaten_kota as city','category', 'data')
+                ->select('kabupaten_kota as city', 'category', 'data')
                 ->where('id_usecase', $idUsecase)
                 ->where('kabupaten_kota', $params['nama_daerah'])
                 ->where('filter', $params['filter'])
@@ -490,7 +523,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getDetailKemiskinan($idUsecase, $params){
+    public function getDetailKemiskinan($idUsecase, $params)
+    {
         try {
             $db = DB::table('mart_poda_social_kemiskinan_detail')
                 ->select('kabupaten_kota as category', 'tahun as column', 'data')
@@ -507,7 +541,8 @@ class SosialKependudukanRepositories {
     // End Kemiskinan
 
     // Start Pekerjaan dan Angkatan Kerja
-    public function getIndikatorPekerjaan($idUsecase){
+    public function getIndikatorPekerjaan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_pekerjaan_filter_indikator')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -519,7 +554,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getTahunPekerjaan($idUsecase){
+    public function getTahunPekerjaan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_pekerjaan_filter_year_leaflet')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -532,7 +568,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getTahunJenisPekerjaan($idUsecase){
+    public function getTahunJenisPekerjaan($idUsecase)
+    {
         try {
             $db = DB::table('master_poda_social_pekerjaan_type')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -545,7 +582,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getPeriodePekerjaan($idUsecase, $filter){
+    public function getPeriodePekerjaan($idUsecase, $filter)
+    {
         try {
             $db = DB::table('mart_poda_social_pekerjaan_periode')
                 ->select('startYear', 'endYear', 'minYear', 'maxYear')
@@ -559,7 +597,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getBarJenisPekerjaan($idUsecase, $tahun){
+    public function getBarJenisPekerjaan($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('master_poda_social_pekerjaan_type')
                 ->selectRaw("jenis as chart_categories, sum(datacontent) as data")
@@ -574,7 +613,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getMapPekerjaan($idUsecase, $params){
+    public function getMapPekerjaan($idUsecase, $params)
+    {
         try {
             $db = DB::table('mart_poda_social_pekerjaan_map_leaflet')
                 ->select('city', 'data', 'lat', 'lon')
@@ -589,7 +629,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getLinePekerjaan($idUsecase, $params){
+    public function getLinePekerjaan($idUsecase, $params)
+    {
         try {
             $years = explode('-', $params['periode']);
 
@@ -609,7 +650,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getDetailJenisPekerjaan($idUsecase, $params){
+    public function getDetailJenisPekerjaan($idUsecase, $params)
+    {
         try {
             $db = DB::table('master_poda_social_pekerjaan_type')
                 ->selectRaw("jenis as category, 'Total' as `column`, sum(datacontent) as data")
@@ -623,7 +665,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getDetailPekerjaan($idUsecase, $params){
+    public function getDetailPekerjaan($idUsecase, $params)
+    {
         try {
             $tahun = explode('-', $params['periode']);
 
@@ -645,7 +688,8 @@ class SosialKependudukanRepositories {
     // End Pekerjaan dan Angkatan Kerja
 
     // Start Pendidikan
-    public function getTahunAjaranPendidikan($idUsecase){
+    public function getTahunAjaranPendidikan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_pendidikan_filter_tahun_ajaran')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -658,7 +702,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getTahunPendidikan($idUsecase){
+    public function getTahunPendidikan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_pendidikan_filter_tahun')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -671,7 +716,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getJenjangPendidikan($idUsecase){
+    public function getJenjangPendidikan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_pendidikan_filter_jenjang')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -683,7 +729,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getIndikatorPendidikan($idUsecase){
+    public function getIndikatorPendidikan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_pendidikan_filter_indikator')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -695,7 +742,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getBarPendidikan($idUsecase, $params){
+    public function getBarPendidikan($idUsecase, $params)
+    {
         try {
             $db = DB::table('mart_poda_social_pendidikan_bar_chart')
                 ->select('city as chart_categories', 'data')
@@ -711,7 +759,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getBarJenjangPendidikan($idUsecase, $tahun){
+    public function getBarJenjangPendidikan($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_pendidikan_jenjang_bar_chart')
                 ->select('sekolah as chart_categories', 'data')
@@ -725,7 +774,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getMapPendidikan($idUsecase, $params){
+    public function getMapPendidikan($idUsecase, $params)
+    {
         try {
             $db = DB::table('mart_poda_social_pendidikan_map_leaflet')
                 ->select('city', 'jenis', 'lat', 'lon', 'value')
@@ -740,7 +790,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getDetailPendidikan($idUsecase, $tahun){
+    public function getDetailPendidikan($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_pendidikan_detail')
                 ->select('city as category', 'sekolah as column', 'value as data')
@@ -756,7 +807,8 @@ class SosialKependudukanRepositories {
     // End Pendidikan
 
     // Start Kesehatan
-    public function getTahunKesehatan($idUsecase){
+    public function getTahunKesehatan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_kesehatan_filter_tahun')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -769,7 +821,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getIndikatorKesehatan($idUsecase){
+    public function getIndikatorKesehatan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_kesehatan_filter_faskes')
                 ->distinct()->where('id_usecase', $idUsecase)
@@ -782,7 +835,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getPeriodeKesehatan($idUsecase){
+    public function getPeriodeKesehatan($idUsecase)
+    {
         try {
             $db = DB::table('mart_poda_social_kesehatan_filter_periode')
                 ->select('startYear', 'endYear', 'minYear', 'maxYear')
@@ -795,10 +849,11 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getBarKesehatan($idUsecase, $params){
+    public function getBarKesehatan($idUsecase, $params)
+    {
         try {
             $db = DB::table('mart_poda_social_kesehatan_bar_chart')
-                ->select('chart_categories','chart_data as data')
+                ->select('chart_categories', 'chart_data as data')
                 ->where('id_usecase', $idUsecase)
                 ->where('tahun', $params['tahun'])
                 ->where('widget_title', $params['filter'])
@@ -810,7 +865,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getBarColumnKesehatan($idUsecase, $periode){
+    public function getBarColumnKesehatan($idUsecase, $periode)
+    {
         try {
             $years = explode('-', $periode['periode']);
 
@@ -818,7 +874,7 @@ class SosialKependudukanRepositories {
             $endYear = $years[1];
 
             $db = DB::table('mart_poda_social_kesehatan_column_chart')
-                ->select('jenis','tahun','data')
+                ->select('jenis', 'tahun', 'data')
                 ->where('id_usecase', $idUsecase)
                 ->whereBetween('tahun', [$startYear, $endYear])
                 ->get();
@@ -829,10 +885,11 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getMapKesehatan($idUsecase, $tahun){
+    public function getMapKesehatan($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_kesehatan_map_leaflet')
-                ->select('city','lat','lon','jenis', 'data')
+                ->select('city', 'lat', 'lon', 'jenis', 'data')
                 ->where('id_usecase', $idUsecase)
                 ->where('tahun', $tahun)
                 ->get();
@@ -843,7 +900,8 @@ class SosialKependudukanRepositories {
         }
     }
 
-    public function getDetailKesehatan($idUsecase, $tahun){
+    public function getDetailKesehatan($idUsecase, $tahun)
+    {
         try {
             $db = DB::table('mart_poda_social_kesehatan_detail')
                 ->select('kabupaten_kota as category', 'jenis as column', 'data')

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\ErrorResponse;
 use App\Http\Controllers\Controller;
 use App\Services\Admin\MenuServices;
 use App\Traits\ApiResponse;
+use Error;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -36,8 +39,15 @@ class MenuController extends Controller
             return $this->validationResponse($validator);
         }
 
-        $data = $this->menuService->insertMenu($validator->validate());
-        return $this->successResponse($data);
+        try {
+            $data = $this->menuService->insertMenu($validator->validate());
+
+            return $this->successResponse($data, message: 'Menu baru berhasil di tambahkan', statusCode: 200);
+        } catch (ErrorResponse $err) {
+            return $this->errorResponse(type: $err->getType(), message: $err->getMessage(), statusCode: $err->getStatusCode());
+        } catch (Exception $err) {
+            return $this->errorResponse(type: 'Internal Server Error', message: $err->getMessage());
+        }
     }
 
     public function menuUtama(Request $request)

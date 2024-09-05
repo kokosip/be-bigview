@@ -6,41 +6,46 @@ use Exception;
 use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\DB;
 
-class RoleRepositories {
+class RoleRepositories
+{
 
-    public function insertRole($data){
+    public function insertRole($data)
+    {
         try {
             DB::table('role')->insert($data);
             return $data;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan role.');
-        } 
+        }
     }
 
-    public function insertGetRoleId($data){
+    public function insertGetRoleId($data)
+    {
         try {
             return DB::table('role')->insertGetId($data);
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan roles.');
-        } 
+        }
     }
 
-    public function getListRole($search, $perPage){
+    public function getListRole($search, $perPage)
+    {
         try {
             $db = DB::table('role')
                 ->select('id', 'nama_role');
 
-            if($search){
+            if ($search) {
                 $db = $db->where('nama_role', 'like', "%{$search}%");
             }
             $result = $db->paginate($perPage, $perPage);
             return $result;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list role.');
-        } 
+        }
     }
 
-    public function getListNameRole(){
+    public function getListNameRole()
+    {
         try {
             $db = DB::table('role')
                 ->select('id', 'nama_role')
@@ -49,10 +54,11 @@ class RoleRepositories {
             return $db;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list nama role.');
-        } 
+        }
     }
 
-    public function getRoleById($id_role){
+    public function getRoleById($id_role)
+    {
         try {
             $db = DB::table('role')
                 ->select('id', 'nama_role')
@@ -62,10 +68,11 @@ class RoleRepositories {
             return $db;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil role');
-        } 
+        }
     }
 
-    public function deleteRole($id_role){
+    public function deleteRole($id_role)
+    {
         try {
             $db = DB::table('role')
                 ->where('id', $id_role)
@@ -74,10 +81,11 @@ class RoleRepositories {
             return $db;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil role.');
-        } 
+        }
     }
 
-    public function updateRole($data, $id_role){
+    public function updateRole($data, $id_role)
+    {
         try {
             $db = DB::table('role')
                 ->where('id', $id_role)
@@ -86,6 +94,6 @@ class RoleRepositories {
             return $db;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui role.');
-        } 
+        }
     }
 }
