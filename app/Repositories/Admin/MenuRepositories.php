@@ -7,6 +7,8 @@ use App\Exceptions\ErrorResponse;
 use App\Traits\CheckDatabase;
 use Illuminate\Support\Facades\DB;
 
+use function Laravel\Prompts\error;
+
 class MenuRepositories
 {
 
@@ -17,15 +19,6 @@ class MenuRepositories
         DB::table('menu')->insert($data);
 
         return $data;
-    }
-
-    public function getLatestSort($data)
-    {
-        $result = DB::table('menu')->selectRaw('max(sort) as sort')
-            ->where('id_parent', $data['id_parent'])->first();
-        $latesSort = is_null($result->sort) ? 1 : $result->sort + 1;
-
-        return $latesSort;
     }
 
     public function getMenuUtama($isSubmenu = null)
@@ -49,13 +42,13 @@ class MenuRepositories
     {
         try {
             $db = DB::table('menu as a')
-                ->selectRaw("a.id_menu, a.name_menu, a.id_parent, IFNULL(b.name_menu, '') as parent, a.sort")
+                ->selectRaw("a.id_menu, a.name_menu, a.id_parent, IFNULL(b.name_menu, '') as parent")
                 ->leftJoin('menu as b', 'a.id_parent', '=', 'b.id_menu');
 
             if ($search) {
                 $db = $db->whereRaw("a.name_menu like ? OR b.name_menu like ?", ["%{$search}%", "%{$search}%"]);
             }
-            $result = $db->paginate($perPage, $perPage);
+            $result = $db->paginate();
             return $result;
         } catch (Exception $e) {
             throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan list menu.');
@@ -66,13 +59,13 @@ class MenuRepositories
     {
         try {
             $db = DB::table('menu')
-                ->select('id_menu', 'name_menu', 'icon', 'link', 'id_parent', 'sort')
+                ->select('id_menu', 'name_menu', 'icon', 'link', 'id_parent')
                 ->where('id_menu', $id_menu)
                 ->first();
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan menu.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mendapatkan menu.', errors: $e->getMessage());
         }
     }
 
@@ -98,7 +91,7 @@ class MenuRepositories
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui menu.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui menu.', errors: $e->getMessage());
         }
     }
 

@@ -86,7 +86,6 @@ class MenuController extends Controller
             'icon' => 'required',
             'link' => 'required',
             'id_parent' => 'required',
-            'sort' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -134,22 +133,5 @@ class MenuController extends Controller
     {
         $data = $this->menuService->getAssignedMenu($this->admin_role);
         return $this->successResponse(data: $data);
-    }
-
-    public function updateAssignedMenu(Request $request, $id_menu)
-    {
-        $validator = Validator::make($request->all(), [
-            'name_menu' => 'required|string',
-            'icon' => 'sometimes',
-            'link' => 'required',
-            'id_parent' => 'required',
-            'sort' => 'sometimes',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->validationResponse($validator);
-        }
-        // $this->menuService->updateAssignedMenu($validator->validate(), $id_menu, $this->admin_role);
-        return $this->successResponse(message: "Data Berhasil di Update");
     }
 }

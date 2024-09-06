@@ -6,6 +6,7 @@ use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ErrorResponse extends Exception
 {
@@ -20,6 +21,8 @@ class ErrorResponse extends Exception
         $this->type = $type;
         $this->errors = $errors;
         $this->statusCode = $statusCode;
+
+        Log::error($errors);
     }
 
     public function render(): JsonResponse
