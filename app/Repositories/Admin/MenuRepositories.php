@@ -21,15 +21,6 @@ class MenuRepositories
         return $data;
     }
 
-    public function getLatestSort($data)
-    {
-        $result = DB::table('menu')->selectRaw('max(sort) as sort')
-            ->where('id_parent', $data['id_parent'])->first();
-        $latesSort = is_null($result->sort) ? 1 : $result->sort + 1;
-
-        return $latesSort;
-    }
-
     public function getMenuUtama($isSubmenu = null)
     {
         try {

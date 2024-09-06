@@ -4,10 +4,12 @@ namespace App\Services\Admin;
 
 use App\Repositories\Admin\RoleRepositories;
 use App\Exceptions\ErrorResponse;
+use App\Traits\CheckDatabase;
 use Exception;
 
 class RoleServices
 {
+    use CheckDatabase;
     protected $roleRepositories;
 
     public function __construct(RoleRepositories $roleRepositories)
@@ -79,6 +81,9 @@ class RoleServices
         if (!$oldRole) {
             throw new ErrorResponse(type: 'Not Found', message: 'Role tidak ditemukan', statusCode: 404);
         }
+
+        $this->isDuplicate('role', ['nama_role'], [$data['nama_role']]);
+
         $result = $this->roleRepositories->updateRole($data, $id_role);
         return $result;
     }

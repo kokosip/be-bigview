@@ -18,7 +18,7 @@ trait CheckDatabase
         }
 
         if ($query->exists()) {
-            throw new ErrorResponse(type: 'Bad Request', statusCode: 400, message: 'Data sudah terdaftar sebelumnya, silahkan mengganti dengan yang lain');
+            throw new ErrorResponse(type: 'Bad Request', statusCode: 400, message: $columns[0] . ' sudah terdaftar sebelumnya, silahkan mengganti dengan yang lain');
         }
     }
 }
