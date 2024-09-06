@@ -6,6 +6,8 @@ use Exception;
 use App\Exceptions\ErrorResponse;
 use Illuminate\Support\Facades\DB;
 
+use function Laravel\Prompts\error;
+
 class RoleRepositories
 {
 
@@ -15,7 +17,7 @@ class RoleRepositories
             DB::table('role')->insert($data);
             return $data;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan role.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan role.', errors: $e->getMessage());
         }
     }
 
@@ -24,7 +26,7 @@ class RoleRepositories
         try {
             return DB::table('role')->insertGetId($data);
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan roles.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal menambahkan roles.', errors: $e->getMessage());
         }
     }
 
@@ -40,7 +42,7 @@ class RoleRepositories
             $result = $db->paginate($perPage, $perPage);
             return $result;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list role.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list role.', errors: $e->getMessage());
         }
     }
 
@@ -53,7 +55,7 @@ class RoleRepositories
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list nama role.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil list nama role.', errors: $e->getMessage());
         }
     }
 
@@ -67,7 +69,7 @@ class RoleRepositories
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil role');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil role', errors: $e->getMessage());
         }
     }
 
@@ -80,7 +82,20 @@ class RoleRepositories
 
             return $db;
         } catch (Exception $e) {
-            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil role.');
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal mengambil role.', errors: $e->getMessage());
+        }
+    }
+
+    public function assignedRoleMenu($data, $id_role)
+    {
+        try {
+            $db = DB::table('role')
+                ->where('id', $id_role)
+                ->update($data);
+
+            return $db;
+        } catch (Exception $e) {
+            throw new ErrorResponse(type: 'Internal Server Error', message: 'Gagal memperbarui role.', errors: $e->getMessage());
         }
     }
 

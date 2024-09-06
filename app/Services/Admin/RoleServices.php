@@ -63,6 +63,16 @@ class RoleServices
         return $result;
     }
 
+    public function assignedRoleMenu($data, $id_role)
+    {
+        $oldRole = $this->getRoleById($id_role);
+        if (!$oldRole) {
+            throw new ErrorResponse(type: 'Not Found', message: 'Role tidak ditemukan', statusCode: 404);
+        }
+        $result = $this->roleRepositories->assignedRoleMenu($data, $id_role);
+        return $result;
+    }
+
     public function updateRole($data, $id_role)
     {
         $oldRole = $this->getRoleById($id_role);

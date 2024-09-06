@@ -86,7 +86,6 @@ class MenuController extends Controller
             'icon' => 'required',
             'link' => 'required',
             'id_parent' => 'required',
-            'sort' => 'required',
         ]);
 
         if ($validator->fails()) {
